@@ -57,4 +57,8 @@ Linux met en place des flux globaux permettant a des commandes appelees, de dial
   - la sortie du programme
   - defaut: du terminal ayant lance le programme
   - permet d'afficher des donnees sur le terminal
-- `stderr` *(sortie standard d'arreur)*: sert a recuperer les messages d'erreurs, par defaut affiches sur le terminal ayant lance le programme
+- `stderr` *(sortie standard d'arreur)*: 
+  - sert a recuperer les messages d'erreurs
+  - par defaut les afficher sur le terminal ayant lance le programme
+
+> Commande `sha256sum`: hacher le contenu d'un fichier en utilisant la fonction de hachage `SHA256`.
