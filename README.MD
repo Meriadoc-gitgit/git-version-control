@@ -21,7 +21,7 @@ Faire dependre le chemin du contenu permet notamment de sauvegarder toutes les d
 - modifier le chemin vers lequel le sauvegarder 
 - creer differentes sauvegardes correspondant a differentes etats du fichier. 
 
-*(Quand on realise une telle sauvegarde, on dit communement qu'on "enregistre un instantane"/qu'on creer un "enregistrement instantane".)*
+*(Quand on realise une telle **sauvegarde**, on dit communement qu'on "enregistre **un instantane**"/qu'on creer un "enregistrement instantane".)*
 ***
 ## Prise en main de Bash
 Les donnees sur le disque sont stockees dans des fichiers, dont des structures de donnees qui apparaissent aux programmes comme des **suites finies d'octets**. 
@@ -95,6 +95,16 @@ Linux met en place des flux globaux permettant a des commandes appelees, de dial
   ```
   - faut que les 6 derniers caracteres de `template` soit `"XXXXXX"` pour que `mkstemps` les remplacent pour creer un nom de fichier unique.
   - `mkstemp` ouvre, *ensuite*, le fichier temporaire nouvellement cree + renvoie un descripteur de fichier ouvert *(lecture + ecriture)*
+
+#### Librairie `<dirent.h>`
+- Fonctions `opendir` et `readdir`: permettent d'explorer un repertoire
+```C
+DIR* dp = opendir(root_dir);
+struct dirent *ep;
+if (dp!=NULL) {
+  while ((ep=readdir(dp))!=NULL) printf("\%s \n",ep->d_name);
+}
+```
 ***
 ## Source code pack
 ### Global usage
@@ -107,7 +117,7 @@ Linux met en place des flux globaux permettant a des commandes appelees, de dial
       - la commande `sha256sum`
       - 1 pipe
       - 1 redirection
-      - 1 fichier temporaire *(supprime apres usage !)*
+      - 1 fichier temporaire *(supprime apres usage!)*
     - renvoie 1 chaine de caracteres contenant *le hash du fichier donne en parametre*
 
 ### Implementation d'une **liste de chaines de caracteres**
@@ -127,4 +137,20 @@ typedef Cell* List;
 `char* ltos(List* L)`: transforme une liste en une chaine de caractere de format: `chain1|chaine2|...` *(utilisant fonction `ctos`)*
 5. `Cell* listGet(List* Lm int i)`: renvoie le i-ieme element d'une liste
 6. `Cell* searchList(List* L, char* str)`
-    - recherche un element dans une 
+    - recherche un element dans une liste a partir de son contenu
+    - renvoie une reference vers lui / `NULL` si absent de la liste
+7. `List stol(char* s)`: transformer une chaine de caracteres representant une liste en une liste chainee
+8. `void ltof(List* L, char* path)`: ecrire une liste dans un fichier <br>
+`List* ftol(chr* path)`: lire une liste enregistree dans un fichier
+***
+### Gestion de fichier sous `git`
+> **Objectif:** produire une fonction qui enregistre un instantane *(realise une sauvegarde)* d'un fichier dont le nom est donne en parametre
+1. `List* listdir(char* root_dir)`: 
+    - prend en parametre une adresse
+    - renvoie une liste contenant les noms des fichiers et repertoires qui s'y trouvent
+2. `int file_exists(char* file)`: renvoie `1` si le fichier existe dans le repertoire courant et `0` sinon
+3. `void cp(char* to, char* from)`: copie le contenu d'un fichier vers un autre *(en lisant ligne par ligne du fichier source)* <br>
+**Note:** verifier que le fichier source existe avant !
+4. `char* hashToPath(char* hash)`: retourne le chemin d'un fichier a partir de son hash
+5. `void blobFile(char* file)`: enregistre un instantane *(realise un sauvegarde)* du fichier donnee en entree <br>
+**Note:** en utilisant `mkdir`
