@@ -61,4 +61,4 @@ Linux met en place des flux globaux permettant a des commandes appelees, de dial
   - sert a recuperer les messages d'erreurs
   - par defaut les afficher sur le terminal ayant lance le programme
 
-> Commande `sha256sum`: hacher le contenu d'un fichier en utilisant la fonction de hachage `SHA256`.
+> **Commande `sha256sum`:** hacher le contenu d'un fichier en utilisant la fonction de hachage `SHA256`.
