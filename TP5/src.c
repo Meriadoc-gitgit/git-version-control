@@ -3,6 +3,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include <dirent.h>
+#include <limits.h>
 
 #include "src.h"
 
@@ -42,4 +44,34 @@ char* sha256file(char* file) {
   fclose(f);
   
   return buffer;
+}
+List* listdir(char* root_dir) {
+  List* L = initList();
+  DIR* dp = opendir(root_dir);
+  struct dirent* ep;
+  if (dp) {
+    while(ep = readdir(dp)) 
+      insertFirst(L,ep->d_name);
+  }
+  return L;
+}
+int file_exists(char* file) {
+  char cwd[PATH_MAX];
+  if (!getcwd(cwd,sizeof(cwd))) {
+    perror("getcwd() error\n");
+    return 1;
+  }
+  List* L = listdir(cwd);
+  return searchList(L,file);
+}
+void cp(char* to, char* from) {
+  if (!file_exists(from)) {
+    printf("Fichier demande n'existe pas\n");
+    return;
+  }
+  char* res = "cat ";
+  strcat(res,from);
+  strcat(" > ",to);
+  system(res);
+  return;
 }
