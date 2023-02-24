@@ -68,5 +68,30 @@ List* stol(char* s) {
   return L;
 }
 void ltof(List* L,char* path) {
+  FILE *f = fopen(path,"w");
+  Cell* tmp = &L;
   
+  while(tmp) {
+    fprintf(f,"%s\n",tmp->data);
+    tmp = tmp->next;
+  }
+  fclose(f);
+  return;
+}
+List* ftol(char* path) {
+  FILE *f = fopen(path,"r");
+  List* L = initList();
+
+  char buffer[256];
+  fgets(buffer, 256, f);
+  char data[26];
+  
+  while(buffer) {
+    sscanf(buffer,"%s",data);
+    insertFirst(L,buildCell(data));
+    fgets(buffer, 256, f);
+  }
+  fclose(f);
+
+  return L;
 }
