@@ -30,16 +30,25 @@ char* ctos(Cell* C) {
   return C->data;
 }
 char* ltos(List* L) {
-  if (*L==NULL) {
+  if ((*L)==NULL) {
     printf("Erreur de pointeur vers List* L de Cell\n");
     return NULL;
   }
   char* rst = "";
-  while(*L!=NULL) {
-    strcat(rst,ctos(*L));
-    strcat(rst,"|");
-    printf("%s\n",rst);
-    *L = (*L)->next;
+  char tmp[256], tmp2[256];
+  char* delim = "|";
+
+  while((*L)) {
+    strcpy(tmp,strdup(ctos(*L)));
+    strcat(tmp,delim);
+    printf("\n%s\n",tmp);
+
+    strcpy(tmp2,strdup(tmp));
+    printf("\ntmp=%s\n",tmp);
+    printf("\ntmp2=%s\n",tmp2);
+    //strcat(rst,tmp2);
+    //strcat(rst,"|");
+    (*L) = (*L)->next;
   }
   return rst;
 }

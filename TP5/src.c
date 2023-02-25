@@ -9,9 +9,13 @@
 #include "src.h"
 
 int hashFile(char* src, char *dst) {
-  char* res = "cat ";
+  char* res = "cat src.txt";
+  //strcat(res,src);
+  /*
   strcat(res,src);
-  strcat(" | sha256sum > ",dst);
+  strcat(res," | sha256sum > ");
+  strcat(res,dst);
+  */
   return system(res);
 }
 
@@ -43,7 +47,7 @@ char* sha256file(char* file) {
   fgets(buffer, 256, f);
   fclose(f);
   
-  return buffer;
+  return NULL;
 }
 List* listdir(char* root_dir) {
   List* L = initList();
@@ -71,7 +75,8 @@ void cp(char* to, char* from) {
   }
   char* res = "cat ";
   strcat(res,from);
-  strcat(" > ",to);
+  strcat(res," > ");
+  strcat(res,to);
   system(res);
   return;
 }
