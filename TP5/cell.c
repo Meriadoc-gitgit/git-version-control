@@ -34,23 +34,35 @@ char* ltos(List* L) {
     printf("Erreur de pointeur vers List* L de Cell\n");
     return NULL;
   }
-  char* rst = "";
-  char tmp[256], tmp2[256];
-  char* delim = "|";
+  char delim = '|';
+  int len = 0, elem = 0;
+
+  Cell* C = *L;
 
   while((*L)) {
-    strcpy(tmp,strdup(ctos(*L)));
-    strcat(tmp,delim);
-    printf("\n%s\n",tmp);
-
-    strcpy(tmp2,strdup(tmp));
-    printf("\ntmp=%s\n",tmp);
-    printf("\ntmp2=%s\n",tmp2);
-    //strcat(rst,tmp2);
-    //strcat(rst,"|");
+    len += (int)strlen(ctos(*L));
+    elem++;
     (*L) = (*L)->next;
   }
-  return rst;
+
+  char rst[len+elem+1], *tmp;
+  int temp = 0;
+
+  while(C) {
+    tmp = ctos(C);
+    for (int i=0;i<(int)strlen(tmp);i++) 
+      rst[i+temp+1] = tmp[i];
+
+    temp += (int)strlen(tmp)+1;
+    rst[temp] = delim;
+
+    if (len==temp) break;
+    C = C->next;
+  }
+  rst[len+elem+1] = '\0';
+  char* res = rst,*r;
+  strcpy(r,res);
+  return r;
 }
 Cell* listGet(List* L,int i) {
   Cell* tmp = *L;

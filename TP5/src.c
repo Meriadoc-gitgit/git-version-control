@@ -39,10 +39,10 @@ char* sha256file(char* file) {
     printf("Erreur lors de l'ouverture\n");
     return NULL;
   }
-  fgets(buffer, 256, f);
+  char *res = fgets(buffer, 256, f);
   fclose(f);
-  
-  return NULL;
+
+  return res;
 }
 List* listdir(char* root_dir) {
   List* L = initList();
@@ -68,28 +68,28 @@ void cp(char* to, char* from) {
     printf("Fichier demande n'existe pas\n");
     return;
   }
-  char* res = "cat ";
-  strcat(res,from);
-  strcat(res," > ");
-  strcat(res,to);
+  char res[200];
+  sprintf(res,"%s > %s",from,to);
   system(res);
   return;
 }
 char* hashToPath(char* hash) {
-  char* res = "";
+  char res[(int)strlen(hash)+1];
   for (int i=0;i<2;i++) 
-    strcat(res,&hash[i]);
-  strcat(res,"/");
+    res[i] = hash[i];
+  res[2] = '/';
   for (int i=2;i<(int)strlen(hash);i++)
-    strcat(res,&hash[i]);
-  return res;
+    res[i+1] = hash[i];
+
+  char* str = res,*r;
+  strcpy(r,str);
+  return r;
 }
 /* Check later */
 void blobFile(char* file) {
   system("mkdir INSTANT");
-  char* rst = "cat ";
-  strcat(rst,file);
-  strcat(rst," > file.tmp");
-  system(rst);
+  char res[200];
+  sprintf(res,"%s > file.tmp",file);
+  system(res);
   return;
 }
