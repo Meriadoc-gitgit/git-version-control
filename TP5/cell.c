@@ -86,7 +86,7 @@ List* stol(char* s) {
   for(int i=0;i<(int)strlen(s);i++)
     str[i] = s[i];
   int init_size = (int)strlen(str);
-  char* delim = "|";
+  const char* delim = "|";
 
   char* ptr = strtok(str,delim);
   List* L = initList();
