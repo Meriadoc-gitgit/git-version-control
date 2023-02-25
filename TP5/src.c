@@ -9,13 +9,8 @@
 #include "src.h"
 
 int hashFile(char* src, char *dst) {
-  char* res = "cat src.txt";
-  //strcat(res,src);
-  /*
-  strcat(res,src);
-  strcat(res," | sha256sum > ");
-  strcat(res,dst);
-  */
+  char res[200];
+  sprintf(res,"sha256sum %s > %s",src,dst);
   return system(res);
 }
 
