@@ -15,13 +15,13 @@ Cell* buildCell(char* ch) {
   return rst;
 }
 void insertFirst(List* L,Cell* C) {
-  if (!L) {
-    L = &C; 
+  if (*L==NULL) {
+    *L = C; 
     printf("ok\n");
   }
   else {
     C->next = *L;
-    L = &C;
+    *L = C;
     printf("ko\n");
   }
   return;
@@ -30,23 +30,26 @@ char* ctos(Cell* C) {
   return C->data;
 }
 char* ltos(List* L) {
-  Cell* tmp = *L;
-  char* rst = "";
-  if (!tmp) {
+  if (*L==NULL) {
     printf("Erreur de pointeur vers List* L de Cell\n");
     return NULL;
   }
-  while(tmp) {
-    strcat(rst,tmp->data);
+  char* rst = "";
+  while(*L!=NULL) {
+    strcat(rst,ctos(*L));
     strcat(rst,"|");
-    tmp = tmp->next;
+    printf("%s\n",rst);
+    *L = (*L)->next;
   }
   return rst;
 }
 Cell* listGet(List* L,int i) {
   Cell* tmp = *L;
-  while(i>0) tmp = tmp->next;
-  if (i==0) return tmp;
+  while(i>1) {
+    tmp = tmp->next;
+    i--;
+  }
+  if (i==1) return tmp;
   else return NULL;
 }
 Cell* searchList(List* L,char* str) {
