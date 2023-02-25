@@ -26,7 +26,7 @@ char* sha256file(char* file) {
   
   if (filedes<1) {
     printf("Echec de creation de file temporaire [%s]\n",strerror(errno));
-    return 1;
+    return NULL;
   } 
   else printf("File temporaire [%s] cree\n",file);
 
@@ -38,7 +38,7 @@ char* sha256file(char* file) {
   FILE* f = fopen(file,"r");
   if (!f) {
     printf("Erreur lors de l'ouverture\n");
-    return;
+    return NULL;
   }
   fgets(buffer, 256, f);
   fclose(f);
@@ -50,8 +50,8 @@ List* listdir(char* root_dir) {
   DIR* dp = opendir(root_dir);
   struct dirent* ep;
   if (dp) {
-    while(ep = readdir(dp)) 
-      insertFirst(L,ep->d_name);
+    while((ep = readdir(dp))) 
+      insertFirst(L,buildCell(ep->d_name));
   }
   return L;
 }
@@ -62,7 +62,7 @@ int file_exists(char* file) {
     return 1;
   }
   List* L = listdir(cwd);
-  return searchList(L,file);
+  return searchList(L,file)!=NULL;
 }
 void cp(char* to, char* from) {
   if (!file_exists(from)) {
@@ -73,5 +73,23 @@ void cp(char* to, char* from) {
   strcat(res,from);
   strcat(" > ",to);
   system(res);
+  return;
+}
+char* hashToPath(char* hash) {
+  char* res = "";
+  for (int i=0;i<2;i++) 
+    strcat(res,&hash[i]);
+  strcat(res,"/");
+  for (int i=2;i<(int)strlen(hash);i++)
+    strcat(res,&hash[i]);
+  return res;
+}
+/* Check later */
+void blobFile(char* file) {
+  system("mkdir INSTANT");
+  char* rst = "cat ";
+  strcat(rst,file);
+  strcat(rst," > file.tmp");
+  system(rst);
   return;
 }

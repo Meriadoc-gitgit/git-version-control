@@ -3,7 +3,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
-#include <dirent.h>
 
 int main(void) {
   //system("ls > list.txt");
@@ -47,17 +46,6 @@ int main(void) {
     printf("File deleted successfully");
   } else {
     printf("Error: unable to delete the file");
-  }
-
-
-
-
-  char* root_dir = "/BASH";
-  DIR* dp = opendir(".");
-  struct dirent *ep;
-  if (dp) {
-    while((ep = readdir(dp)))
-      printf("%s\n",ep->d_name);
   }
 
 	return 0;

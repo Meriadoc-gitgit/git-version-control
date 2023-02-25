@@ -15,20 +15,26 @@ Cell* buildCell(char* ch) {
   return rst;
 }
 void insertFirst(List* L,Cell* C) {
-  Cell* tmp = &L;
-  C->next = tmp;
-  L = tmp;
+  if (!L) {
+    L = &C; 
+    printf("ok\n");
+  }
+  else {
+    C->next = *L;
+    L = &C;
+    printf("ko\n");
+  }
   return;
 }
 char* ctos(Cell* C) {
   return C->data;
 }
 char* ltos(List* L) {
-  Cell* tmp = &L;
+  Cell* tmp = *L;
   char* rst = "";
   if (!tmp) {
-    printf("Erreur de pointeur vers List* L de Cell");
-    return;
+    printf("Erreur de pointeur vers List* L de Cell\n");
+    return NULL;
   }
   while(tmp) {
     strcat(rst,tmp->data);
@@ -38,13 +44,13 @@ char* ltos(List* L) {
   return rst;
 }
 Cell* listGet(List* L,int i) {
-  Cell* tmp = &L;
+  Cell* tmp = *L;
   while(i>0) tmp = tmp->next;
   if (i==0) return tmp;
   else return NULL;
 }
 Cell* searchList(List* L,char* str) {
-  Cell* tmp = &L;
+  Cell* tmp = *L;
   while(tmp) {
     if (strcmp(tmp->data,str)==0) return tmp;
     tmp = tmp->next;
@@ -69,7 +75,7 @@ List* stol(char* s) {
 }
 void ltof(List* L,char* path) {
   FILE *f = fopen(path,"w");
-  Cell* tmp = &L;
+  Cell* tmp = *L;
   
   while(tmp) {
     fprintf(f,"%s\n",tmp->data);
@@ -83,13 +89,13 @@ List* ftol(char* path) {
   List* L = initList();
 
   char buffer[256];
-  fgets(buffer, 256, f);
+  char *res = fgets(buffer, 256, f);
   char data[26];
   
-  while(buffer) {
+  while(res) {
     sscanf(buffer,"%s",data);
     insertFirst(L,buildCell(data));
-    fgets(buffer, 256, f);
+    char *res = fgets(buffer, 256, f);
   }
   fclose(f);
 
