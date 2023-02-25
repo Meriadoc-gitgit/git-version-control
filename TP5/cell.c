@@ -99,29 +99,36 @@ List* stol(char* s) {
 }
 void ltof(List* L,char* path) {
   FILE *f = fopen(path,"w");
-  Cell* tmp = *L;
+  if (!f) {
+    printf("Erreur lors de l'ouverture\n");
+    return;
+  }
   
-  while(tmp) {
-    fprintf(f,"%s\n",tmp->data);
-    tmp = tmp->next;
+  while((*L)) {
+    fprintf(f,"%s\n",(*L)->data);
+    *L = (*L)->next;
   }
   fclose(f);
   return;
 }
 List* ftol(char* path) {
   FILE *f = fopen(path,"r");
+  if (!f) {
+    printf("Erreur lors de l'ouverture\n");
+    return NULL;
+  }
+
   List* L = initList();
 
   char buffer[256];
   char *res = fgets(buffer, 256, f);
   char data[26];
   
-  while(res) {
+  while(res!=NULL) {
     sscanf(buffer,"%s",data);
+    res = fgets(buffer, 256, f);
     insertFirst(L,buildCell(data));
-    char *res = fgets(buffer, 256, f);
   }
-  fclose(f);
-
+  //fclose(f);
   return L;
 }
