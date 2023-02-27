@@ -24,7 +24,7 @@ char* ctos(Cell* C) {
 }
 char* ltos(List* L) {
   if ((*L)==NULL) {
-    printf("Erreur de pointeur vers List* L de Cell\n");
+    printf("Liste *L est NULL\n");
     return NULL;
   }
   char delim = '|';
