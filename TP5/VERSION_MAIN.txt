@@ -1,3 +1,4 @@
+----1
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,9 +11,10 @@ int main(void) {
   Cell* C = buildCell("test");
 
   insertFirst(L,C);
-  //insertFirst(L,C);
+  insertFirst(L,buildCell("test2"));
 
-  //printf("tmp0:%s\n",ltos(L));
+  //char* tmp = ltos(L);
+  //printf("tmp:%s\n",tmp);
 
   Cell* c1 = buildCell("hihi");
   printf("%s\n",ctos(c1));
@@ -28,8 +30,8 @@ int main(void) {
 
   int hash = hashFile("src.txt","dst.txt");
   printf("%d\n",hash);
-
-
-
   return 0;
 }
+
+==============================
+----2

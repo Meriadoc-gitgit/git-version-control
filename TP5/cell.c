@@ -15,15 +15,8 @@ Cell* buildCell(char* ch) {
   return rst;
 }
 void insertFirst(List* L,Cell* C) {
-  if (*L==NULL) {
-    *L = C; 
-    printf("ok\n");
-  }
-  else {
-    C->next = *L;
-    *L = C;
-    printf("ko\n");
-  }
+  C->next = *L;
+  *L = C;
   return;
 }
 char* ctos(Cell* C) {
@@ -35,31 +28,35 @@ char* ltos(List* L) {
     return NULL;
   }
   char delim = '|';
-  int len = 0, elem = 0;
+  int total = 0;
 
   Cell* C = *L;
 
-  while((*L)) {
-    len += (int)strlen(ctos(*L));
-    elem++;
+  while((*L)!=NULL) {
+    total += (int)strlen(ctos(*L));
+    total++;
     (*L) = (*L)->next;
   }
 
-  char rst[len+elem+1], *tmp;
+  printf("total char for rst:%d\n",total);
+
+  char rst[total], *tmp;
   int temp = 0;
 
   while(C) {
+    //if ((int)strlen(rst)==total) break;
     tmp = ctos(C);
-    for (int i=0;i<(int)strlen(tmp);i++) 
-      rst[i+temp+1] = tmp[i];
-
+    for (int i=0;i<(int)strlen(tmp);i++) {
+      if (i+temp+1==total) break;
+      rst[i+temp] = tmp[i];
+    }
+    
     temp += (int)strlen(tmp)+1;
-    rst[temp] = delim;
-
-    if (len==temp) break;
+    rst[temp-1] = delim;
+  
     C = C->next;
   }
-  rst[len+elem+1] = '\0';
+  rst[total] = '\0';
   char* res = rst,*r;
   strcpy(r,res);
   return r;
@@ -95,6 +92,7 @@ List* stol(char* s) {
     insertFirst(L,buildCell(ptr));
     ptr = strtok(NULL,delim);
   }
+  printf("stol:ok\n");
   return L;
 }
 void ltof(List* L,char* path) {
@@ -129,6 +127,7 @@ List* ftol(char* path) {
     res = fgets(buffer, 256, f);
     insertFirst(L,buildCell(data));
   }
-  //fclose(f);
+  fclose(f);
+  printf("ftol:ok\n");
   return L;
 }

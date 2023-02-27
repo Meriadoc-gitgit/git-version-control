@@ -1,10 +1,10 @@
-Makefile
 cell.c
 cell.h
 cell.o
 dst.txt
 main.c
 main.o
+Makefile
 src.c
 src.h
 src.o
