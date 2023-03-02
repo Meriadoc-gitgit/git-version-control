@@ -1,6 +1,8 @@
 #ifndef _CELL_H
 #define _CELL_H
 
+// Possible d'ajouter '#include "src.h"' au lieu de recopier tous les fonctions de src.h dans cell.h
+
 typedef struct cell {
   char* data;
   struct cell* next;
