@@ -37,15 +37,15 @@ int main(void) {
   //printf("C2: %s\n",ctos(C2));
 
   /* FILE */
-  ltof(L2,"ltof.txt");
+  ltof(L1,"ltof.txt");
 
   /* Free */
   free(C->data);
   free(L); free(C);
 
+  
 
-
-  // src
-  printf("hash: %s\n",sha256file("src.txt-XXXXXX"));
+  //src
+  printf("sha:%s\n", sha256file1("src.cXXXXXX"));
   return 0;
 }

@@ -1,0 +1,11 @@
+BINOME
+Bash_command.png
+README.MD
+fichiers-stocke.png
+file.tmp
+list.txt
+main
+main.c
+projet-version-20fev.pdf
+src.c
+src.h

@@ -14,8 +14,8 @@ int hashFile(char* src, char *dst) {
   return system(res);
 }
 
+
 char* sha256file(char* file) {
-  strcat(file,"-XXXXXX");
   char* src = strdup(file);
   int filedes = -1, count = 0;
   
@@ -23,7 +23,6 @@ char* sha256file(char* file) {
 
   filedes = mkstemp(file);
   unlink(file);
-  printf("%s\n",file);
   
   if (filedes<1) {
     printf("Echec de creation de file temporaire [%s]\n",strerror(errno));
@@ -83,8 +82,8 @@ char* hashToPath(char* hash) {
   for (int i=2;i<(int)strlen(hash);i++)
     res[i+1] = hash[i];
 
-  char* str = res,*r;
-  strcpy(r,str);
+  char* str = res,*r=strdup(res);
+  //strcpy(r,str);
   return r;
 }
 /* Check later */

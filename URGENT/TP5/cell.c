@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "cell.h"
-#include "src.h"
 
 List* initList() {
   List* rst = (List*)malloc(sizeof(Cell));
@@ -102,10 +101,6 @@ List* stol(char* s) {
   return L;
 }
 void ltof(List* L,char* path) {
-  if (*L==NULL) {
-    printf("Liste *L est NULL\n");
-    return;
-  }
   FILE *f = fopen(path,"w");
   if (!f) {
     printf("Erreur lors de l'ouverture\n");
@@ -121,10 +116,6 @@ void ltof(List* L,char* path) {
   return;
 }
 List* ftol(char* path) {
-  if (!file_exists(path)) {
-    printf("Fichier introuvable\n");
-    return NULL;
-  }
   FILE *f = fopen(path,"r");
   if (!f) {
     printf("Erreur lors de l'ouverture\n");

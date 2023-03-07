@@ -1,5 +1,3 @@
-Makefile
-VERSION_MAIN.txt
 cell.c
 cell.h
 cell.o
@@ -7,8 +5,10 @@ dst.txt
 ltof.txt
 main.c
 main.o
+Makefile
 src.c
 src.h
 src.o
 src.txt
 test
+VERSION_MAIN.txt
