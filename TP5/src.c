@@ -15,36 +15,15 @@ int hashFile(char* src, char *dst) {
 }
 
 char* sha256file(char* file) {
-  strcat(file,"-XXXXXX");
-  char* src = strdup(file);
-  int filedes = -1, count = 0;
-  
-  errno = 0;
-
-  filedes = mkstemp(file);
-  unlink(file);
-  printf("%s\n",file);
-  
-  if (filedes<1) {
-    printf("Echec de creation de file temporaire [%s]\n",strerror(errno));
-    return NULL;
-  } 
-  else printf("File temporaire [%s] cree\n",file);
-
-  errno = 0;
-
-  hashFile(src, file);
-  /* Read the data */
-  char buffer[256];
-  FILE* f = fopen(file,"r");
-  if (!f) {
-    printf("Erreur lors de l'ouverture\n");
-    return NULL;
-  }
-  char *res = fgets(buffer, 256, f);
+  static char template[] ="/tmp/XXXXXX";
+  char *fname = strdup(template);
+  mkstemp(fname);
+  hashFile(file,fname);
+  FILE *f = fopen(fname,"r");
+  char *buffer = (char*)malloc(256*sizeof(char));
+  fgets(buffer,256,f);
   fclose(f);
-
-  return res;
+  return buffer;
 }
 List* listdir(char* root_dir) {
   List* L = initList();
@@ -87,11 +66,10 @@ char* hashToPath(char* hash) {
   strcpy(r,str);
   return r;
 }
-/* Check later */
 void blobFile(char* file) {
-  system("mkdir INSTANT");
+  system("mkdir tmp");
   char res[200];
-  sprintf(res,"%s > file.tmp",file);
+  sprintf(res,"mv %s tmp/",file);
   system(res);
   return;
 }
