@@ -68,8 +68,8 @@ char* hashToPath(char* hash) {
 }
 void blobFile(char* file) {
   system("mkdir tmp");
-  char res[200];
-  sprintf(res,"mv %s tmp/",file);
-  system(res);
+  char command[200];
+  sprintf(command,"cat %s > tmp/%s",file,file);
+  system(command);
   return;
 }
