@@ -17,7 +17,6 @@ Cell* buildCell(char* ch) {
   return rst;
 }
 void insertFirst(List* L,Cell* C) {
-  //if (C==NULL) return;
   C->next = *L; *L = C;
   return;
 }
@@ -30,29 +29,17 @@ char* ltos(List* L) {
     printf("Liste *L est NULL\n");
     return NULL;
   }
-  char delim = '|'; int total = 0; Cell* C = *L;
-
-  while((*L)!=NULL) {
-    total += (int)strlen(ctos(*L));
-    total++; (*L) = (*L)->next;
-  }
-  //printf("total char for rst:%d\n",total);
-  char rst[total], *tmp; int temp = 0;
-
+  char delim = '|'; Cell* C = *L;
+  char* rst = (char*)malloc(sizeof(char)), *tmp; int temp = 0;
   while(C) {
-    //if ((int)strlen(rst)==total) break;
     tmp = ctos(C);
-    for (int i=0;i<(int)strlen(tmp);i++) {
-      if (i+temp+1==total) break;
+    for (int i=0;i<(int)strlen(tmp);i++) 
       rst[i+temp] = tmp[i];
-    }
-    
-    temp += (int)strlen(tmp)+1; rst[temp-1] = delim;
+    temp += (int)strlen(tmp)+1; 
+    rst[temp-1] = delim;
     C = C->next;
   }
-  rst[total] = '\0';
-  char* res = rst,*r = strdup(res); //strcpy(r,res);
-  return r;
+  return rst;
 }
 Cell* listGet(List* L,int i) {
   if (*L==NULL) return NULL;
@@ -78,7 +65,6 @@ List* stol(char* s) {
     str[i] = s[i];
   int init_size = (int)strlen(str);
   const char* delim = "|";
-
   char* ptr = strtok(str,delim);
   List* L = initList();
 
@@ -86,7 +72,7 @@ List* stol(char* s) {
     insertFirst(L,buildCell(ptr)); //printf("ptr: %s\n",ptr);
     ptr = strtok(NULL,delim);
   }
-  printf("stol:ok\n");
+  //printf("stol:ok\n");
   return L;
 }
 void ltof(List* L,char* path) {
@@ -138,7 +124,4 @@ WorkFile* createWorkFile(char* name) {
   wt->name = strdup(name);
   wt->hash = NULL; wt->mode = 0;
   return wt;
-}
-char* wfts(WorkFile* wf) {
-  
 }

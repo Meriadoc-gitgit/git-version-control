@@ -1,8 +1,7 @@
 Makefile
-VERSION_MAIN.txt
-cell.c
-cell.h
-cell.o
+bash.c
+bash.h
+bash.o
 dst.txt
 ltof.txt
 main.c
