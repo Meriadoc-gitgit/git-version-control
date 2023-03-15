@@ -5,6 +5,7 @@
 #include "bash.h"
 #include "src.h"
 
+/* Part 1 - Manipulation de Cell et List */
 List* initList() {
   List* rst = (List*)malloc(sizeof(Cell));
   return rst;
@@ -17,8 +18,7 @@ Cell* buildCell(char* ch) {
 }
 void insertFirst(List* L,Cell* C) {
   //if (C==NULL) return;
-  C->next = *L;
-  *L = C;
+  C->next = *L; *L = C;
   return;
 }
 char* ctos(Cell* C) {
@@ -30,21 +30,14 @@ char* ltos(List* L) {
     printf("Liste *L est NULL\n");
     return NULL;
   }
-  char delim = '|';
-  int total = 0;
-
-  Cell* C = *L;
+  char delim = '|'; int total = 0; Cell* C = *L;
 
   while((*L)!=NULL) {
     total += (int)strlen(ctos(*L));
-    total++;
-    (*L) = (*L)->next;
+    total++; (*L) = (*L)->next;
   }
-
   //printf("total char for rst:%d\n",total);
-
-  char rst[total], *tmp;
-  int temp = 0;
+  char rst[total], *tmp; int temp = 0;
 
   while(C) {
     //if ((int)strlen(rst)==total) break;
@@ -54,14 +47,11 @@ char* ltos(List* L) {
       rst[i+temp] = tmp[i];
     }
     
-    temp += (int)strlen(tmp)+1;
-    rst[temp-1] = delim;
-  
+    temp += (int)strlen(tmp)+1; rst[temp-1] = delim;
     C = C->next;
   }
   rst[total] = '\0';
-  char* res = rst,*r = strdup(res);
-  //strcpy(r,res);
+  char* res = rst,*r = strdup(res); //strcpy(r,res);
   return r;
 }
 Cell* listGet(List* L,int i) {
@@ -69,8 +59,7 @@ Cell* listGet(List* L,int i) {
   Cell* tmp = *L;
   if (i==0) return NULL;
   while(i>1) {
-    tmp = tmp->next;
-    i--;
+    tmp = tmp->next; i--;
   }
   if (i==1) return tmp;
   else return NULL;
@@ -94,8 +83,7 @@ List* stol(char* s) {
   List* L = initList();
 
   while (ptr!=NULL) {
-    insertFirst(L,buildCell(ptr));
-    printf("ptr: %s\n",ptr);
+    insertFirst(L,buildCell(ptr)); //printf("ptr: %s\n",ptr);
     ptr = strtok(NULL,delim);
   }
   printf("stol:ok\n");
@@ -113,8 +101,7 @@ void ltof(List* L,char* path) {
   }
   Cell *C = *L;
   while(C) {
-    fprintf(f,"%s\n",C->data);
-    //printf("ok\n");
+    fprintf(f,"%s\n",C->data); //printf("ok\n");
     C = C->next;
   }
   fclose(f);
@@ -130,13 +117,9 @@ List* ftol(char* path) {
     printf("Erreur lors de l'ouverture\n");
     return NULL;
   }
-
   List* L = initList();
 
-  char buffer[256];
-  char *res = fgets(buffer, 256, f);
-  char data[26];
-  
+  char buffer[256]; char *res = fgets(buffer, 256, f); char data[26];
   while(res!=NULL) {
     sscanf(buffer,"%s",data);
     res = fgets(buffer, 256, f);
@@ -145,3 +128,8 @@ List* ftol(char* path) {
   fclose(f);
   return L;
 }
+
+
+
+/* Part 2 */
+/* MANIPULATION DE WORKFILE */

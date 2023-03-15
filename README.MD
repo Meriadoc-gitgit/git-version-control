@@ -202,3 +202,19 @@ Un `WorkTree` = un tableau de `WorkFile`.
 #### Fonctions fournie pour manipuler les `Chmod`
 - `getChmod`: recuperer ces autorisations
 - `setChmod`: modifier les autorisations
+
+## Fonctions de manipulation de base
+### Manipulation de `WorkFile`
+- `WorkFile* createWorkFile(char* name)`: creer un `WorkFile` + l'initialiser
+- `char* wfts(WorkFile* wf)`: convertir un `WorkFile` en chaine de caracteres contenant les differents champs separes par des tabulations *(caracteres `'\t'`)*
+- `WorkFile* stwf(char* ch)`: convertir une chaine de caracteres representant un `WorkFile` en un `WorkFile`
+### Manipulation de `WorkTree`
+- `WorkTree* initWorkTree()`: allouer un `WorkTree` de taille fixee *(donnee par une constante du programme)* + l'initialiser
+- `int inWorkTree(WorkTree* wt,char* name)`: verifie la presence d'un fichier ou repertoire dans un `WorkTree`, retourner:
+  - la position du fichier dans le tableau, si present
+  - `-1` sinon
+- `int appendWorkTree(WorkTree* wt,char* name,char* hash,int mode)`: ajoute un fichier ou repertoire au `WorkTree` *(s'il n'existe pas deja)*
+- `char* wtts(WorkTree* wt)`: convertit un `WorkTree` en une chaine de caracteres composee des representations des `WorkFile` separees par un saut de ligne *(caractere `'\n'`)*
+- `WorkTree* stwt(char* ch)`: convertit une chaine de caracteres representant un `WorkTree` en un `WorkTree`
+- `int wttf(WorkTree* wt,char* file)`: ecrit dans le fichier `file` la chaine de caracteres representant un `WorkTree`
+- `WorkTree* ftwt(char* file)`: construit un `WorkTree` a partir d'un fichier qui contient sa representation en chaine de caracteres

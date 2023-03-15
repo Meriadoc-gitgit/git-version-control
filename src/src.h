@@ -18,7 +18,7 @@ typedef struct {
   int n;
 } WorkTree;
 
-/* Part 1*/
+/* Part 1 - Manipulation de Cell et List */
 List* initList();
 Cell* buildCell(char* ch);
 void insertFirst(List* L,Cell* C);
@@ -30,5 +30,21 @@ List* stol(char* s);
 void ltof(List* L,char* path);
 List* ftol(char* path);
 
-/* Part 2*/
+
+
+/* Part 2 */
+/* MANIPULATION DE WORKFILE */
+WorkFile* createWorkFile(char* name);
+char* wfts(WorkFile* wf);
+WorkFile* stwf(char* ch);
+
+/* MANIPULATION DE WORKTREE */
+WorkTree* initWorkTree();
+int inWorkTree(WorkTree* wt,char* name);
+int appendWorkTree(WorkTree* wt,char* name,char* hash,int mode);
+char* wtts(WorkTree* wt);
+WorkTree* stwt(char* ch);
+int wttf(WorkTree* wt,char* file);
+WorkTree* ftwt(char* file);
+
 #endif
