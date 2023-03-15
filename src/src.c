@@ -133,3 +133,12 @@ List* ftol(char* path) {
 
 /* Part 2 */
 /* MANIPULATION DE WORKFILE */
+WorkFile* createWorkFile(char* name) {
+  WorkFile* wt = (WorkFile*)malloc(sizeof(WorkFile));
+  wt->name = strdup(name);
+  wt->hash = NULL; wt->mode = 0;
+  return wt;
+}
+char* wfts(WorkFile* wf) {
+  
+}
