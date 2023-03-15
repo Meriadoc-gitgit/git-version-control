@@ -2,48 +2,29 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <errno.h>
 #include <dirent.h>
 #include <limits.h>
+#include <sys/stat.h>
 
 #include "src.h"
 
+/* Part 1 */
 int hashFile(char* src, char *dst) {
   char res[200];
   sprintf(res,"sha256sum %s > %s",src,dst);
   return system(res);
 }
 
-
 char* sha256file(char* file) {
-  char* src = strdup(file);
-  int filedes = -1, count = 0;
-  
-  errno = 0;
-
-  filedes = mkstemp(file);
-  unlink(file);
-  
-  if (filedes<1) {
-    printf("Echec de creation de file temporaire [%s]\n",strerror(errno));
-    return NULL;
-  } 
-  else printf("File temporaire [%s] cree\n",file);
-
-  errno = 0;
-
-  hashFile(src, file);
-  /* Read the data */
-  char buffer[256];
-  FILE* f = fopen(file,"r");
-  if (!f) {
-    printf("Erreur lors de l'ouverture\n");
-    return NULL;
-  }
-  char *res = fgets(buffer, 256, f);
+  static char template[] ="/tmp/XXXXXX";
+  char *fname = strdup(template);
+  mkstemp(fname);
+  hashFile(file,fname);
+  FILE *f = fopen(fname,"r");
+  char *buffer = (char*)malloc(256*sizeof(char));
+  fgets(buffer,256,f);
   fclose(f);
-
-  return res;
+  return buffer;
 }
 List* listdir(char* root_dir) {
   List* L = initList();
@@ -70,7 +51,7 @@ void cp(char* to, char* from) {
     return;
   }
   char res[200];
-  sprintf(res,"%s > %s",from,to);
+  sprintf(res,"cat %s > %s",from,to);
   system(res);
   return;
 }
@@ -82,15 +63,34 @@ char* hashToPath(char* hash) {
   for (int i=2;i<(int)strlen(hash);i++)
     res[i+1] = hash[i];
 
-  char* str = res,*r=strdup(res);
-  //strcpy(r,str);
+  char* str = res,*r;
+  strcpy(r,str);
   return r;
 }
-/* Check later */
 void blobFile(char* file) {
-  system("mkdir INSTANT");
-  char res[200];
-  sprintf(res,"%s > file.tmp",file);
-  system(res);
+  if (!file_exists(file)) {
+    printf("Fichier demande n'existe pas\n");
+    return;
+  }
+  char *path = hashToPath(sha256file(file));
+  char *dir = (char*)malloc(2*sizeof(char));
+  strncpy(dir,path,2);
+  char command[200];
+  sprintf(command,"mkdir %s",dir);
+  system(command);
+  cp(path,file);
   return;
+}
+
+
+
+/* Part 2 */
+int getChmod(const char* path) {
+  struct stat ret;
+   
+  if (stat(path,&ret)==-1) return -1;
+
+  return (ret.st_mode & S_IRUSR)|(ret.st_mode & S_IWUSR)|(ret.st_mode & S_IXUSR)| /*owner*/
+    (ret.st_mode & S_IRGRP)|(ret.st_mode & S_IWGRP)|(ret.st_mode & S_IXGRP)| /*group*/
+    (ret.st_mode & S_IROTH)|(ret.st_mode & S_IWOTH)|(ret.st_mode & S_IXOTH); /*other*/
 }

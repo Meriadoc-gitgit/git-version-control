@@ -1,7 +1,0 @@
-BASH
-Bash_command.png
-README.MD
-SUBJECT
-TP5
-fichiers-stocke.png
-list.txt

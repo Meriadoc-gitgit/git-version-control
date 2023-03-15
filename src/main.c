@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "cell.h"
 #include "src.h"
+#include "bash.h"
 
 int main(void) {
 
@@ -37,15 +37,13 @@ int main(void) {
   //printf("C2: %s\n",ctos(C2));
 
   /* FILE */
-  ltof(L1,"ltof.txt");
+  ltof(L2,"ltof.txt");
 
   /* Free */
   free(C->data);
   free(L); free(C);
 
-  
-
-  //src
-  printf("sha:%s\n", sha256file1("src.cXXXXXX"));
+  // src
+  //printf("hash: %s\n",sha256file("src.txt-XXXXXX"));
   return 0;
 }

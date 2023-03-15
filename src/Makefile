@@ -7,14 +7,14 @@ PROGRAMS = test
 
 all: $(PROGRAMS)
 
-test: cell.o src.o main.o
+test: bash.o src.o main.o
 	$(CC) -o $@ $(CFLAGS) $^
-
-cell.o: cell.c 
-	gcc $(CFLAGS) -c cell.c
 
 src.o: src.c 
 	gcc $(CFLAGS) -c src.c
+
+bash.o: bash.c 
+	gcc $(CFLAGS) -c bash.c
 
 main.o: main.c 
 	gcc $(CFLAGS) -c main.c 

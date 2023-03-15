@@ -1,5 +1,5 @@
-#ifndef _CELL
-#define _CELL
+#ifndef _SRC
+#define _SRC
 
 typedef struct cell { 
   char* data;
@@ -7,6 +7,18 @@ typedef struct cell {
 } Cell;
 typedef Cell* List;
 
+typedef struct {
+  char* name;
+  char* hash;
+  int mode;
+} WorkFile;
+typedef struct {
+  WorkFile* tab;
+  int size;
+  int n;
+} WorkTree;
+
+/* Part 1*/
 List* initList();
 Cell* buildCell(char* ch);
 void insertFirst(List* L,Cell* C);
@@ -18,4 +30,5 @@ List* stol(char* s);
 void ltof(List* L,char* path);
 List* ftol(char* path);
 
+/* Part 2*/
 #endif

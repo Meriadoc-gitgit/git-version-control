@@ -1,14 +1,16 @@
 # Projet: Réalisation d'un logiciel de gestion de versions
 > **Aim:** Realisation d'un *outil de suivi et de versionnage de code* (**`git`**)
-## Cadre du projet
+# Cadre du projet
 Un logiciel de **gestion de versions** est un outil permettant le stockage, le suivi et la gestion de plusieurs versions d'un projet *(ou d'un ensembles de fichiers)*. 
 - offrent un **acces aise a l'historique de toutes les modifications effectuees** sur les fichiers + permettent notamment de *recuperer une version anterieure en cas de probleme*. 
 - tres utiles dans le cadre de travail collaboratif, permettant de *fusionner de maniere intelligente differentes versions d'un meme projet*. 
 > **Objectif:** etudier le fonctionnement d'un logiciel de gestion de versions, *en detaillant* differentes structures de donnees impliquees dans sa mise en oeuvre. 
-## Vers la creation d'enregistrements instantanes
+# Vers la creation d'enregistrements instantanes
+>**Pt1:** Enregistrement d'un instantanee d'**un** fichier
+
 Sous `git`, tous les objets, *qu'ils soient relatifs aux fichiers versionnes ou a leurs meta-donnees*, sont enregistres sous forme de fichiers. <br>
 Ces fichiers ont pour particularite de pouvoir deriver le chemin ou ils sont stockes a partir de leur contenu. 
-<p align="center"><img src="fichiers-stocke.png"></p>
+![fichiers-stocke.png](img/fichiers-stocke.png)
 
 #### Note:
 - Ici, la fonction de hachage `SHA256` est appliquee sur le contenu du fichier
@@ -49,7 +51,7 @@ Les donnees sur le disque sont stockees dans des fichiers, dont des structures d
 Linux met en place des flux globaux permettant a des commandes appelees, de dialoguer avec le programme appelant en ecrivant ou en lisant depuis ces flux.
 
 #### Exemple de Bash de TP5
-<p align="center"><img src="Bash_command.png"></p>
+![Bash_command.png](img/Bash_command.png)
 
 ```shell
 ls > file.tmp
@@ -115,9 +117,8 @@ if (dp!=NULL) {
   while ((ep=readdir(dp))!=NULL) printf("\%s \n",ep->d_name);
 }
 ```
-***
-## Source code pack
-### Global usage
+# Source code pack
+## Global usage
 1. Fonction `int hashFile(char* source, char* dest)`: etant donne le chemin de 2 fichiers
     - calcule le hash du contenu du premier fichier
     - l'ecrit dans le deuxieme fichier
@@ -130,7 +131,7 @@ if (dp!=NULL) {
       - 1 fichier temporaire *(supprime apres usage!)*
     - renvoie 1 chaine de caracteres contenant *le hash du fichier donne en parametre*
 
-### Implementation d'une **liste de chaines de caracteres**
+## Implementation d'une **liste de chaines de caracteres**
 ```C
 typedef struct cell {
   char* data;
@@ -138,7 +139,7 @@ typedef struct cell {
 } Cell;
 typedef Cell* List;
 ```
-#### Manipulating function
+### Manipulating function
 1. `List* initList()`: initialise une liste vide <br>
 *(ne plus initialiser de liste autrement que par cette fonction)*
 2. `Cell* buildCell(char* ch)`: allouer + retourner une cellule de la liste
@@ -152,8 +153,7 @@ typedef Cell* List;
 7. `List stol(char* s)`: transformer une chaine de caracteres representant une liste en une liste chainee
 8. `void ltof(List* L, char* path)`: ecrire une liste dans un fichier <br>
 `List* ftol(chr* path)`: lire une liste enregistree dans un fichier
-***
-### Gestion de fichier sous `git`
+## Gestion de fichier sous `git`
 > **Objectif:** produire une fonction qui enregistre un instantane *(realise une sauvegarde)* d'un fichier dont le nom est donne en parametre
 1. `List* listdir(char* root_dir)`: 
     - prend en parametre une adresse
@@ -164,3 +164,41 @@ typedef Cell* List;
 4. `char* hashToPath(char* hash)`: retourne le chemin d'un fichier a partir de son hash
 5. `void blobFile(char* file)`: enregistre un instantane *(realise un sauvegarde)* du fichier donnee en entree <br>
 **Note:** en utilisant `mkdir`
+
+# Enregistrement de plusieurs instantanes
+>**Pt2:** Enregistrement d'un instantanee de **plusieurs** fichiers et/ou repertoires du projet.
+
+>## Objectif 
+>- pouvoir creer un enregistrement instantane d'un `WorkTree` et de son contenu
+>- *(puis)* permettre la restauration de cet ensemble de fichier
+>
+>*(comme decrit dans ces enregistrements instantanes)*
+
+## Prelimiraire
+```c
+typedef struct {
+  char* name;
+  char* hash;
+  int mode;
+} WorkFile;
+typedef struct {
+  WorkFile* tab;
+  int size;
+  int n;
+} WorkTree;
+```
+Un `WorkFile` represente un fichier ou repertoire dont on souhaite enregistre un instantane.<br>
+Il possede 3 champs: 
+- `name`: nom du fichier ou du repertoire
+- `hash`: hash associe a son contenu, initialise a `NULL`
+- `mode`: les autorisations associes au fichier *(modification, lecture et execution)*, initialise a `0`.
+
+Un `WorkTree` = un tableau de `WorkFile`.
+### Note: Les autorisations
+- associes a un fichier, decrivent qui peut le modifier, le lire et l'executer
+- sont representees par un nombre de 3 digits en octal
+
+  >**Dangereux:** `777` = donne a tout le monde le droit de lire, ecrire et executer le fichier
+#### Fonctions fournie pour manipuler les `Chmod`
+- `getChmod`: recuperer ces autorisations
+- `setChmod`: modifier les autorisations
