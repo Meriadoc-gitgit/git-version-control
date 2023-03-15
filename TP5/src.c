@@ -50,7 +50,7 @@ void cp(char* to, char* from) {
     return;
   }
   char res[200];
-  sprintf(res,"%s > %s",from,to);
+  sprintf(res,"cat %s > %s",from,to);
   system(res);
   return;
 }
@@ -67,9 +67,16 @@ char* hashToPath(char* hash) {
   return r;
 }
 void blobFile(char* file) {
-  system("mkdir tmp");
+  if (!file_exists(file)) {
+    printf("Fichier demande n'existe pas\n");
+    return;
+  }
+  char *path = hashToPath(sha256file(file));
+  char *dir = (char*)malloc(2*sizeof(char));
+  strncpy(dir,path,2);
   char command[200];
-  sprintf(command,"cat %s > tmp/%s",file,file);
+  sprintf(command,"mkdir %s",dir);
   system(command);
+  cp(path,file);
   return;
 }
