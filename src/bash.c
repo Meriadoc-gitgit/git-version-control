@@ -26,6 +26,8 @@ char* sha256file(char* file) {
   fclose(f);
   return buffer;
 }
+
+
 List* listdir(char* root_dir) {
   List* L = initList();
   DIR* dp = opendir(root_dir);
@@ -63,13 +65,13 @@ char* hashToPath(char* hash) {
   for (int i=2;i<(int)strlen(hash);i++)
     res[i+1] = hash[i];
 
-  char* str = res,*r;
-  strcpy(r,str);
-  return r;
+  char* str = (char*)malloc(sizeof(char));
+  strcpy(str,res);
+  return str;
 }
 void blobFile(char* file) {
   if (!file_exists(file)) {
-    printf("Fichier demande n'existe pas\n");
+    printf("blobFile: Fichier demande n'existe pas\n");
     return;
   }
   char *path = hashToPath(sha256file(file));
