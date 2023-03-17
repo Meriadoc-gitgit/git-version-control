@@ -67,7 +67,7 @@ List* stol(char* s) {
 
   while (ptr!=NULL) {
     insertFirst(L,buildCell(ptr)); //printf("ptr: %s\n",ptr);
-    ptr = strtok(NULL,delim); printf("ptr: %s\n",ptr);
+    ptr = strtok(NULL,delim); //printf("ptr: %s\n",ptr);
   }
   //printf("stol:ok\n");
   return L;
@@ -178,13 +178,13 @@ char* wtts(WorkTree* wt) {
 WorkTree* stwt(char* ch) {
   char str[(int)strlen(ch)]; sprintf(str,"%s",ch);
   const char* delim = "\n";
-  char* ptr = strtok(str,delim);
+  char* ptr = strtok(str,delim); 
   WorkTree* wt = initWorkTree();
 
   while(ptr!=NULL) {
     WorkFile* wf = stwf(ptr);
     appendWorkTree(wt,wf->name,wf->hash,wf->mode);
-    ptr = strtok(NULL,delim);
+    ptr = strtok(NULL,delim); //printf("ptr:%s\n",ptr);
   }
   return wt;
 }
