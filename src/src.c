@@ -30,13 +30,12 @@ char* ltos(List* L) {
     printf("Liste *L est NULL\n");
     return NULL;
   }
-  char command[MAX_INPUT];
+  char command[MAX_INPUT] = "";
   Cell* C = *L;
-  char* rst = (char*)malloc(sizeof(char)), *tmp; int temp = 0;
+  char* rst = (char*)malloc(sizeof(char)), *tmp;
   while(C) {
     tmp = ctos(C);
-    if (temp==0) sprintf(command,"%s|",tmp);
-    temp++; sprintf(command,"%s%s|",command,tmp);
+    sprintf(command,"%s%s|",command,tmp);
     C = C->next;
   }
   strcpy(rst,command);
@@ -61,17 +60,14 @@ Cell* searchList(List* L,char* str) {
   return NULL;
 }
 List* stol(char* s) {
-  char str[(int)strlen(s)];
-  for(int i=0;i<(int)strlen(s);i++)
-    str[i] = s[i];
-  int init_size = (int)strlen(str);
+  char str[(int)strlen(s)]; sprintf(str,"%s",s);
   const char* delim = "|";
-  char* ptr = strtok(str,delim);
+  char* ptr = strtok(str,delim); //printf("ptr0: %s\n",ptr);
   List* L = initList();
 
   while (ptr!=NULL) {
     insertFirst(L,buildCell(ptr)); //printf("ptr: %s\n",ptr);
-    ptr = strtok(NULL,delim);
+    ptr = strtok(NULL,delim); printf("ptr: %s\n",ptr);
   }
   //printf("stol:ok\n");
   return L;
@@ -135,4 +131,60 @@ char* wfts(WorkFile* wf) {
   char* res = (char*)malloc(sizeof(char));
   strcpy(res,command);
   return res;
+}
+WorkFile* stwf(char* ch) {
+  char str[(int)strlen(ch)]; sprintf(str,"%s",ch);
+  const char* delim = "\t";
+  char* ptr = strtok(str,delim);
+  WorkFile* wf = createWorkFile(ptr);
+  ptr = strtok(NULL,delim); wf->hash = strdup(ptr);
+  ptr = strtok(NULL,delim); wf->mode = atoi(ptr);
+  return wf;
+}
+WorkTree* initWorkTree() {
+  WorkTree* wt = (WorkTree*)malloc(sizeof(WorkTree));
+  wt->size = MAX_INPUT; wt->n = 0;
+  wt->tab = (WorkFile*)malloc(wt->size*sizeof(WorkFile));
+  return wt;
+}
+int inWorkTree(WorkTree* wt,char* name) {
+  if (!wt) {
+    printf("inWorkTree: wt NULL\n"); return -1;
+  }
+  for (int i=0;i<wt->n;i++) {
+    if (strcmp(wt->tab->name,name)==0) return i;
+  }
+  return -1;
+}
+int appendWorkTree(WorkTree* wt,char* name,char* hash,int mode) {
+  if (inWorkTree(wt,name)==-1 && wt->n<wt->size) {
+    WorkFile* wf = createWorkFile(name);
+    wf->hash = strdup(hash); wf->mode = mode;
+    wt->tab[wt->n] = *wf; wt->n++;
+    return 1;
+  }
+  return 0;
+}
+char* wtts(WorkTree* wt) {
+  char command[MAX_INPUT]; char* w;
+  for (int i=0;i<wt->n;i++) {
+    w = wfts(&(wt->tab[i]));
+    sprintf(command,"%s%s\n",command,w);
+  }
+  char* res = (char*)malloc(sizeof(char));
+  strcpy(res,command);
+  return res;
+}
+WorkTree* stwt(char* ch) {
+  char str[(int)strlen(ch)]; sprintf(str,"%s",ch);
+  const char* delim = "\n";
+  char* ptr = strtok(str,delim);
+  WorkTree* wt = initWorkTree();
+
+  while(ptr!=NULL) {
+    WorkFile* wf = stwf(ptr);
+    appendWorkTree(wt,wf->name,wf->hash,wf->mode);
+    ptr = strtok(NULL,delim);
+  }
+  return wt;
 }
