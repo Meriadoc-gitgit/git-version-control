@@ -100,6 +100,11 @@ void setMode(int mode,char* path) {
   system(buff);
 }
 
+
 char* blobWorkTree(WorkTree* wt) {
-  
+  char* save = wtts(wt);
+  static char template[] ="/tmp/XXXXXX";
+  char *fname = strdup(template);
+  mkstemp(fname); fprintf(fname,"%s",save);
+  return hashToPath(sha256file(fname));
 }

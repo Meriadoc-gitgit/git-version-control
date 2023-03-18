@@ -218,3 +218,8 @@ Un `WorkTree` = un tableau de `WorkFile`.
 - `WorkTree* stwt(char* ch)`: convertit une chaine de caracteres representant un `WorkTree` en un `WorkTree`
 - `int wttf(WorkTree* wt,char* file)`: ecrit dans le fichier `file` la chaine de caracteres representant un `WorkTree`
 - `WorkTree* ftwt(char* file)`: construit un `WorkTree` a partir d'un fichier qui contient sa representation en chaine de caracteres
+
+## Enregistrement et restauration
+Realiser un enregistrement instantate d'un WorkTree = creer un enregistrement instantane du fichier qui le represente. 
+
+Pour pouvoir le distinguer d'un fichier classique, on ajoute l'extension `.t` au nom de son enregistrement instantane. 

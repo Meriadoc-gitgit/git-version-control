@@ -205,6 +205,12 @@ WorkTree* ftwt(char* file) {
     printf("ftwt: Erreur lors de l'ouverture\n");
     return NULL;
   }
-  char buffer[MAX_INPUT]; fgets(buffer,MAX_INPUT,f);
-  return stwt(buffer);
+  WorkTree* wt = initWorkTree();
+  char buffer[256]; char* res = fgets(buffer,256,f); char name[26], hash[256]; int mode;
+  while (res!=NULL) {
+    sscanf(buffer,"%s\t%s\t%d",name,hash,&mode);
+    appendWorkTree(wt,name,hash,mode);
+    res = fgets(buffer,256,f);
+  }
+  return wt;
 }
