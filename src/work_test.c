@@ -45,5 +45,6 @@ int main(void) {
   WorkTree* wt4 = ftwt("src.txt");
   printf("%s\n",wtts(wt4));
   
+  printf("%d\n",getChmod("src.c"));
   return 0;
 }

@@ -80,7 +80,6 @@ void blobFile(char* file) {
   char command[200];
   sprintf(command,"mkdir %s",dir);
   system(command);
-  sprintf(path,"%s.t",path);
   cp(path,file);
   return;
 }
@@ -105,8 +104,11 @@ char* blobWorkTree(WorkTree* wt) {
   char* save = wtts(wt);
   static char template[] ="/tmp/XXXXXX";
   char *fname = strdup(template);
-  mkstemp(fname); fprintf(fname,"%s",save);
+  mkstemp(fname);
 
+  FILE* f = fopen(fname,"w");
+  fprintf(f,"%s",save);
+  fclose(f);
   char *path = hashToPath(sha256file(fname));
   char *dir = (char*)malloc(2*sizeof(char));
   strncpy(dir,path,2);
@@ -131,12 +133,24 @@ char* saveWorkTree(WorkTree* wt,char* path) {
       }
       char* hash = blobWorkTree(&newWT);
       WF.hash = hash;
-      WF.mode = getChmod(WF.name);
+      WF.mode = getChmod(path);
     } else {
       blobFile(WF.name);
       WF.hash = sha256file(WF.name);
-      WF.mode = getChmod(WF.name);
+      WF.mode = getChmod(path);
     }
   }
   return blobWorkTree(wt);
+}
+void restoreWorkTree(WorkTree* wt,char* path) {
+  WorkFile WF;
+  for (int i=0;i<wt->n;i++) {
+    WF = wt->tab[i];
+    char* hash = WF.hash;
+    if (strcmp(strstr(hash,".t"),".t")==0) {
+
+    } else {
+      cp(path,WF.name);
+    }
+  }
 }
