@@ -1,13 +1,2 @@
-Makefile
-bash.c
-bash.h
-bash.o
-dst.txt
-ltof.txt
-main.c
-main.o
-src.c
-src.h
-src.o
-src.txt
-test
+src.c	oadsuifghipug	705
+src.txt	oadsuifghipug	705

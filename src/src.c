@@ -152,7 +152,9 @@ int inWorkTree(WorkTree* wt,char* name) {
     printf("inWorkTree: wt NULL\n"); return -1;
   }
   for (int i=0;i<wt->n;i++) {
-    if (strcmp(wt->tab->name,name)==0) return i;
+    if (strcmp(wt->tab->name,name)==0) {
+      printf("%s\t%s\n",wt->tab->name,name); return i;
+    }
   }
   return -1;
 }
@@ -161,9 +163,9 @@ int appendWorkTree(WorkTree* wt,char* name,char* hash,int mode) {
     WorkFile* wf = createWorkFile(name);
     wf->hash = strdup(hash); wf->mode = mode;
     wt->tab[wt->n] = *wf; wt->n++;
-    return 1;
+    return 0;
   }
-  return 0;
+  return -1;
 }
 char* wtts(WorkTree* wt) {
   char command[MAX_INPUT]; char* w;
@@ -175,16 +177,34 @@ char* wtts(WorkTree* wt) {
   strcpy(res,command);
   return res;
 }
+/* ERROR */
 WorkTree* stwt(char* ch) {
   char str[(int)strlen(ch)]; sprintf(str,"%s",ch);
   const char* delim = "\n";
   char* ptr = strtok(str,delim); 
-  WorkTree* wt = initWorkTree();
+  WorkTree* wt = initWorkTree(); WorkFile* wf;
 
   while(ptr!=NULL) {
-    WorkFile* wf = stwf(ptr);
+    wf = stwf(ptr);
     appendWorkTree(wt,wf->name,wf->hash,wf->mode);
-    ptr = strtok(NULL,delim); //printf("ptr:%s\n",ptr);
+    ptr = strtok(NULL,delim);
   }
   return wt;
+}
+int wttf(WorkTree* wt,char* file) {
+  FILE* f = fopen(file,"w");
+  if (!f) {
+    printf("wttf: Erreur lors de l'ouverture de fichier\n"); return -1;
+  }
+  fprintf(f,"%s",wtts(wt));
+  fclose(f); return 0;
+}
+WorkTree* ftwt(char* file) {
+  FILE* f = fopen(file,"r");
+  if (!f) {
+    printf("ftwt: Erreur lors de l'ouverture\n");
+    return NULL;
+  }
+  char buffer[MAX_INPUT]; fgets(buffer,MAX_INPUT,f);
+  return stwt(buffer);
 }
