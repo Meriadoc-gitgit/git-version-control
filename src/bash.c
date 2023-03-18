@@ -80,6 +80,7 @@ void blobFile(char* file) {
   char command[200];
   sprintf(command,"mkdir %s",dir);
   system(command);
+  sprintf(path,"%s.t",path);
   cp(path,file);
   return;
 }
@@ -100,11 +101,42 @@ void setMode(int mode,char* path) {
   system(buff);
 }
 
-
 char* blobWorkTree(WorkTree* wt) {
   char* save = wtts(wt);
   static char template[] ="/tmp/XXXXXX";
   char *fname = strdup(template);
   mkstemp(fname); fprintf(fname,"%s",save);
-  return hashToPath(sha256file(fname));
+
+  char *path = hashToPath(sha256file(fname));
+  char *dir = (char*)malloc(2*sizeof(char));
+  strncpy(dir,path,2);
+  char command[200];
+  sprintf(command,"mkdir %s",dir);
+  system(command);
+  sprintf(path,"%s.t",path);
+  cp(path,fname);
+  return sha256file(fname);
+}
+char* saveWorkTree(WorkTree* wt,char* path) {
+  WorkFile WF;
+  for (int i=0;i<wt->n;i++) {
+    WF = wt->tab[i];
+    if (listdir(WF.name)) {
+      List* L = listdir(WF.name);
+      WorkTree newWT; 
+      while(*L) {
+        WorkFile* wf = createWorkFile((*L)->data);
+        appendWorkTree(&newWT,wf->name,wf->hash,wf->mode);
+        *L = (*L)->next;
+      }
+      char* hash = blobWorkTree(&newWT);
+      WF.hash = hash;
+      WF.mode = getChmod(WF.name);
+    } else {
+      blobFile(WF.name);
+      WF.hash = sha256file(WF.name);
+      WF.mode = getChmod(WF.name);
+    }
+  }
+  return blobWorkTree(wt);
 }
