@@ -50,9 +50,6 @@ Les donnees sur le disque sont stockees dans des fichiers, dont des structures d
 
 Linux met en place des flux globaux permettant a des commandes appelees, de dialoguer avec le programme appelant en ecrivant ou en lisant depuis ces flux.
 
-#### Exemple de Bash de TP5
-![Bash_command.png](img/Bash_command.png)
-
 ```shell
 ls > file.tmp
 cat file.tmp
