@@ -119,7 +119,7 @@ char* blobWorkTree(WorkTree* wt) {
   return sha256file(fname);
 }
 char* saveWorkTree(WorkTree* wt,char* path) {
-  WorkFile WF;
+  WorkFile WF; // creer un autre path concatene avec nom
   for (int i=0;i<wt->n;i++) {
     WF = wt->tab[i];
     if (listdir(WF.name)) {

@@ -110,6 +110,10 @@ List* ftol(char* path) {
   fclose(f);
   return L;
 }
+void libererWorkFile(WorkFile* wf) {
+  free(wf->name); free(wf->hash); free(wf);
+  return;
+}
 
 
 
@@ -213,4 +217,11 @@ WorkTree* ftwt(char* file) {
     res = fgets(buffer,256,f);
   }
   return wt;
+}
+void libererWorkTree(WorkTree* wt) {
+  for(int i=0;i<wt->n;i++) 
+    libererWorkFile(&(wt->tab[i]));
+
+  free(wt);
+  return;
 }

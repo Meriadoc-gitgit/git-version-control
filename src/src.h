@@ -37,6 +37,7 @@ List* ftol(char* path);
 WorkFile* createWorkFile(char* name);
 char* wfts(WorkFile* wf);
 WorkFile* stwf(char* ch);
+void libererWorkFile(WorkFile* wf);
 
 /* MANIPULATION DE WORKTREE */
 WorkTree* initWorkTree();
@@ -46,5 +47,6 @@ char* wtts(WorkTree* wt);
 WorkTree* stwt(char* ch);
 int wttf(WorkTree* wt,char* file);
 WorkTree* ftwt(char* file);
+void libererWorkTree(WorkTree* wt);
 
 #endif

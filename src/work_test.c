@@ -43,8 +43,15 @@ int main(void) {
   /* FILE */
   wttf(wt1,"src.txt");
   WorkTree* wt4 = ftwt("src.txt");
-  printf("%s\n",wtts(wt4));
+  printf("wt4: %s\n",wtts(wt4));
   
   printf("%d\n",getChmod("src.c"));
+
+  /* Liberation */
+  libererWorkFile(wf1);
+  libererWorkFile(wf2);
+  libererWorkTree(wt1);
+  libererWorkTree(wt3);
+
   return 0;
 }
