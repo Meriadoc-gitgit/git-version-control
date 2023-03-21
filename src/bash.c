@@ -127,13 +127,12 @@ char* saveWorkTree(WorkTree* wt,char* path) {
       WorkTree newWT; 
       while(*L) {
         WorkFile* wf = createWorkFile((*L)->data);
-        sprintf(dir,"%s/%s",dir,wf->name);
         appendWorkTree(&newWT,wf->name,wf->hash,wf->mode);
         *L = (*L)->next;
       }
       char* hash = blobWorkTree(&newWT);
       WF.hash = hash;
-      WF.mode = getChmod(path);
+      WF.mode = getChmod(dir);
     } else {
       blobFile(WF.name);
       WF.hash = sha256file(WF.name);
