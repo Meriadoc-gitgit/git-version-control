@@ -119,14 +119,15 @@ char* blobWorkTree(WorkTree* wt) {
   return sha256file(fname);
 }
 char* saveWorkTree(WorkTree* wt,char* path) {
-  WorkFile WF; // creer un autre path concatene avec nom
+  WorkFile WF; char dir[26]; // creer un autre path concatene avec nom
   for (int i=0;i<wt->n;i++) {
-    WF = wt->tab[i];
+    WF = wt->tab[i]; sprintf(dir,"%s/%s",path,WF.name);
     if (listdir(WF.name)) {
       List* L = listdir(WF.name);
       WorkTree newWT; 
       while(*L) {
         WorkFile* wf = createWorkFile((*L)->data);
+        sprintf(dir,"%s/%s",dir,wf->name);
         appendWorkTree(&newWT,wf->name,wf->hash,wf->mode);
         *L = (*L)->next;
       }
@@ -136,7 +137,7 @@ char* saveWorkTree(WorkTree* wt,char* path) {
     } else {
       blobFile(WF.name);
       WF.hash = sha256file(WF.name);
-      WF.mode = getChmod(path);
+      WF.mode = getChmod(dir);
     }
   }
   return blobWorkTree(wt);
