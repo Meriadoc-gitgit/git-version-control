@@ -43,22 +43,22 @@ int main(void) {
   //printf("wt2.1: %s\n",wfts(&(wt2->tab[0])));
   //printf("n of wt2: %d\n",wt2->n);
 
-
   wttf(wt1,"src.txt");
   WorkTree* wt4 = ftwt("src.txt");
   printf("%s\n",wtts(wt4));
 
   printf("%d\n",getChmod("src.c")); 
 
+  WorkFile* wf5 = createWorkFile("work_test.o");
 
   /*LIBERATION*/
 
-  //libererWorkFile(wf1);
+  libererWorkFile(wf5);
   //libererWorkFile(wf2);
   //libererWorkFile(work);
-  libererWorkTree(&wt1);
-  libererWorkTree(&wt2);
-  libererWorkTree(&wt3);
+  //libererWorkTree(&wt1);
+  //libererWorkTree(&wt2);
+  //libererWorkTree(&wt3);
   //liberer_WT(wt4);
 
   return 0;
