@@ -145,6 +145,8 @@ WorkFile* stwf(char* ch) {
   ptr = strtok(NULL,delim); wf->mode = atoi(ptr);
   return wf;
 }
+
+
 WorkTree* initWorkTree() {
   WorkTree* wt = (WorkTree*)malloc(sizeof(WorkTree));
   wt->size = MAX_INPUT; wt->n = 0;
@@ -164,22 +166,23 @@ int inWorkTree(WorkTree* wt,char* name) {
 }
 int appendWorkTree(WorkTree* wt,char* name,char* hash,int mode) {
   if (inWorkTree(wt,name)==-1 && wt->n<wt->size) {
-    WorkFile* wf = createWorkFile(name);
-    wf->hash = strdup(hash); wf->mode = mode;
-    wt->tab[wt->n] = *wf; wt->n++;
+    wt->tab[wt->n].name = strdup(name);
+    wt->tab[wt->n].hash = strdup(hash);
+    wt->tab[wt->n].mode = mode;
+    wt->n++;
     return 0;
   }
   return -1;
 }
 char* wtts(WorkTree* wt) {
-  char command[MAX_INPUT]; char* w;
+  if (wt->n==0) return "wtts: WorkTree vide\n";
+  char *command = (char*)malloc(sizeof(MAX_INPUT)+(wt->n));
+  char* w = NULL;
   for (int i=0;i<wt->n;i++) {
     w = wfts(&(wt->tab[i]));
-    sprintf(command,"%s%s\n",command,w);
+    strcat(command,w); //strcat(command,"\n");
   }
-  char* res = (char*)malloc(sizeof(char));
-  strcpy(res,command);
-  return res;
+  return command;
 }
 /* ERROR */
 WorkTree* stwt(char* ch) {
