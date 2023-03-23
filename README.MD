@@ -215,8 +215,63 @@ Un `WorkTree` = un tableau de `WorkFile`.
 - `WorkTree* stwt(char* ch)`: convertit une chaine de caracteres representant un `WorkTree` en un `WorkTree`
 - `int wttf(WorkTree* wt,char* file)`: ecrit dans le fichier `file` la chaine de caracteres representant un `WorkTree`
 - `WorkTree* ftwt(char* file)`: construit un `WorkTree` a partir d'un fichier qui contient sa representation en chaine de caracteres
-
+***
 ## Enregistrement et restauration
+### Preliminary
 Realiser un enregistrement instantate d'un WorkTree = creer un enregistrement instantane du fichier qui le represente. 
 
 Pour pouvoir le distinguer d'un fichier classique, on ajoute l'extension `.t` au nom de son enregistrement instantane. 
+
+Example: 
+- hash du fichier representant le WorkTree: `dsfsd245azd`
+- l'enregistrement instantane est dans: `ds/fsd245azd.t`
+#### Fonction
+```c
+char* blocWorkTree(WorkTree* wt);
+```
+#### Algorithm
+- cree un fichier temporaire representant le `WorkTree` 
+- *ensuite,* creer l'enregistrement instantane du `WorkTree` *avec l'extension `.t`*
+
+**Retour:** hash du fichier temporaire
+***
+### Sauvegarder un `WorkTree`
+#### Fonction
+```c
+char* saveWorkTree(WorkTree* wt,char* path);
+```
+#### Mission
+Etant donne un `WorkFile` *(fichier ou repertoire!)* dont le chemin est donne en parametre: 
+- cree un enregistrement instantane de tout son contenu *(de maniere recursive)*
+- *puis* de lui meme
+
+#### Algorithme
+La fonction parcourt le tableau de `WorkFile` de ` WorkTree wt`, et pour chaque `WorkFile WF`: 
+- Si `WF` = fichier: 
+  - `blobFile` pour creer un enregistrement instantane de ce fichier
+  - recupere le hash du fichier et son mode `getChmod` pour le sauvegarder dans `WF`
+- Sinon, realiser un appel recursif sur ce repertoire
+  - creer un nouveau `WorkTree newWT` *(representant tout le contenu de ce repertoire: `listdir`)*
+  - realiser un appel recursif sur `newWT`
+  - *puis,* recuperer son hash et son mode pour le sauvegarder dans `WF`
+
+*** 
+### Restaurer un `WorkTree`
+#### Fonction
+```c
+void restoreWorkTree(WorkTree* wt, char* path);
+```
+#### Mission
+Recreer l'arborescence des fichiers comme decrit par ses enregistrements instantanes. 
+#### Algorithm
+La fonction parcourt le tableau de `wt`, en realisant pour chacun de ses `WorkFile WF` le traitement suivant: 
+- trouver l'enregistrement instantane correspondant au hash de `WF`
+- Si l'enregistrement ne possede pas de `.t`: fichier
+  - creer une copie de l'enregistrement a l'endroit indique par `path`
+  - lui donner le nom et les autorisations correspondant aux champs `name` et `mode`
+- Sinon, 
+  - creer le `WorkTree` associe
+  - modifier `path`: ajouter ce repertoire a la fin
+  - faire un appel recursif
+
+> **Note:** pensez a sauvegarder votre code dans un autre repertoire avant de tester cette fonction, au risque de supprimer tout le projet !
