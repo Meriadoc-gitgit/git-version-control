@@ -219,11 +219,13 @@ WorkTree* ftwt(char* file) {
     appendWorkTree(wt,name,hash,mode);
     res = fgets(buffer,256,f);
   }
+  fclose(f);
   return wt;
 }
-void libererWorkTree(WorkTree** wt) {
-  for(int i=0;i<(*wt)->n;i++) 
-    libererWorkFile(&(*wt)->tab[i]);
+void libererWorkTree(WorkTree* wt) {
+  if (wt->n==0) return;
+  for(int i=0;i<wt->n;i++) 
+    libererWorkFile(&wt->tab[i]);
 
   free(wt);
   return;

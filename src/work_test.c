@@ -38,16 +38,17 @@ int main(void) {
   printf("wt1:\n%s\n",wtts(wt1));
   printf("wt2:\n%s\n",wtts(wt2));
   printf("wt3:\n%s\n",wtts(wt3));
-  printf("FIN AFFICHAGE\n");
 
   //printf("wt2.1: %s\n",wfts(&(wt2->tab[0])));
   //printf("n of wt2: %d\n",wt2->n);
 
   wttf(wt1,"src.txt");
   WorkTree* wt4 = ftwt("src.txt");
-  printf("%s\n",wtts(wt4));
+  printf("wt4:\n%s\n",wtts(wt4));
 
-  printf("%d\n",getChmod("src.c")); 
+  printf("FIN AFFICHAGE\n");
+
+  printf("chmod de [src.c]: %d\n",getChmod("src.c")); 
 
   WorkFile* wf5 = createWorkFile("work_test.o");
 
@@ -59,7 +60,7 @@ int main(void) {
   //libererWorkTree(&wt1);
   //libererWorkTree(&wt2);
   //libererWorkTree(&wt3);
-  //liberer_WT(wt4);
+  //libererWorkTree(wt4);
 
   return 0;
 }
