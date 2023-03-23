@@ -47,6 +47,6 @@ char* wtts(WorkTree* wt);
 WorkTree* stwt(char* ch);
 int wttf(WorkTree* wt,char* file);
 WorkTree* ftwt(char* file);
-void libererWorkTree(WorkTree* wt);
+void libererWorkTree(WorkTree** wt);
 
 #endif

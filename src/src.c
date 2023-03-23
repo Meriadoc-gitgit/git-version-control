@@ -176,11 +176,11 @@ int appendWorkTree(WorkTree* wt,char* name,char* hash,int mode) {
 }
 char* wtts(WorkTree* wt) {
   if (wt->n==0) return "wtts: WorkTree vide\n";
-  char *command = (char*)malloc(sizeof(MAX_INPUT)+(wt->n));
+  char *command = (char*)malloc(MAX_INPUT);
   char* w = NULL;
   for (int i=0;i<wt->n;i++) {
     w = wfts(&(wt->tab[i]));
-    strcat(command,w); //strcat(command,"\n");
+    strcat(command,w); strcat(command,"\n");
   }
   return command;
 }
@@ -221,9 +221,9 @@ WorkTree* ftwt(char* file) {
   }
   return wt;
 }
-void libererWorkTree(WorkTree* wt) {
-  for(int i=0;i<wt->n;i++) 
-    libererWorkFile(&(wt->tab[i]));
+void libererWorkTree(WorkTree** wt) {
+  for(int i=0;i<(*wt)->n;i++) 
+    libererWorkFile(&(*wt)->tab[i]);
 
   free(wt);
   return;
