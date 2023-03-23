@@ -5,20 +5,38 @@ typedef struct cell {
   char* data;
   struct cell* next;
 } Cell;
+
 typedef Cell* List;
+
 
 typedef struct {
   char* name;
   char* hash;
   int mode;
 } WorkFile;
+
 typedef struct {
   WorkFile* tab;
   int size;
   int n;
 } WorkTree;
 
-/* Part 1 - Manipulation de Cell et List */
+
+typedef struct key_value_pair {
+  char* key;
+  char* value;
+} kvp;
+
+typedef struct hash_table {
+  kvp** T;
+  int n;
+  int size;
+} HashTable;
+
+typedef HashTable Commit;
+
+
+/* Part 1 - MANIPULATION DE CELL ET LIST */
 List* initList();
 Cell* buildCell(char* ch);
 void insertFirst(List* L,Cell* C);
@@ -29,7 +47,6 @@ Cell* searchList(List* L,char* str);
 List* stol(char* s);
 void ltof(List* L,char* path);
 List* ftol(char* path);
-
 
 
 /* Part 2 */
@@ -49,4 +66,29 @@ int wttf(WorkTree* wt,char* file);
 WorkTree* ftwt(char* file);
 void libererWorkTree(WorkTree* wt);
 
+
+/* Part 3 - GESTION DES COMMITS */
+/* FONCTION DE BASE */
+kvp* createKeyVal(char* key,char* val);
+void freeKeyVal(kvp* kv);
+char* kvts(kvp* k);
+kvp* stkv(char* str);
+Commit* initCommit();
+// choix de hash !
+void commitSet(Commit* c,char* key,char* value);
+Commit* createCommit(char* hash);
+char* commitGet(Commit* c,char* key);
+char* cts(Commit* c);
+void ctf(Commit* c,char* file);
+Commit* ftc(char* file);
+
+/* MANIPULATION DES REFERENCES */
+void initRefs();
+void createUpdateRef(char* ref_name,char* hash);
+void deleteRef(char* ref_name);
+char* getRef(char* ref_name);
+
+/* SIMULATION */
+void myGitAdd(char* file_or_folder);
+void myGitCommit(char* branch_name,char* message);
 #endif
