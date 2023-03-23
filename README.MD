@@ -1,12 +1,14 @@
 # Projet: Réalisation d'un logiciel de gestion de versions
-> **Aim:** Realisation d'un *outil de suivi et de versionnage de code* (**`git`**)
+**Aim:** Realisation d'un *outil de suivi et de versionnage de code* (**`git`**)
 # Cadre du projet
 Un logiciel de **gestion de versions** est un outil permettant le stockage, le suivi et la gestion de plusieurs versions d'un projet *(ou d'un ensembles de fichiers)*. 
 - offrent un **acces aise a l'historique de toutes les modifications effectuees** sur les fichiers + permettent notamment de *recuperer une version anterieure en cas de probleme*. 
 - tres utiles dans le cadre de travail collaboratif, permettant de *fusionner de maniere intelligente differentes versions d'un meme projet*. 
-> **Objectif:** etudier le fonctionnement d'un logiciel de gestion de versions, *en detaillant* differentes structures de donnees impliquees dans sa mise en oeuvre. 
-# Vers la creation d'enregistrements instantanes
->**Pt1:** Enregistrement d'un instantanee d'**un** fichier
+
+**Objectif:** etudier le fonctionnement d'un logiciel de gestion de versions, *en detaillant* differentes structures de donnees impliquees dans sa mise en oeuvre. 
+
+# VERS LA CREATION D'ENREGISTREMENTS INSTANTANES
+**Pt1:** Enregistrement d'un instantanee d'**un** fichier
 
 Sous `git`, tous les objets, *qu'ils soient relatifs aux fichiers versionnes ou a leurs meta-donnees*, sont enregistres sous forme de fichiers. <br>
 Ces fichiers ont pour particularite de pouvoir deriver le chemin ou ils sont stockes a partir de leur contenu. 
@@ -151,7 +153,7 @@ typedef Cell* List;
 8. `void ltof(List* L, char* path)`: ecrire une liste dans un fichier <br>
 `List* ftol(chr* path)`: lire une liste enregistree dans un fichier
 ## Gestion de fichier sous `git`
-> **Objectif:** produire une fonction qui enregistre un instantane *(realise une sauvegarde)* d'un fichier dont le nom est donne en parametre
+**Objectif:** produire une fonction qui enregistre un instantane *(realise une sauvegarde)* d'un fichier dont le nom est donne en parametre
 1. `List* listdir(char* root_dir)`: 
     - prend en parametre une adresse
     - renvoie une liste contenant les noms des fichiers et repertoires qui s'y trouvent
@@ -162,14 +164,14 @@ typedef Cell* List;
 5. `void blobFile(char* file)`: enregistre un instantane *(realise un sauvegarde)* du fichier donnee en entree <br>
 **Note:** en utilisant `mkdir`
 
-# Enregistrement de plusieurs instantanes
->**Pt2:** Enregistrement d'un instantanee de **plusieurs** fichiers et/ou repertoires du projet.
+# ENREGISTREMENTS DE PLUSIEURS INSTANTANES
+**Pt2:** Enregistrement d'un instantanee de **plusieurs** fichiers et/ou repertoires du projet.
 
->## Objectif 
->- pouvoir creer un enregistrement instantane d'un `WorkTree` et de son contenu
->- *(puis)* permettre la restauration de cet ensemble de fichier
->
->*(comme decrit dans ces enregistrements instantanes)*
+## Objectif 
+- pouvoir creer un enregistrement instantane d'un `WorkTree` et de son contenu
+- *(puis)* permettre la restauration de cet ensemble de fichier
+
+*(comme decrit dans ces enregistrements instantanes)*
 
 ## Prelimiraire
 ```c
@@ -275,3 +277,6 @@ La fonction parcourt le tableau de `wt`, en realisant pour chacun de ses `WorkFi
   - faire un appel recursif
 
 > **Note:** pensez a sauvegarder votre code dans un autre repertoire avant de tester cette fonction, au risque de supprimer tout le projet !
+
+
+# GESTION DES COMMITS
