@@ -23,5 +23,21 @@ int main(void) {
 
   //blobFile("file_test.txt");
 
+
+
+  char* s1 = "hello";
+  char* s2 = "world";
+  char* s3 = concat(s1,s2);
+  printf("s3: %s\n",s3);
+  s3 = concat(s3,s1);
+  printf("s3.2: %s\n",s3);
+
+
+  printf("chmod du repertoire src dans le projet: %d\n",getChmod("/Users/vuhoangthuyduong/Documents/GitHub/GIT-version-control/src"));
+
+  printf("chmod de ce projet: %d\n",getChmod("/Users/vuhoangthuyduong/Documents/GitHub/GIT-version-control"));
+
+  printf("chmod du fichier src.c dans src dans le projet: %d\n",getChmod("/Users/vuhoangthuyduong/Documents/GitHub/GIT-version-control/src/src.c"));
+
   return 0;
 }

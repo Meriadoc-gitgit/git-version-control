@@ -121,7 +121,7 @@ char* blobWorkTree(WorkTree* wt) {
   return sha256file(fname);
 }
 char* concat(char* s1,char* s2) {
-  char* dir = (char*)malloc(strlen(s1)+strlen(s2)+1);
+  char* dir = (char*)malloc(MAX_INPUT);
   strcat(dir,s1); strcat(dir,"/"); strcat(dir,s2);
   return dir;
 }
