@@ -14,12 +14,12 @@ char* hashToPath(char* hash);
 void blobFile(char* file);
 
 
-
 /* Part 2 - Enregistrement d'un instantanee de plusieurs */
 int getChmod(const char* path);
 void setMode(int mode,char* path);
 
 char* blobWorkTree(WorkTree* wt);
+char* concat(char* s1,char* s2);
 char* saveWorkTree(WorkTree* wt,char* path);
 void restoreWorkTree(WorkTree* wt,char* path);
 

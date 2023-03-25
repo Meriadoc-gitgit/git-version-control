@@ -184,7 +184,6 @@ char* wtts(WorkTree* wt) {
   }
   return command;
 }
-/* ERROR */
 WorkTree* stwt(char* ch) {
   char str[(int)strlen(ch)]; sprintf(str,"%s",ch);
   const char* delim = "\n";
@@ -229,4 +228,48 @@ void libererWorkTree(WorkTree* wt) {
 
   free(wt);
   return;
+}
+
+
+/* Part 3 - GESTION DES COMMITS */
+/* FONCTION DE BASE */
+kvp* createKeyVal(char* key,char* val) {
+  kvp* kv = (kvp*)malloc(sizeof(kvp));
+  kv->key = strdup(key); kv->value = strdup(val);
+  return kv;
+}
+void freeKeyVal(kvp* kv) {
+  free(kv->key); free(kv->value); free(kv);
+  return;
+}
+char* kvts(kvp* k) {
+  char* s = (char*)malloc(strlen(k->key)+strlen(k->value)+1);
+  strcat(s,k->key); strcat(s,":"); strcat(s,k->value);
+  return s;
+}
+kvp* stkv(char* str) {
+  char ch[(int)strlen(str)]; sprintf(ch,"%s",str);
+  const char* delim = ":"; char* key, *val;
+  char* ptr = strtok(ch,delim); key = strdup(ptr);
+  ptr = strtok(NULL,delim); val = strdup(ptr);
+  return createKeyVal(key,val);
+}
+Commit* initCommit() {
+  //A revoir
+  Commit* c = (Commit*)malloc(sizeof(Commit));
+  c->n = 0; c->size = MAX_INPUT;
+  c->T = (kvp**)malloc(c->size*2*sizeof(kvp));
+  return c;
+}
+/* HASH FUNCTION */
+unsigned long hash(unsigned char *str) {
+  unsigned long hash = 5381;
+  int c;
+  while ((c = *str++))
+    hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+  printf("hash: %lu\n",hash);
+  return hash % MAX_INPUT;
+}
+void commitSet(Commit* c,char* key,char* value) {
+
 }

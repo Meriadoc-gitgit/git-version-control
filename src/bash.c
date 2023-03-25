@@ -108,6 +108,7 @@ char* blobWorkTree(WorkTree* wt) {
 
   FILE* f = fopen(fname,"w");
   fprintf(f,"%s",save); fclose(f);
+
   char *path = hashToPath(sha256file(fname));
   char *dir = (char*)malloc(2*sizeof(char));
   strncpy(dir,path,2);
@@ -116,27 +117,34 @@ char* blobWorkTree(WorkTree* wt) {
   system(command);
   sprintf(path,"%s.t",path);
   cp(path,fname);
+  //Question: Parcourir tous les elements de WorkTree avec blobFile ou juste creer un FILE pour enregistrer les caracteristiques des fichiers dans le wt?
   return sha256file(fname);
 }
+char* concat(char* s1,char* s2) {
+  char* dir = (char*)malloc(strlen(s1)+strlen(s2)+1);
+  strcat(dir,s1); strcat(dir,"/"); strcat(dir,s2);
+  return dir;
+}
 char* saveWorkTree(WorkTree* wt,char* path) {
-  WorkFile WF; char dir[26]; // creer un autre path concatene avec nom
+  WorkFile WF; // creer un autre path concatene avec nom
   for (int i=0;i<wt->n;i++) {
-    WF = wt->tab[i]; sprintf(dir,"%s/%s",path,WF.name);
+    WF = wt->tab[i]; 
+    char* a_path = concat(path,WF.name);
     if (listdir(WF.name)) {
       List* L = listdir(WF.name);
       WorkTree newWT; 
       while(*L) {
-        WorkFile* wf = createWorkFile((*L)->data);
-        appendWorkTree(&newWT,wf->name,wf->hash,wf->mode);
+        //WorkFile* wf = createWorkFile((*L)->data);
+        appendWorkTree(&newWT,(*L)->data,sha256file((*L)->data),getChmod((*L)->data));
         *L = (*L)->next;
       }
-      char* hash = blobWorkTree(&newWT);
-      WF.hash = hash;
-      WF.mode = getChmod(dir);
+      saveWorkTree(&newWT,a_path);
+      WF.hash = blobWorkTree(&newWT);
+      WF.mode = getChmod(a_path);
     } else {
       blobFile(WF.name);
       WF.hash = sha256file(WF.name);
-      WF.mode = getChmod(dir);
+      WF.mode = getChmod(a_path);
     }
   }
   return blobWorkTree(wt);
@@ -145,20 +153,20 @@ void restoreWorkTree(WorkTree* wt,char* path) {
   WorkFile WF; char dir[26];
   for (int i=0;i<wt->n;i++) {
     WF = wt->tab[i];
-    char* hash = WF.hash;
-    if (strcmp(strstr(hash,".t"),".t")==0) {
-      sprintf(dir,"%s/%s",path,WF.name);
+    if (strcmp(strstr(WF.hash,".t"),".t")==0) {
+      char* a_path = concat(path,WF.name);
       List* L = listdir(WF.name);
       WorkTree newWT; 
       while(*L) {
-        WorkFile* wf = createWorkFile((*L)->data);
-        appendWorkTree(&newWT,wf->name,wf->hash,wf->mode);
+        //WorkFile* wf = createWorkFile((*L)->data);
+        appendWorkTree(&newWT,(*L)->data,sha256file((*L)->data),getChmod((*L)->data));
         *L = (*L)->next;
       }
-      restoreWorkTree(&newWT,dir);
+      restoreWorkTree(&newWT,a_path);
     } else {
-      sprintf(dir,"%s/%s",path,WF.name);
-      cp(dir,WF.name); setMode(WF.mode,dir);
+      char* a_path = concat(path,WF.name);
+      cp(a_path,hashToPath(WF.hash)); setMode(WF.mode,a_path);
+      //Question: Comment trouver le nom et le chmod de ces enregistrements? 
     }
   }
   return;
