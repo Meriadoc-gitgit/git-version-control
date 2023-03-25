@@ -258,7 +258,7 @@ Commit* initCommit() {
   //A revoir
   Commit* c = (Commit*)malloc(sizeof(Commit));
   c->n = 0; c->size = MAX_INPUT;
-  c->T = (kvp**)malloc(c->size*2*sizeof(kvp));
+  c->T = (kvp**)malloc(c->size*sizeof(kvp));
   return c;
 }
 /* HASH FUNCTION */
@@ -267,9 +267,8 @@ unsigned long hash(unsigned char *str) {
   int c;
   while ((c = *str++))
     hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-  printf("hash: %lu\n",hash);
   return hash % MAX_INPUT;
 }
 void commitSet(Commit* c,char* key,char* value) {
-
+  
 }

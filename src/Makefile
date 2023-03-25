@@ -1,11 +1,14 @@
 CFLAGS = -g -Wno-unused-parameter
 CC = gcc
 
-PROGRAMS = work cell 
+PROGRAMS = work cell bash
 
 .PHONY: all clean 
 
 all: $(PROGRAMS)
+
+bash: bash.o src.o bash_test.o
+	$(CC) -o $@ $(CFLAGS) $^
 
 work : bash.o src.o work_test.o
 	$(CC) -o $@ $(CFLAGS) $^
@@ -24,6 +27,9 @@ cell_test.o: cell_test.c
 
 work_test.o: work_test.c 
 	gcc $(CFLAGS) -c work_test.c 
+
+bash_test.o: bash_test.c 
+	gcc $(CFLAGS) -c bash_test.c 
 
 clean:
 	rm -f *.o *~ $(PROGRAMS)

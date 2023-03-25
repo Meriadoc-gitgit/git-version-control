@@ -40,7 +40,7 @@ List* listdir(char* root_dir) {
 }
 int file_exists(char* file) {
   char cwd[PATH_MAX];
-  if (!getcwd(cwd,sizeof(cwd))) {
+  if (!getcwd(cwd,PATH_MAX)) {
     perror("getcwd() error\n");
     return 1;
   }
