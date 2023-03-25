@@ -33,3 +33,15 @@ typedef HashTable Commit;
 
   où `hash` est le hash du fichier correspondant a l'enregistrement instantane d'un `WorkTree`
 > **Remarque:** Cette partie a pour but de simuler les commandes `git add` et `git commit` de maniere simplifiee
+
+## Fonction HASH choisie: `DJB2`
+- [Homepage link](http://www.cse.yorku.ca/~oz/hash.html)
+- [DJB2 Algo explained](https://thealgorithms.github.io/C/d4/de3/hash__djb2_8c.html#details)
+![Dependency graph for hash_djb2.c](sub_img/djb2.png)
+- [Hash Functions for Strings](https://youtu.be/jtMwp0FqEcg)
+
+## Fonctions de base
+1. `kvp* createKeyVal(char* key,char* val);` : allouer + initialiser un element
+
+    `void freeKeyVal(kvp* kv);` : liberer la memoire associe a un element
+2. 

@@ -7,8 +7,8 @@
 #include "src.h"
 
 int main(void) {
-  int chr = 100;
-  unsigned char i = chr;
+  unsigned char i = 43;
   printf("%lu\n",hash(&i));
+
   return 0;
 }

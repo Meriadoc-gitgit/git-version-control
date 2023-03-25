@@ -262,12 +262,12 @@ Commit* initCommit() {
   return c;
 }
 /* HASH FUNCTION */
-unsigned long hash(unsigned char *str) {
+unsigned long hash(unsigned char* str) {
   unsigned long hash = 5381;
   int c;
-  while ((c = *str++))
+  while ((c = *str++)) 
     hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-  return hash % MAX_INPUT;
+  return hash;
 }
 void commitSet(Commit* c,char* key,char* value) {
   
