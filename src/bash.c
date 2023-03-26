@@ -117,7 +117,6 @@ char* blobWorkTree(WorkTree* wt) {
   system(command);
   sprintf(path,"%s.t",path);
   cp(path,fname);
-  //Question: Parcourir tous les elements de WorkTree avec blobFile ou juste creer un FILE pour enregistrer les caracteristiques des fichiers dans le wt?
   return sha256file(fname);
 }
 char* concat(char* s1,char* s2) {
@@ -126,7 +125,7 @@ char* concat(char* s1,char* s2) {
   return dir;
 }
 char* saveWorkTree(WorkTree* wt,char* path) {
-  WorkFile WF; // creer un autre path concatene avec nom
+  WorkFile WF; 
   for (int i=0;i<wt->n;i++) {
     WF = wt->tab[i]; 
     char* a_path = concat(path,WF.name);
@@ -134,7 +133,6 @@ char* saveWorkTree(WorkTree* wt,char* path) {
       List* L = listdir(WF.name);
       WorkTree newWT; 
       while(*L) {
-        //WorkFile* wf = createWorkFile((*L)->data);
         appendWorkTree(&newWT,(*L)->data,sha256file((*L)->data),getChmod((*L)->data));
         *L = (*L)->next;
       }
@@ -158,7 +156,6 @@ void restoreWorkTree(WorkTree* wt,char* path) {
       List* L = listdir(WF.name);
       WorkTree newWT; 
       while(*L) {
-        //WorkFile* wf = createWorkFile((*L)->data);
         appendWorkTree(&newWT,(*L)->data,sha256file((*L)->data),getChmod((*L)->data));
         *L = (*L)->next;
       }
@@ -166,8 +163,32 @@ void restoreWorkTree(WorkTree* wt,char* path) {
     } else {
       char* a_path = concat(path,WF.name);
       cp(a_path,hashToPath(WF.hash)); setMode(WF.mode,a_path);
-      //Question: Comment trouver le nom et le chmod de ces enregistrements? 
     }
   }
   return;
+}
+
+
+
+/* Part 3 - GESTION DES COMMITS */
+
+/* Fonction de base */
+char* blobCommit(Commit* c) {
+  char* save = ftc(c);
+  static char template[] ="/tmp/XXXXXX";
+  char *fname = strdup(template);
+  mkstemp(fname);
+
+  FILE* f = fopen(fname,"w");
+  fprintf(f,"%s",save); fclose(f);
+
+  char *path = hashToPath(sha256file(fname));
+  char *dir = (char*)malloc(2*sizeof(char));
+  strncpy(dir,path,2);
+  char command[200];
+  sprintf(command,"mkdir %s",dir);
+  system(command);
+  sprintf(path,"%s.c",path);
+  cp(path,fname);
+  return sha256file(fname);
 }

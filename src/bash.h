@@ -23,4 +23,9 @@ char* concat(char* s1,char* s2);
 char* saveWorkTree(WorkTree* wt,char* path);
 void restoreWorkTree(WorkTree* wt,char* path);
 
+
+/* Part 3 - GESTION DES COMMITS */
+/* Fonctions de base */
+char* blobCommit(Commit* c);
+
 #endif

@@ -319,13 +319,39 @@ char* cts(Commit* c) {
   }
   return desc;
 }
-void ctf(Commit* c,char* file) {
+Commit* stc(char* file) {
   char str[(int)strlen(file)]; sprintf(str,"%s",file);
   char* desc = str;
-  char* ptr; kvp* k;
+  char* ptr; kvp* k; Commit* c = initCommit();
   while((ptr = strtok_r(desc, "\n", &desc))) {
     k = stkv(ptr);
     commitSet(c,k->key,k->value);
   }
-  return;
+  return c;
+}
+void ctf(Commit* c,char* file) {
+  FILE* f = fopen(file,"w");
+  if (!f) {
+    printf("ctf: Erreur lors de l'ouverture\n");
+    return;
+  }
+  fprintf(f,"%s",cts(c));
+  fclose(f); return;
+}
+Commit* ftc(char* file) {
+  Commit* c = initCommit();
+  FILE* f = fopen(file,"r");
+  if (!f) {
+    printf("ftc: Erreur lors de l'ouverture de fichier\n");
+    return NULL;
+  }
+  char buffer[256]; char* res = fgets(buffer,256,f); char* key; char* value;
+  while (res!=NULL) {
+    key = strtok(buffer,":\n");
+    value = strtok(NULL,":\n");
+    commitSet(c,key,value);
+    res = fgets(buffer,256,f);
+  }
+  fclose(f);
+  return c;
 }

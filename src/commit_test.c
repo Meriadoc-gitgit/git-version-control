@@ -48,12 +48,13 @@ int main(void) {
   printf("\nDescription of c: \n%s\n",cts(c));
   printf("Description of c1: \n%s\n",cts(c1));
 
-  char* cts_c1 = cts(c1);
-  ctf(c,cts_c1);
-  printf("\ntest ctf on c: \n%s\n",cts(c));
+  printf("\ntest stc on c1: \n%s\n",cts(stc(cts(c1))));
   for (int i=0;i<MAX_INPUT;i++) {
     if (c->T[i]) 
       printf("test commit %d: %s\n",i,kvts(c->T[i]));
   }
+
+  ctf(c1,"file_test.txt");
+  printf("\ntest ftc: \n%s\n",cts(ftc("file_test.txt")));
   return 0;
 }
