@@ -21,13 +21,39 @@ int main(void) {
 
   /* COMMIT test */
   Commit* c = initCommit();
-  commitSet(c,"Duong","hehehe");
+  commitSet(c,"Duogn","hehehe");
   commitSet(c,"Duong","hehehe");
 
-  for (int i=hash("Duong");i<MAX_INPUT;i++) {
+  printf("hash of duong: %lu\n",hash("Duong"));
+  printf("hash of duogn: %lu\n",hash("Duogn"));
+
+  for (int i=0;i<MAX_INPUT;i++) {
     if (c->T[i]) 
       printf("test commit %d: %s\n",i,kvts(c->T[i]));
   }
 
+  Commit* c1 = createCommit("aieufbqebgfquoebgo");
+  for(int i=hash("tree");i<MAX_INPUT;i++) {
+    if (c1->T[i]) 
+      printf("test commit %d: %s\n",i,kvts(c1->T[i]));
+  }
+  commitSet(c1,"lim","thai hong");
+  commitSet(c1,"vu","hoang thuy duong");
+  commitSet(c1,"diallo","lima");
+  commitSet(c1,"truong","gia bao");
+
+  char* val = commitGet(c,"lim");
+  printf("val: %s\n",val);
+
+  printf("\nDescription of c: \n%s\n",cts(c));
+  printf("Description of c1: \n%s\n",cts(c1));
+
+  char* cts_c1 = cts(c1);
+  ctf(c,cts_c1);
+  printf("\ntest ctf on c: \n%s\n",cts(c));
+  for (int i=0;i<MAX_INPUT;i++) {
+    if (c->T[i]) 
+      printf("test commit %d: %s\n",i,kvts(c->T[i]));
+  }
   return 0;
 }

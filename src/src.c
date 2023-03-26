@@ -176,7 +176,7 @@ int appendWorkTree(WorkTree* wt,char* name,char* hash,int mode) {
 }
 char* wtts(WorkTree* wt) {
   if (wt->n==0) return "wtts: WorkTree vide\n";
-  char *command = (char*)malloc(MAX_INPUT);
+  char *command = (char*)malloc(INT_MAX);
   char* w = NULL;
   for (int i=0;i<wt->n;i++) {
     w = wfts(&(wt->tab[i]));
@@ -292,5 +292,40 @@ void commitSet(Commit* c,char* key,char* value) {
     }
   }
   if (!insertOK) printf("commitSet: Surcharge de memoire\n");
+  return;
+}
+Commit* createCommit(char* hash) {
+  Commit* c = initCommit();
+  commitSet(c,"tree",hash);
+  c->n++;
+  return c;
+}
+char* commitGet(Commit* c,char* key) {
+  for(int i=0;i<MAX_INPUT;i++) {
+    if (c->T[i] && strcmp(c->T[i]->key,key)==0) {
+      return c->T[i]->value;
+    }
+  }
+  return NULL;
+}
+char* cts(Commit* c) {
+  char* desc = (char*)malloc(INT_MAX);
+  char* w = NULL;
+  for (int i=0;i<MAX_INPUT;i++) {
+    if (c->T[i]) {
+      w = kvts(c->T[i]);
+      strcat(desc,w); strcat(desc,"\n");
+    }
+  }
+  return desc;
+}
+void ctf(Commit* c,char* file) {
+  char str[(int)strlen(file)]; sprintf(str,"%s",file);
+  char* desc = str;
+  char* ptr; kvp* k;
+  while((ptr = strtok_r(desc, "\n", &desc))) {
+    k = stkv(ptr);
+    commitSet(c,k->key,k->value);
+  }
   return;
 }
