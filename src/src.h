@@ -1,6 +1,7 @@
 #ifndef _SRC
 #define _SRC
 
+/* CELL - LIST */
 typedef struct cell { 
   char* data;
   struct cell* next;
@@ -8,7 +9,7 @@ typedef struct cell {
 
 typedef Cell* List;
 
-
+/* WORK[FILE|TREE] */
 typedef struct {
   char* name;
   char* hash;
@@ -22,6 +23,7 @@ typedef struct {
 } WorkTree;
 
 
+/* COMMIT */
 typedef struct key_value_pair {
   char* key;
   char* value;
@@ -74,7 +76,7 @@ void freeKeyVal(kvp* kv);
 char* kvts(kvp* k);
 kvp* stkv(char* str);
 Commit* initCommit();
-unsigned long hash(unsigned char *str); //choix de hash !
+unsigned long hash(char *str); //choix de hash !
 void commitSet(Commit* c,char* key,char* value);
 Commit* createCommit(char* hash);
 char* commitGet(Commit* c,char* key);

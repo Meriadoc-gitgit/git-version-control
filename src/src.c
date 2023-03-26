@@ -243,7 +243,7 @@ void freeKeyVal(kvp* kv) {
   return;
 }
 char* kvts(kvp* k) {
-  char* s = (char*)malloc(strlen(k->key)+strlen(k->value)+1);
+  char* s = (char*)malloc(MAX_INPUT);
   strcat(s,k->key); strcat(s,":"); strcat(s,k->value);
   return s;
 }
@@ -262,12 +262,12 @@ Commit* initCommit() {
   return c;
 }
 /* HASH FUNCTION */
-unsigned long hash(unsigned char* str) {
+unsigned long hash(char* str) {
   unsigned long hash = 5381;
   int c;
   while ((c = *str++)) 
     hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-  return hash;
+  return hash % MAX_INPUT;
 }
 void commitSet(Commit* c,char* key,char* value) {
   
