@@ -270,5 +270,27 @@ unsigned long hash(char* str) {
   return hash % MAX_INPUT;
 }
 void commitSet(Commit* c,char* key,char* value) {
-  
+  unsigned long h = hash(key);
+  int insertOK = 0;
+  if (c->T[h]) {
+    for (int i=h;i<MAX_INPUT;i++) {
+      if (!c->T[i]) {
+        c->T[i] = createKeyVal(key,value);
+        c->n++; insertOK = 1; break;
+      }
+    }
+  } else {
+    c->T[h] = createKeyVal(key,value);
+    c->n++; insertOK = 1;
+  }
+  if (!insertOK) {
+    for (int i=0;i<h;i++) {
+      if (!c->T[i]) {
+        c->T[i] = createKeyVal(key,value);
+        c->n++; insertOK = 1; break;
+      }
+    }
+  }
+  if (!insertOK) printf("commitSet: Surcharge de memoire\n");
+  return;
 }
