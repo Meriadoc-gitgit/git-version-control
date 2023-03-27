@@ -44,7 +44,7 @@ int file_exists(char* file) {
     perror("getcwd() error\n");
     return 1;
   }
-  List* L = listdir(cwd);
+  List* L = listdir(cwd); 
   return searchList(L,file)!=NULL;
 }
 void cp(char* to, char* from) {
@@ -174,7 +174,7 @@ void restoreWorkTree(WorkTree* wt,char* path) {
 
 /* Fonction de base */
 char* blobCommit(Commit* c) {
-  char* save = ftc(c);
+  char* save = cts(c);
   static char template[] ="/tmp/XXXXXX";
   char *fname = strdup(template);
   mkstemp(fname);
@@ -191,4 +191,80 @@ char* blobCommit(Commit* c) {
   sprintf(path,"%s.c",path);
   cp(path,fname);
   return sha256file(fname);
+}
+
+/* MANIPULATION DES REFERENCES */
+void initRefs() {
+  if (!file_exists(".refs")) {
+    system("mkdir.refs");
+  }
+  system("echo > master"); 
+  system("echo > HEAD");
+  return;
+}
+void createUpdateRef(char* ref_name,char* hash) {
+  FILE* f = fopen(ref_name,"w");
+  if (!file_exists(".refs")) {
+    initRefs();
+    
+  }
+  if (!f) {
+    char command[200]; sprintf(command,"echo > %s",ref_name);
+    system(command);
+  }
+  fprintf(f,"%s",hash); fclose(f);
+  return;
+}
+void deleteRef(char* ref_name) {
+  char command[200]; sprintf(command,"rm %s",ref_name);
+  system(command); return;
+}
+char* getRef(char* ref_name) {
+  FILE* f = fopen(ref_name,"r");
+  char buffer[MAX_INPUT];
+  fgets(buffer,MAX_INPUT,f); 
+  char* res = (char*)malloc(strlen(buffer));
+  strcpy(res,buffer); fclose(f);
+  return res;
+}
+
+/* SIMULATION */
+void myGitAdd(char* file_or_folder) {
+  if (!file_exists(".add")) 
+    system("echo > .add");
+  FILE* f = fopen(".add","w");
+  WorkTree* WT = ftwt(".add");
+  WorkFile* WF = stwf(file_or_folder);
+  appendWorkTree(WT,WF->name,WF->hash,WF->mode);
+  fprintf(f,"%s",wtts(WT));
+  fclose(f);
+  return;
+}
+void myGitCommit(char* branch_name,char* message) {
+  if (!file_exists(".refs")) {
+    printf("gitCommit: Initialiser d'abord les references du projet\n");
+    return;
+  }
+  if (!file_exists(branch_name)) {
+    printf("gitCommit: La branche n'existe pas\n");
+    return;
+  }
+  char head[MAX_INPUT], branch[MAX_INPUT];
+  FILE* f = fopen("HEAD","r"); fgets(head,"%s",f); 
+  FILE* g = fopen(branch_name,"r"); fgets(branch,"%s",g);
+  if (strcmp(head,branch)!=0) {
+    printf("getCommit: HEAD doit pointer sur le dernier commit de la branche\n");
+    return;
+  }
+  char cwd[PATH_MAX]; getcwd(cwd,PATH_MAX); sprintf(cwd,"%s/.refs",cwd);
+  WorkTree* wt = ftwt(".add"); deleteRef(".add"); 
+  char* h = saveWorkTree(wt,cwd);
+  Commit* c = createCommit(h);
+  if (strcmp(branch,"")!=0) 
+    commitSet(c,"predecessor",branch);
+  if (message!=NULL) 
+    commitSet(c,"message",message);
+  char* hc = blobCommit(c);
+  fprintf(g,"%s",hc); fprintf(f,"%s",hc);
+  return;
 }

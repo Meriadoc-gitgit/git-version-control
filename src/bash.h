@@ -28,4 +28,14 @@ void restoreWorkTree(WorkTree* wt,char* path);
 /* Fonctions de base */
 char* blobCommit(Commit* c);
 
+/* MANIPULATION DES REFERENCES */
+void initRefs();
+void createUpdateRef(char* ref_name,char* hash);
+void deleteRef(char* ref_name);
+char* getRef(char* ref_name);
+
+/* SIMULATION */
+void myGitAdd(char* file_or_folder);
+void myGitCommit(char* branch_name,char* message);
+
 #endif

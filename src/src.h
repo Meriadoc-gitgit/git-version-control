@@ -85,13 +85,4 @@ Commit* stc(char* file);
 void ctf(Commit* c,char* file);
 Commit* ftc(char* file);
 
-/* MANIPULATION DES REFERENCES */
-void initRefs();
-void createUpdateRef(char* ref_name,char* hash);
-void deleteRef(char* ref_name);
-char* getRef(char* ref_name);
-
-/* SIMULATION */
-void myGitAdd(char* file_or_folder);
-void myGitCommit(char* branch_name,char* message);
 #endif
