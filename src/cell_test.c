@@ -38,8 +38,16 @@ int main(void) {
   //printf("C1: %s\n",ctos(C1));
   printf("C2: %s\n",ctos(C2));
 
+  Cell* C3 = listGet(L,1);
+  printf("test de listGet sur C3: %s\n",ctos(C3));
+
+  Cell* C4 = searchList(L2,"chain1");
+  printf("test de searchList sur C4: %s\n",ctos(C4));
   /* FILE */
-  //ltof(L2,"ltof.txt");
+  ltof(L2,"file_test.txt");
+
+  List* L3 = ftol("file_test.txt");
+  printf("test de ftol sur L3: %s\n",ltos(L3));
 
   /* Free */
   free(C->data);

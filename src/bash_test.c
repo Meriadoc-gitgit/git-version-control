@@ -12,7 +12,9 @@ int main(void) {
   /* AFFICHAGE */
   printf("Files dans l'ensemble du projet:\n%s\n",ltos(listdir("/Users/vuhoangthuyduong/Documents/GitHub/GIT-version-control")));
 
+  printf("Le fichier img existe dans ce projet: %d\n",file_exists("img"));
   printf("Le fichier src.c existe dans ce projet: %d\n",file_exists("src.c"));
+  printf("Le fichier test existe dans ce projet: %d\n",file_exists("test"));
   printf("main.c in the project: %s\n",ctos(searchList(listdir("/Users/vuhoangthuyduong/Documents/GitHub/GIT-version-control"),"main.c")));
 
   char cwd[PATH_MAX];

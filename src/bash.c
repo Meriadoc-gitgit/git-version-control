@@ -10,21 +10,27 @@
 
 /* Part 1 */
 int hashFile(char* src, char *dst) {
-  char res[200];
-  sprintf(res,"sha256sum %s > %s",src,dst);
-  return system(res);
+  char buff[100];
+  sprintf(buff,"cat %s | sha256sum > %s",src,dst);
+  return system(buff);
 }
 
 char* sha256file(char* file) {
-  static char template[] ="/tmp/XXXXXX";
-  char *fname = strdup(template);
+  static char template[] ="/tmp/fileXXXXXX";
+  char fname[1000];
+  strcpy(fname,template);
   mkstemp(fname);
+
   hashFile(file,fname);
+  char *hash = (char*)malloc(256*sizeof(char));
   FILE *f = fopen(fname,"r");
-  char *buffer = (char*)malloc(256*sizeof(char));
-  fgets(buffer,256,f);
+  fgets(hash,256,f);
   fclose(f);
-  return buffer;
+
+  char cmd[10000]; 
+  sprintf(cmd,"rm %s",fname);
+  system(cmd);
+  return hash;
 }
 
 
@@ -33,29 +39,29 @@ List* listdir(char* root_dir) {
   DIR* dp = opendir(root_dir);
   struct dirent* ep;
   if (dp) {
-    while((ep = readdir(dp))) 
+    while((ep = readdir(dp))) {
       insertFirst(L,buildCell(ep->d_name));
+      List ptr = *L;
+    }
+    (void)closedir(dp);
+  } else {
+    perror("listdir: Could not opend the directory\n");
+    return NULL;
   }
   return L;
 }
 int file_exists(char* file) {
-  char cwd[PATH_MAX];
-  if (!getcwd(cwd,PATH_MAX)) {
-    perror("getcwd() error\n");
-    return 1;
-  }
-  List* L = listdir(cwd); 
-  return searchList(L,file)!=NULL;
+  struct stat buffer;
+  return (stat(file,&buffer)==0);
 }
 void cp(char* to, char* from) {
   if (!file_exists(from)) {
-    printf("Fichier demande n'existe pas\n");
+    printf("cp: Fichier demande n'existe pas\n");
     return;
   }
-  char res[200];
-  sprintf(res,"cat %s > %s",from,to);
-  system(res);
-  return;
+  char cmd[20000];
+  sprintf(cmd,"cat %s > %s",from,to);
+  system(cmd); return;
 }
 char* hashToPath(char* hash) {
   char res[(int)strlen(hash)+1];
@@ -77,13 +83,13 @@ void blobFile(char* file) {
   char *path = hashToPath(sha256file(file));
   char *dir = (char*)malloc(2*sizeof(char));
   strncpy(dir,path,2);
-  char command[200];
+  char command[256];
   sprintf(command,"mkdir %s",dir);
   system(command);
   cp(path,file);
   return;
 }
-
+//verified!!
 
 
 /* Part 2 */
@@ -250,8 +256,8 @@ void myGitCommit(char* branch_name,char* message) {
     return;
   }
   char head[MAX_INPUT], branch[MAX_INPUT];
-  FILE* f = fopen("HEAD","r"); fgets(head,"%s",f); 
-  FILE* g = fopen(branch_name,"r"); fgets(branch,"%s",g);
+  FILE* f = fopen("HEAD","r"); fgets(head,MAX_INPUT,f); 
+  FILE* g = fopen(branch_name,"r"); fgets(branch,MAX_INPUT,g);
   if (strcmp(head,branch)!=0) {
     printf("getCommit: HEAD doit pointer sur le dernier commit de la branche\n");
     return;

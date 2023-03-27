@@ -52,6 +52,13 @@ int main(void) {
 
   WorkFile* wf5 = createWorkFile("work_test.o");
 
+  printf("test position inWT on wt4 with src1.c: %d\n",inWorkTree(wt4,"src1.c"));
+
+  wttf(wt4,"file_test.txt");
+
+  WorkTree* wt6 = ftwt("file_test.txt");
+  printf("\ntest de ftwt on wt6: \n%s\n",wtts(wt6));
+
   /*LIBERATION*/
 
   libererWorkFile(wf5);

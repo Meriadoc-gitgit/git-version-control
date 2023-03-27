@@ -7,29 +7,28 @@
 #include "src.h"
 
 /* Part 1 - Manipulation de Cell et List */
-List* initList() {
-  List* rst = (List*)malloc(sizeof(Cell));
+List* initList() { //OK
+  List* rst = (List*)malloc(sizeof(List));
+  *rst = NULL;
   return rst;
 }
-Cell* buildCell(char* ch) {
+Cell* buildCell(char* ch) {//OK
   Cell* rst = (Cell*)malloc(sizeof(Cell));
   rst->data = strdup(ch);
   rst->next = NULL;
   return rst;
 }
-void insertFirst(List* L,Cell* C) {
+void insertFirst(List* L,Cell* C) {//OK
   C->next = *L; *L = C;
   return;
 }
-char* ctos(Cell* C) {
-  if (C==NULL) return NULL;
+char* ctos(Cell* C) {//OK
+  if (C==NULL) return "";
   return C->data;
 }
-char* ltos(List* L) {
-  if (*L==NULL) {
-    printf("Liste *L est NULL\n");
-    return NULL;
-  }
+char* ltos(List* L) {//OK
+  if (*L==NULL) 
+    return "";  
   char command[MAX_INPUT] = "";
   Cell* C = *L;
   char* rst = (char*)malloc(sizeof(char)), *tmp;
@@ -41,7 +40,7 @@ char* ltos(List* L) {
   strcpy(rst,command);
   return rst;
 }
-Cell* listGet(List* L,int i) {
+Cell* listGet(List* L,int i) {//OK
   if (*L==NULL) return NULL;
   Cell* tmp = *L;
   if (i==0) return NULL;
@@ -51,28 +50,25 @@ Cell* listGet(List* L,int i) {
   if (i==1) return tmp;
   else return NULL;
 }
-Cell* searchList(List* L,char* str) {
+Cell* searchList(List* L,char* str) {//OK
   Cell* tmp = *L;
-  while(tmp) {
-    if (strcmp(tmp->data,str)==0) return tmp;
+  while(tmp && strcmp(tmp->data,str)!=0) 
     tmp = tmp->next;
-  }
-  return NULL;
+  return tmp;
 }
-List* stol(char* s) {
+List* stol(char* s) {//ok
   char str[(int)strlen(s)]; sprintf(str,"%s",s);
   const char* delim = "|";
-  char* ptr = strtok(str,delim); //printf("ptr0: %s\n",ptr);
+  char* ptr = strtok(str,delim); 
   List* L = initList();
 
   while (ptr!=NULL) {
-    insertFirst(L,buildCell(ptr)); //printf("ptr: %s\n",ptr);
-    ptr = strtok(NULL,delim); //printf("ptr: %s\n",ptr);
+    insertFirst(L,buildCell(ptr)); 
+    ptr = strtok(NULL,delim); 
   }
-  //printf("stol:ok\n");
   return L;
 }
-void ltof(List* L,char* path) {
+void ltof(List* L,char* path) {//ok
   if (*L==NULL) {
     printf("ltof: Liste *L est NULL\n");
     return;
@@ -84,13 +80,13 @@ void ltof(List* L,char* path) {
   }
   Cell *C = *L;
   while(C) {
-    fprintf(f,"%s\n",C->data); //printf("ok\n");
+    fprintf(f,"%s\n",C->data); 
     C = C->next;
   }
   fclose(f);
   return;
 }
-List* ftol(char* path) {
+List* ftol(char* path) {//ok
   if (!file_exists(path)) {
     printf("ftol: Fichier introuvable\n");
     return NULL;
@@ -110,33 +106,27 @@ List* ftol(char* path) {
   fclose(f);
   return L;
 }
-void libererWorkFile(WorkFile* wf) {
-  free(wf->name); free(wf->hash); free(wf);
-  return;
-}
 
 
 
 /* Part 2 */
 /* MANIPULATION DE WORKFILE */
-WorkFile* createWorkFile(char* name) {
+WorkFile* createWorkFile(char* name) {//ok
   WorkFile* wf = (WorkFile*)malloc(sizeof(WorkFile));
   wf->name = strdup(name);
   wf->hash = NULL; wf->mode = 0;
   return wf;
 }
-char* wfts(WorkFile* wf) {
+char* wfts(WorkFile* wf) {//ok
   if (!wf) {
     printf("Erreur wfts: WF NULL");
     return NULL;
   }
-  char command[100];
+  char* command = (char*)malloc(1000*sizeof(char));
   sprintf(command,"%s\t%s\t%d",wf->name,wf->hash,wf->mode);
-  char* res = (char*)malloc(sizeof(char));
-  strcpy(res,command);
-  return res;
+  return command;
 }
-WorkFile* stwf(char* ch) {
+WorkFile* stwf(char* ch) {//ok
   char str[(int)strlen(ch)]; sprintf(str,"%s",ch);
   const char* delim = "\t";
   char* ptr = strtok(str,delim);
@@ -145,36 +135,40 @@ WorkFile* stwf(char* ch) {
   ptr = strtok(NULL,delim); wf->mode = atoi(ptr);
   return wf;
 }
+void libererWorkFile(WorkFile* wf) {//ok
+  free(wf->name); free(wf->hash); free(wf);
+  return;
+}
 
 
-WorkTree* initWorkTree() {
+WorkTree* initWorkTree() {//ok
   WorkTree* wt = (WorkTree*)malloc(sizeof(WorkTree));
   wt->size = MAX_INPUT; wt->n = 0;
   wt->tab = (WorkFile*)malloc(wt->size*sizeof(WorkFile));
   return wt;
 }
-int inWorkTree(WorkTree* wt,char* name) {
+int inWorkTree(WorkTree* wt,char* name) {//ok
   if (!wt) {
     printf("inWorkTree: wt NULL\n"); return -1;
   }
   for (int i=0;i<wt->n;i++) {
-    if (strcmp(wt->tab->name,name)==0) {
-      printf("%s\t%s\n",wt->tab->name,name); return i;
-    }
+    if (strcmp(wt->tab[i].name,name)==0) 
+      return i;
   }
   return -1;
 }
-int appendWorkTree(WorkTree* wt,char* name,char* hash,int mode) {
+int appendWorkTree(WorkTree* wt,char* name,char* hash,int mode) {//ok
   if (inWorkTree(wt,name)==-1 && wt->n<wt->size) {
     wt->tab[wt->n].name = strdup(name);
-    wt->tab[wt->n].hash = strdup(hash);
     wt->tab[wt->n].mode = mode;
+    if (hash) wt->tab[wt->n].hash = strdup(hash);
+    else wt->tab[wt->n].hash = "";
     wt->n++;
     return 0;
   }
   return -1;
 }
-char* wtts(WorkTree* wt) {
+char* wtts(WorkTree* wt) {//ok
   if (wt->n==0) return "wtts: WorkTree vide\n";
   char *command = (char*)malloc(INT_MAX);
   char* w = NULL;
@@ -184,20 +178,27 @@ char* wtts(WorkTree* wt) {
   }
   return command;
 }
-WorkTree* stwt(char* ch) {
-  char str[(int)strlen(ch)]; sprintf(str,"%s",ch);
-  const char* delim = "\n";
-  char* ptr = strtok(str,delim); 
-  WorkTree* wt = initWorkTree(); WorkFile* wf;
-
-  while(ptr!=NULL) {
-    wf = stwf(ptr);
-    appendWorkTree(wt,wf->name,wf->hash,wf->mode);
-    ptr = strtok(NULL,delim);
+WorkTree* stwt(char* ch) {//ok
+  int pos = 0; int n_pos = 0; int sep = '\n';
+  char* ptr;
+  char* result = malloc(sizeof(char)*10000);
+  WorkTree* wt = initWorkTree ();
+  while (pos < strlen(ch)){
+    ptr = strchr(ch + pos , sep);
+    if (ptr == NULL)
+      n_pos = strlen(ch)+1;
+    else{
+      n_pos = ptr - ch + 1;
+    }
+    memcpy(result , ch+pos , n_pos - pos - 1);
+    result[n_pos - pos - 1] = '\0' ;
+    pos = n_pos;
+    WorkFile* wf = stwf(result);
+    appendWorkTree(wt, wf->name , wf->hash , wf->mode);
   }
   return wt;
 }
-int wttf(WorkTree* wt,char* file) {
+int wttf(WorkTree* wt,char* file) {//ok
   FILE* f = fopen(file,"w");
   if (!f) {
     printf("wttf: Erreur lors de l'ouverture de fichier\n"); return -1;
@@ -205,7 +206,7 @@ int wttf(WorkTree* wt,char* file) {
   fprintf(f,"%s",wtts(wt));
   fclose(f); return 0;
 }
-WorkTree* ftwt(char* file) {
+WorkTree* ftwt(char* file) {//ok
   FILE* f = fopen(file,"r");
   if (!f) {
     printf("ftwt: Erreur lors de l'ouverture\n");
