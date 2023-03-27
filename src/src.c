@@ -222,7 +222,7 @@ WorkTree* ftwt(char* file) {//ok
   fclose(f);
   return wt;
 }
-void libererWorkTree(WorkTree* wt) {
+void libererWorkTree(WorkTree* wt) {//ok
   if (wt->n==0) return;
   for(int i=0;i<wt->n;i++) 
     libererWorkFile(&wt->tab[i]);

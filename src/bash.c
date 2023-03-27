@@ -89,7 +89,7 @@ void blobFile(char* file) {
   cp(path,file);
   return;
 }
-//verified!!
+
 
 
 /* Part 2 */
@@ -106,23 +106,23 @@ void setMode(int mode,char* path) {
   system(buff);
 }
 
+struct stat st = {0};
 char* blobWorkTree(WorkTree* wt) {
-  char* save = wtts(wt);
   static char template[] ="/tmp/XXXXXX";
   char *fname = strdup(template);
-  mkstemp(fname);
-
-  FILE* f = fopen(fname,"w");
-  fprintf(f,"%s",save); fclose(f);
+  mkstemp(fname); wttf(wt,fname);
 
   char *path = hashToPath(sha256file(fname));
   char *dir = (char*)malloc(2*sizeof(char));
   strncpy(dir,path,2);
-  char command[200];
-  sprintf(command,"mkdir %s",dir);
-  system(command);
+
+  if (stat(sha256file(fname),&st)==-1) {
+    char command[200];
+    sprintf(command,"mkdir %s",dir);
+    system(command);
+  }
   sprintf(path,"%s.t",path);
-  cp(path,fname);
+  cp(path,fname); free(dir);
   return sha256file(fname);
 }
 char* concat(char* s1,char* s2) {
@@ -130,50 +130,47 @@ char* concat(char* s1,char* s2) {
   strcat(dir,s1); strcat(dir,"/"); strcat(dir,s2);
   return dir;
 }
-char* saveWorkTree(WorkTree* wt,char* path) {
+char* saveWorkTree(WorkTree* wt,char* path) {//ok
   WorkFile WF; 
   for (int i=0;i<wt->n;i++) {
     WF = wt->tab[i]; 
     char* a_path = concat(path,WF.name);
-    if (listdir(WF.name)) {
+    if (listdir(a_path)) {
       List* L = listdir(WF.name);
-      WorkTree newWT; 
+      WorkTree* newWT = initWorkTree(); 
       while(*L) {
-        appendWorkTree(&newWT,(*L)->data,sha256file((*L)->data),getChmod((*L)->data));
+        appendWorkTree(newWT,(*L)->data,sha256file((*L)->data),getChmod((*L)->data));
         *L = (*L)->next;
       }
-      saveWorkTree(&newWT,a_path);
-      WF.hash = blobWorkTree(&newWT);
+      WF.hash = saveWorkTree(newWT,a_path);
       WF.mode = getChmod(a_path);
     } else {
-      blobFile(WF.name);
-      WF.hash = sha256file(WF.name);
+      blobFile(a_path);
+      WF.hash = sha256file(a_path);
       WF.mode = getChmod(a_path);
     }
   }
   return blobWorkTree(wt);
 }
-void restoreWorkTree(WorkTree* wt,char* path) {
-  WorkFile WF; char dir[26];
+void restoreWorkTree(WorkTree* wt,char* path) {//ok
+  WorkFile WF;
   for (int i=0;i<wt->n;i++) {
     WF = wt->tab[i];
+    char* a_path = concat(path,WF.name);
+    char* cpPath = hashToPath(WF.hash);
     if (strcmp(strstr(WF.hash,".t"),".t")==0) {
-      char* a_path = concat(path,WF.name);
-      List* L = listdir(WF.name);
-      WorkTree newWT; 
-      while(*L) {
-        appendWorkTree(&newWT,(*L)->data,sha256file((*L)->data),getChmod((*L)->data));
-        *L = (*L)->next;
-      }
-      restoreWorkTree(&newWT,a_path);
+      strcat(a_path,".t");
+      WorkTree* newWT = ftwt(cpPath);
+      restoreWorkTree(newWT,a_path);
+      setMode(getChmod(cpPath),a_path);
     } else {
-      char* a_path = concat(path,WF.name);
-      cp(a_path,hashToPath(WF.hash)); setMode(WF.mode,a_path);
+      cp(a_path,cpPath); 
+      setMode(getChmod(cpPath),a_path);
     }
   }
   return;
 }
-
+//verified!!
 
 
 /* Part 3 - GESTION DES COMMITS */
