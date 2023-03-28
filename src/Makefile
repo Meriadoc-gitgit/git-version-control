@@ -1,11 +1,14 @@
 CFLAGS = -g -Wno-unused-parameter
 CC = gcc
 
-PROGRAMS = work cell bash commit
+PROGRAMS = work cell bash commit myGit
 
 .PHONY: all clean 
 
 all: $(PROGRAMS)
+
+myGit: bash.o src.o myGit.o
+	$(CC) -o $@ $(CFLAGS) $^
 
 bash: bash.o src.o bash_test.o
 	$(CC) -o $@ $(CFLAGS) $^
@@ -36,6 +39,9 @@ bash_test.o: bash_test.c
 
 commit_test.o: commit_test.c 
 	gcc $(CFLAGS) -c commit_test.c 
+
+myGit.o: myGit.c 
+	gcc $(CFLAGS) -c myGit.c 
 
 clean:
 	rm -f *.o *~ $(PROGRAMS)

@@ -129,10 +129,11 @@ char* wfts(WorkFile* wf) {//ok
 WorkFile* stwf(char* ch) {//ok
   char str[(int)strlen(ch)]; sprintf(str,"%s",ch);
   const char* delim = "\t";
-  char* ptr = strtok(str,delim);
-  WorkFile* wf = createWorkFile(ptr);
-  ptr = strtok(NULL,delim); wf->hash = strdup(ptr);
-  ptr = strtok(NULL,delim); wf->mode = atoi(ptr);
+  char name[100], hash[100]; int mode;
+  sscanf(ch,"%s %s %d",name,hash,&mode);
+  WorkFile* wf = createWorkFile(name);
+  wf->hash = strdup(hash);
+  wf->mode = mode;
   return wf;
 }
 void libererWorkFile(WorkFile* wf) {//ok
@@ -234,82 +235,64 @@ void libererWorkTree(WorkTree* wt) {//ok
 
 /* Part 3 - GESTION DES COMMITS */
 /* FONCTION DE BASE */
-kvp* createKeyVal(char* key,char* val) {
+kvp* createKeyVal(char* key,char* val) {//ok
   kvp* kv = (kvp*)malloc(sizeof(kvp));
   kv->key = strdup(key); kv->value = strdup(val);
   return kv;
 }
-void freeKeyVal(kvp* kv) {
+void freeKeyVal(kvp* kv) {//ok
   free(kv->key); free(kv->value); free(kv);
   return;
 }
-char* kvts(kvp* k) {
-  char* s = (char*)malloc(MAX_INPUT);
-  strcat(s,k->key); strcat(s,":"); strcat(s,k->value);
-  return s;
+char* kvts(kvp* k) {//ok
+  char* buff = (char*)malloc(MAX_INPUT);
+  sprintf(buff,"%s : %s",k->key,k->value);
+  return buff;
 }
-kvp* stkv(char* str) {
-  char ch[(int)strlen(str)]; sprintf(ch,"%s",str);
-  const char* delim = ":"; char* key, *val;
-  char* ptr = strtok(ch,delim); key = strdup(ptr);
-  ptr = strtok(NULL,delim); val = strdup(ptr);
+kvp* stkv(char* str) {//ok
+  const char* delim = ":"; char key[100], val[100];
+  sscanf(str,"%s : %s",key,val);
   return createKeyVal(key,val);
 }
-Commit* initCommit() {
-  //A revoir
+Commit* initCommit() {//ok
   Commit* c = (Commit*)malloc(sizeof(Commit));
   c->n = 0; c->size = MAX_INPUT;
-  c->T = (kvp**)malloc(c->size*sizeof(kvp));
+  c->T = (kvp**)malloc(c->size*sizeof(kvp*));
+  for (int i=0;i<c->size;i++)
+    c->T[i] = NULL;
   return c;
 }
 /* HASH FUNCTION */
-unsigned long hash(char* str) {
+int hash(char* str) {
   unsigned long hash = 5381;
   int c;
   while ((c = *str++)) 
     hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-  return hash % MAX_INPUT;
+  return hash;
 }
-void commitSet(Commit* c,char* key,char* value) {
-  unsigned long h = hash(key);
-  int insertOK = 0;
-  if (c->T[h]) {
-    for (int i=h;i<MAX_INPUT;i++) {
-      if (!c->T[i]) {
-        c->T[i] = createKeyVal(key,value);
-        c->n++; insertOK = 1; break;
-      }
-    }
-  } else {
-    c->T[h] = createKeyVal(key,value);
-    c->n++; insertOK = 1;
-  }
-  if (!insertOK) {
-    for (int i=0;i<h;i++) {
-      if (!c->T[i]) {
-        c->T[i] = createKeyVal(key,value);
-        c->n++; insertOK = 1; break;
-      }
-    }
-  }
-  if (!insertOK) printf("commitSet: Surcharge de memoire\n");
+void commitSet(Commit* c,char* key,char* value) {//ok
+  int h = hash(key)%c->size;
+  while (c->T[h]) 
+    h = (h+1)%c->size;
+  c->T[h] = createKeyVal(key,value);
+  c->n++;
   return;
 }
-Commit* createCommit(char* hash) {
+Commit* createCommit(char* hash) {//ok
   Commit* c = initCommit();
   commitSet(c,"tree",hash);
-  c->n++;
+  //c->n++;
   return c;
 }
-char* commitGet(Commit* c,char* key) {
-  for(int i=0;i<MAX_INPUT;i++) {
+char* commitGet(Commit* c,char* key) {//ok
+  for(int i=0;i<c->size;i++) {
     if (c->T[i] && strcmp(c->T[i]->key,key)==0) {
       return c->T[i]->value;
     }
   }
   return NULL;
 }
-char* cts(Commit* c) {
+char* cts(Commit* c) {//ok
   char* desc = (char*)malloc(INT_MAX);
   char* w = NULL;
   for (int i=0;i<MAX_INPUT;i++) {
@@ -320,7 +303,7 @@ char* cts(Commit* c) {
   }
   return desc;
 }
-Commit* stc(char* file) {
+Commit* stc(char* file) {//ok
   char str[(int)strlen(file)]; sprintf(str,"%s",file);
   char* desc = str;
   char* ptr; kvp* k; Commit* c = initCommit();
@@ -330,7 +313,7 @@ Commit* stc(char* file) {
   }
   return c;
 }
-void ctf(Commit* c,char* file) {
+void ctf(Commit* c,char* file) {//ok
   FILE* f = fopen(file,"w");
   if (!f) {
     printf("ctf: Erreur lors de l'ouverture\n");
@@ -339,7 +322,7 @@ void ctf(Commit* c,char* file) {
   fprintf(f,"%s",cts(c));
   fclose(f); return;
 }
-Commit* ftc(char* file) {
+Commit* ftc(char* file) {//ok
   Commit* c = initCommit();
   FILE* f = fopen(file,"r");
   if (!f) {

@@ -177,22 +177,21 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
 
 /* Fonction de base */
 char* blobCommit(Commit* c) {
-  char* save = cts(c);
   static char template[] ="/tmp/XXXXXX";
   char *fname = strdup(template);
-  mkstemp(fname);
-
-  FILE* f = fopen(fname,"w");
-  fprintf(f,"%s",save); fclose(f);
+  mkstemp(fname); ctf(c,fname);
 
   char *path = hashToPath(sha256file(fname));
   char *dir = (char*)malloc(2*sizeof(char));
   strncpy(dir,path,2);
-  char command[200];
-  sprintf(command,"mkdir %s",dir);
-  system(command);
+
+  if (stat(sha256file(fname),&st)==-1) {
+    char command[200];
+    sprintf(command,"mkdir %s",dir);
+    system(command);
+  }
   sprintf(path,"%s.c",path);
-  cp(path,fname);
+  cp(path,fname); free(dir);
   return sha256file(fname);
 }
 
@@ -200,47 +199,51 @@ char* blobCommit(Commit* c) {
 void initRefs() {
   if (!file_exists(".refs")) {
     system("mkdir.refs");
+    system("touch .refs/master");
+    system("touch .refs/HEAD");
   }
-  system("echo > master"); 
-  system("echo > HEAD");
   return;
 }
 void createUpdateRef(char* ref_name,char* hash) {
-  FILE* f = fopen(ref_name,"w");
-  if (!file_exists(".refs")) {
-    initRefs();
-    
-  }
-  if (!f) {
-    char command[200]; sprintf(command,"echo > %s",ref_name);
-    system(command);
-  }
-  fprintf(f,"%s",hash); fclose(f);
-  return;
+  char buff[256];
+  sprintf(buff,"echo %s > .refs/%s",hash,ref_name);
+  system(buff);
 }
 void deleteRef(char* ref_name) {
-  char command[200]; sprintf(command,"rm %s",ref_name);
-  system(command); return;
+  char buff[256];
+  sprintf(buff,".refs/%s",ref_name);
+  if (!file_exists(buff)) 
+    printf("deletedRef: The reference %s does not exists\n",buff);
+  else {
+    sprintf(buff,"rm %s",buff);
+    system(buff);
+  }
+  return;
 }
 char* getRef(char* ref_name) {
-  FILE* f = fopen(ref_name,"r");
-  char buffer[MAX_INPUT];
-  fgets(buffer,MAX_INPUT,f); 
-  char* res = (char*)malloc(strlen(buffer));
-  strcpy(res,buffer); fclose(f);
+  char buff[256]; sprintf(buff,".refs/%s",ref_name);
+  if (!file_exists(buff)) 
+    printf("deletedRef: The reference %s does not exists\n",buff);
+  FILE* f = fopen(buff,"r");
+  char* res = (char*)malloc(MAX_INPUT);
+  fgets(res,MAX_INPUT,f); fclose(f);
   return res;
 }
 
 /* SIMULATION */
 void myGitAdd(char* file_or_folder) {
-  if (!file_exists(".add")) 
-    system("echo > .add");
-  FILE* f = fopen(".add","w");
-  WorkTree* WT = ftwt(".add");
-  WorkFile* WF = stwf(file_or_folder);
-  appendWorkTree(WT,WF->name,WF->hash,WF->mode);
-  fprintf(f,"%s",wtts(WT));
-  fclose(f);
+  WorkTree* wt;
+  if (!file_exists(".add")) {
+    system("touch .add");
+    wt = initWorkTree();
+  } else 
+    wt = ftwt(".add");
+
+  if (file_exists(file_or_folder)) {
+    appendWorkTree(wt,file_or_folder,NULL,0);
+    wttf(wt,".add");
+  }
+  else printf("git add: File or folder %s does not exists",file_or_folder);
   return;
 }
 void myGitCommit(char* branch_name,char* message) {
@@ -252,22 +255,24 @@ void myGitCommit(char* branch_name,char* message) {
     printf("gitCommit: La branche n'existe pas\n");
     return;
   }
-  char head[MAX_INPUT], branch[MAX_INPUT];
-  FILE* f = fopen("HEAD","r"); fgets(head,MAX_INPUT,f); 
-  FILE* g = fopen(branch_name,"r"); fgets(branch,MAX_INPUT,g);
+  char *head = getRef("HEAD");
+  char  *branch = getRef(branch_name);
+
   if (strcmp(head,branch)!=0) {
     printf("getCommit: HEAD doit pointer sur le dernier commit de la branche\n");
     return;
   }
-  char cwd[PATH_MAX]; getcwd(cwd,PATH_MAX); sprintf(cwd,"%s/.refs",cwd);
-  WorkTree* wt = ftwt(".add"); deleteRef(".add"); 
-  char* h = saveWorkTree(wt,cwd);
+  WorkTree* wt = ftwt(".add"); 
+  char* h = saveWorkTree(wt,".");
   Commit* c = createCommit(h);
-  if (strcmp(branch,"")!=0) 
+  if (strlen(branch)!=0) 
     commitSet(c,"predecessor",branch);
   if (message!=NULL) 
     commitSet(c,"message",message);
   char* hc = blobCommit(c);
-  fprintf(g,"%s",hc); fprintf(f,"%s",hc);
+  createUpdateRef(branch,hc);
+  createUpdateRef("HEAD",hc);
+  system("rm .add"); 
+  free(branch); free(head);
   return;
 }

@@ -1,3 +1,4 @@
-src.c	oadsuifghipug	705
-src.txt	oadsuifghipug	715
-src1.c	oadsuifghipug	710
+lim : thai hong
+tree : aieufbqebgfquoebgo
+vu : hoang thuy duong
+truong : gia bao

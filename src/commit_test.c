@@ -24,8 +24,8 @@ int main(void) {
   commitSet(c,"Duogn","hehehe");
   commitSet(c,"Duong","hehehe");
 
-  printf("hash of duong: %lu\n",hash("Duong"));
-  printf("hash of duogn: %lu\n",hash("Duogn"));
+  printf("hash of duong: %d\n",hash("Duong"));
+  printf("hash of duogn: %d\n",hash("Duogn"));
 
   for (int i=0;i<MAX_INPUT;i++) {
     if (c->T[i]) 
@@ -42,8 +42,8 @@ int main(void) {
   commitSet(c1,"diallo","lima");
   commitSet(c1,"truong","gia bao");
 
-  char* val = commitGet(c,"lim");
-  printf("val: %s\n",val);
+  char* val = commitGet(c1,"lim");
+  printf("test de commitGet val: %s\n",val);
 
   printf("\nDescription of c: \n%s\n",cts(c));
   printf("Description of c1: \n%s\n",cts(c1));
