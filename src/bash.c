@@ -170,7 +170,7 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
   }
   return;
 }
-//verified!!
+
 
 
 /* Part 3 - GESTION DES COMMITS */
@@ -276,3 +276,4 @@ void myGitCommit(char* branch_name,char* message) {
   free(branch); free(head);
   return;
 }
+//verified!!
