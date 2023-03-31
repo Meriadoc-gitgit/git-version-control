@@ -198,7 +198,7 @@ char* blobCommit(Commit* c) {
 /* MANIPULATION DES REFERENCES */
 void initRefs() {
   if (!file_exists(".refs")) {
-    system("mkdir.refs");
+    system("mkdir .refs");
     system("touch .refs/master");
     system("touch .refs/HEAD");
   }

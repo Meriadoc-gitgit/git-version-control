@@ -56,5 +56,8 @@ int main(void) {
 
   ctf(c1,"file_test.txt");
   printf("\ntest ftc: \n%s\n",cts(ftc("file_test.txt")));
+
+  /* test hash */
+  printf("test switch: %d\n",hash("list-refs"));
   return 0;
 }
