@@ -16,7 +16,7 @@ int hashFile(char* src, char *dst) {
 }
 
 char* sha256file(char* file) {
-  static char template[] ="/tmp/fileXXXXXX";
+  static char template[] ="/tmp/myfileXXXXXX";
   char fname[1000];
   strcpy(fname,template);
   mkstemp(fname);
@@ -81,11 +81,12 @@ void blobFile(char* file) {
     return;
   }
   char *path = hashToPath(sha256file(file));
-  char *dir = (char*)malloc(2*sizeof(char));
-  strncpy(dir,path,2);
-  char command[256];
-  sprintf(command,"mkdir %s",dir);
-  system(command);
+  char *dir = strdup(path); dir[2] = '\0';
+  if (!file_exists(dir)) {
+    char command[256];
+    sprintf(command,"mkdir %s",dir);
+    system(command);
+  }
   cp(path,file);
   return;
 }
@@ -108,21 +109,15 @@ void setMode(int mode,char* path) {
 
 struct stat st = {0};
 char* blobWorkTree(WorkTree* wt) {
-  static char template[] ="/tmp/XXXXXX";
-  char *fname = strdup(template);
+  char fname[100] = "/tmp/myfileXXXXXX";
   mkstemp(fname); wttf(wt,fname);
 
+  if (stat(sha256file(fname),&st)==-1) 
+    mkdir(sha256file(fname),0700);
+  
   char *path = hashToPath(sha256file(fname));
-  char *dir = (char*)malloc(2*sizeof(char));
-  strncpy(dir,path,2);
-
-  if (stat(sha256file(fname),&st)==-1) {
-    char command[200];
-    sprintf(command,"mkdir %s",dir);
-    system(command);
-  }
-  sprintf(path,"%s.t",path);
-  cp(path,fname); free(dir);
+  strcat(path,".t");
+  cp(path,fname);
   return sha256file(fname);
 }
 char* concat(char* s1,char* s2) {
@@ -177,26 +172,20 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
 
 /* Fonction de base */
 char* blobCommit(Commit* c) {
-  static char template[] ="/tmp/XXXXXX";
-  char *fname = strdup(template);
+  char fname[100] = "/tmp/myfileXXXXXX";
   mkstemp(fname); ctf(c,fname);
 
+  if (stat(sha256file(fname),&st)==-1) 
+    mkdir(sha256file(fname),0700);
+  
   char *path = hashToPath(sha256file(fname));
-  char *dir = (char*)malloc(2*sizeof(char));
-  strncpy(dir,path,2);
-
-  if (stat(sha256file(fname),&st)==-1) {
-    char command[200];
-    sprintf(command,"mkdir %s",dir);
-    system(command);
-  }
-  sprintf(path,"%s.c",path);
-  cp(path,fname); free(dir);
+  strcat(path,".c");
+  cp(path,fname);
   return sha256file(fname);
 }
 
 /* MANIPULATION DES REFERENCES */
-void initRefs() {
+void initRefs(void) {
   if (!file_exists(".refs")) {
     system("mkdir .refs");
     system("touch .refs/master");
