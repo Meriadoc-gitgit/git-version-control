@@ -55,5 +55,6 @@ int main(void) {
 
   /* SRC */
   //printf("hash: %s\n",sha256file("src.txt"));
+
   return 0;
 }

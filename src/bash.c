@@ -275,3 +275,21 @@ char* hashToPathCommit(char* hash) {
   sprintf(buff,"%s.c",hashToPath(hash));
   return buff;
 }
+
+/* SIMULATION DE GIT CHECKOUT */
+void restoreCommit(char* hash_commit) {
+  Commit* c = ftc(hashToPathCommit(hash_commit));
+  char* tree_hash = strcat(hashToPath(commitGet(c,"tree")),".t");
+  restoreWorkTree(ftwt(tree_hash),".");
+  return;
+}
+void myGitCheckoutBranch(char* branch) {
+  char buff[PATH_MAX];
+  sprintf(buff,"echo %s > .current_branch",branch);
+  system(buff);
+
+  char* hash_commit = getRef(branch);
+  createUpdateRef("HEAD",hash_commit);
+  restoreCommit(hash_commit);
+  return;
+}

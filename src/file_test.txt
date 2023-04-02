@@ -1,4 +1,2 @@
-lim : thai hong
-tree : aieufbqebgfquoebgo
-vu : hoang thuy duong
-truong : gia bao
+chain2
+chain1
