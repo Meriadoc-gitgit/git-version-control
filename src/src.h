@@ -85,4 +85,16 @@ Commit* stc(char* file);
 void ctf(Commit* c,char* file);
 Commit* ftc(char* file);
 
+
+
+/* Part 4 - GESTION D'UNE TIMELINE ARBORESCENTE */
+/* FONCTION DE BASE */
+void initBranch(void);
+int branchExists(char* branch);
+void createBranch(char* branch);
+char* getCurrentBranch(void);
+void printBranch(char* branch);
+List* branchList(char* branch);
+List* getAllCommits(void);
+
 #endif

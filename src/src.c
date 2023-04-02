@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <sys/stat.h>
 
 #include "bash.h"
 #include "src.h"
@@ -338,4 +339,69 @@ Commit* ftc(char* file) {//ok
   }
   fclose(f);
   return c;
+}
+
+
+
+/* Part 4 - GESTION D'UNE TIMELINE ARBORESCENTE */
+/* FONCTION DE BASE */
+void initBranch(void) {
+  system("echo master > .current_branch");
+  return;
+}
+int branchExists(char* branch) {
+  return searchList(listdir(".refs"),branch)!=NULL;
+}
+void createBranch(char* branch) {
+  createUpdateRef(branch,getRef("HEAD"));
+}
+char* getCurrentBranch(void) {
+  FILE* f = fopen(".current_branch","r");
+  char* buff = (char*)malloc(PATH_MAX);
+  fgets(buff,PATH_MAX,f); fclose(f);
+  return buff;
+}
+void printBranch(char* branch) {
+  char* c_hash = getRef(branch);
+  Commit* c = ftc(hashToPathCommit(c_hash));
+  while (c) {
+    if (commitGet(c,"message")) 
+      printf("%s : %s\n",c_hash,commitGet(c,"message"));
+    else printf("%s\n",c_hash);
+
+    if (commitGet(c,"predecessor")) {
+      c_hash = commitGet(c,"predecessor");
+      c = ftc(hashToPathCommit(c_hash));
+    }
+    else c = NULL;
+  }
+  return;
+}
+List* branchList(char* branch) {
+  char* c_hash = getRef(branch);
+  Commit* c = ftc(hashToPathCommit(c_hash));
+  List* L = initList();
+  while (c) {
+    insertFirst(L,buildCell(c_hash));
+    if (commitGet(c,"predecessor")) {
+      c_hash = commitGet(c,"predecessor");
+      c = ftc(hashToPathCommit(c_hash));
+    }
+    else c = NULL;
+  }
+  return L;
+}
+List* getAllCommits(void) {
+  List* L = initList();
+  List* ref = listdir(".refs");
+  for (Cell* ptr=*ref;ptr!=NULL;ptr=ptr->next) {
+    if (ptr->data[0]=='.') continue;
+    List* branch = branchList(ptr->data);
+    while (*branch) {
+      if (!searchList(L,(*branch)->data)) 
+        insertFirst(L,buildCell((*branch)->data));
+      *branch = (*branch)->next;
+    }
+  }
+  return L;
 }

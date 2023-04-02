@@ -212,7 +212,7 @@ void deleteRef(char* ref_name) {
 char* getRef(char* ref_name) {
   char buff[256]; sprintf(buff,".refs/%s",ref_name);
   if (!file_exists(buff)) 
-    printf("deletedRef: The reference %s does not exists\n",buff);
+    printf("getRef: The reference %s does not exists\n",buff);
   FILE* f = fopen(buff,"r");
   char* res = (char*)malloc(MAX_INPUT);
   fgets(res,MAX_INPUT,f); fclose(f);
@@ -265,4 +265,13 @@ void myGitCommit(char* branch_name,char* message) {
   free(branch); free(head);
   return;
 }
-//verified!!
+
+
+
+/* Part 4 - GESTION D'UNE TIMELINE ARBORESCENTE */
+/* Side function */
+char* hashToPathCommit(char* hash) {
+  char* buff = (char*)malloc(PATH_MAX);
+  sprintf(buff,"%s.c",hashToPath(hash));
+  return buff;
+}

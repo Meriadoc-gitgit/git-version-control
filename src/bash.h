@@ -38,4 +38,16 @@ char* getRef(char* ref_name);
 void myGitAdd(char* file_or_folder);
 void myGitCommit(char* branch_name,char* message);
 
+
+
+/* Part 4 - GESTION D'UNE TIMELINE ARBORESCENTE */
+/* Side function */
+char* hashToPathCommit(char* hash);
+
+/* SIMULATION DE GIT CHECKOUT */
+void restoreCommit(char* hash_commit);
+void myGitCheckoutBranch(char* branch);
+List* filterList(List* L,char* pattern);
+void myGitCheckoutCommit(char* pattern);
+
 #endif
