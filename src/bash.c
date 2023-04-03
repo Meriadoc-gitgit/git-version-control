@@ -198,13 +198,13 @@ void createUpdateRef(char* ref_name,char* hash) {
   sprintf(buff,"echo %s > .refs/%s",hash,ref_name);
   system(buff);
 }
-void deleteRef(char* ref_name) {
+void deleteRef(char* ref_name) {//ok
   char buff[256];
   sprintf(buff,".refs/%s",ref_name);
   if (!file_exists(buff)) 
     printf("deletedRef: The reference %s does not exists\n",buff);
   else {
-    sprintf(buff,"rm %s",buff);
+    sprintf(buff,"rm .refs/%s",ref_name);
     system(buff);
   }
   return;
@@ -241,14 +241,14 @@ void myGitCommit(char* branch_name,char* message) {
     return;
   }
   if (!file_exists(branch_name)) {
-    printf("gitCommit: La branche n'existe pas\n");
+    printf("git commit: La branche n'existe pas\n");
     return;
   }
   char *head = getRef("HEAD");
   char  *branch = getRef(branch_name);
 
   if (strcmp(head,branch)!=0) {
-    printf("getCommit: HEAD doit pointer sur le dernier commit de la branche\n");
+    printf("git commit: HEAD doit pointer sur le dernier commit de la branche\n");
     return;
   }
   WorkTree* wt = ftwt(".add"); 
@@ -280,7 +280,7 @@ char* hashToPathCommit(char* hash) {
 void restoreCommit(char* hash_commit) {
   Commit* c = ftc(hashToPathCommit(hash_commit));
   char* tree_hash = strcat(hashToPath(commitGet(c,"tree")),".t");
-  restoreWorkTree(ftwt(strcat(hashToPath(commitGet(c,"tree")),".t")),".");
+  restoreWorkTree(ftwt(tree_hash),".");
   free(tree_hash);
   return;
 }

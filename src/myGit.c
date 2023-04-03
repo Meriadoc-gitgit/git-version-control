@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 
     case 5: 
       for (int i=2;i<argc;i++) 
-        myGitAdd(argv[1]);
+        myGitAdd(argv[2]);
       break;
 
     case 6:
