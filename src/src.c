@@ -8,6 +8,13 @@
 #include "src.h"
 
 /* Part 1 - Manipulation de Cell et List */
+int sizeList(List* L) {
+  int cpt = 0;
+  while (*L) {
+    cpt++; *L = (*L)->next;
+  }
+  return cpt;
+}
 List* initList() { //OK
   List* rst = (List*)malloc(sizeof(List));
   *rst = NULL;
@@ -44,11 +51,10 @@ char* ltos(List* L) {//OK
 Cell* listGet(List* L,int i) {//OK
   if (*L==NULL) return NULL;
   Cell* tmp = *L;
-  if (i==0) return NULL;
-  while(i>1) {
+  while(i>0) {
     tmp = tmp->next; i--;
   }
-  if (i==1) return tmp;
+  if (i==0) return tmp;
   else return NULL;
 }
 Cell* searchList(List* L,char* str) {//OK
@@ -358,7 +364,7 @@ void createBranch(char* branch) {
 char* getCurrentBranch(void) {
   FILE* f = fopen(".current_branch","r");
   char* buff = (char*)malloc(PATH_MAX);
-  fgets(buff,PATH_MAX,f); fclose(f);
+  fgets(buff,PATH_MAX,f); fclose(f); free(buff);
   return buff;
 }
 void printBranch(char* branch) {
@@ -366,7 +372,7 @@ void printBranch(char* branch) {
   Commit* c = ftc(hashToPathCommit(c_hash));
   while (c) {
     if (commitGet(c,"message")) 
-      printf("%s : %s\n",c_hash,commitGet(c,"message"));
+      printf("%s -> %s\n",c_hash,commitGet(c,"message"));
     else printf("%s\n",c_hash);
 
     if (commitGet(c,"predecessor")) {
@@ -375,6 +381,7 @@ void printBranch(char* branch) {
     }
     else c = NULL;
   }
+  free(c_hash);
   return;
 }
 List* branchList(char* branch) {
@@ -389,6 +396,7 @@ List* branchList(char* branch) {
     }
     else c = NULL;
   }
+  free(c_hash);
   return L;
 }
 List* getAllCommits(void) {

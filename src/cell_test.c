@@ -38,7 +38,7 @@ int main(void) {
   //printf("C1: %s\n",ctos(C1));
   printf("C2: %s\n",ctos(C2));
 
-  Cell* C3 = listGet(L,1);
+  Cell* C3 = listGet(L,0);
   printf("test de listGet sur C3: %s\n",ctos(C3));
 
   Cell* C4 = searchList(L2,"chain1");
@@ -56,5 +56,6 @@ int main(void) {
   /* SRC */
   //printf("hash: %s\n",sha256file("src.txt"));
 
+  //printf("%s",getCurrentBranch());
   return 0;
 }

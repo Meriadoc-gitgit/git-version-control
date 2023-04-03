@@ -7,7 +7,7 @@ PROGRAMS = work cell bash commit myGit
 
 all: $(PROGRAMS)
 
-myGit: bash.o src.o myGit.o
+myGit: bash.o src.o myGit.o myGit_casebreak.o
 	$(CC) -o $@ $(CFLAGS) $^
 
 bash: bash.o src.o bash_test.o
@@ -42,6 +42,9 @@ commit_test.o: commit_test.c
 
 myGit.o: myGit.c 
 	gcc $(CFLAGS) -c myGit.c 
+
+myGit_casebreak.o: myGit_casebreak.c 
+	gcc $(CFLAGS) -c myGit_casebreak.c 
 
 clean:
 	rm -f *.o *~ $(PROGRAMS)

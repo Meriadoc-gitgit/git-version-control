@@ -39,6 +39,11 @@ typedef HashTable Commit;
 
 
 /* Part 1 - MANIPULATION DE CELL ET LIST */
+/* Side function */
+int sizeList(List* L);
+int case_break(char* chain);
+
+/* Fonction de base */
 List* initList();
 Cell* buildCell(char* ch);
 void insertFirst(List* L,Cell* C);

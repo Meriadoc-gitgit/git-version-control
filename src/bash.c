@@ -280,7 +280,8 @@ char* hashToPathCommit(char* hash) {
 void restoreCommit(char* hash_commit) {
   Commit* c = ftc(hashToPathCommit(hash_commit));
   char* tree_hash = strcat(hashToPath(commitGet(c,"tree")),".t");
-  restoreWorkTree(ftwt(tree_hash),".");
+  restoreWorkTree(ftwt(strcat(hashToPath(commitGet(c,"tree")),".t")),".");
+  free(tree_hash);
   return;
 }
 void myGitCheckoutBranch(char* branch) {
@@ -291,5 +292,35 @@ void myGitCheckoutBranch(char* branch) {
   char* hash_commit = getRef(branch);
   createUpdateRef("HEAD",hash_commit);
   restoreCommit(hash_commit);
+  free(hash_commit);
+  return;
+}
+List* filterList(List* L,char* pattern) {
+  List* filtered = initList();
+  for (Cell* ptr=*L;ptr!=NULL;ptr=ptr->next) {
+    char* c = strdup(ptr->data);
+    c[strlen(pattern)] = '\0';
+    if (!strcmp(c,pattern))
+      insertFirst(filtered,buildCell(c));
+    free(c);
+  }
+  return filtered;
+}
+void myGitCheckoutCommit(char* pattern) {
+  List* filtered = filterList(getAllCommits(),pattern);
+  if (sizeList(filtered)==1) {
+    char* c_hash = listGet(filtered,0)->data;
+    createUpdateRef("HEAD",c_hash);
+    restoreCommit(c_hash);
+    free(c_hash);
+  } else {
+    if (!sizeList(filtered)) 
+      printf("No pattern matching.\n");
+    else {
+      printf("Multiple matchings found:\n");
+      for (Cell* ptr=*filtered;ptr!=NULL;ptr=ptr->next)
+        printf("-> %s\n",ptr->data);
+    }
+  }
   return;
 }
