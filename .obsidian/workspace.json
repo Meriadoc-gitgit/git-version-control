@@ -13,8 +13,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "desc/preliminary.md",
-                "mode": "source",
+                "file": "desc/multi_instant.md",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "desc/preliminary.md",
+                "file": "desc/multi_instant.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "desc/preliminary.md",
+                "file": "desc/multi_instant.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "desc/preliminary.md"
+                "file": "desc/multi_instant.md"
               }
             }
           }
@@ -148,9 +148,10 @@
   },
   "active": "8a0b7c33d40eaae6",
   "lastOpenFiles": [
-    "desc/multi_instant.md",
     "desc/commit.md",
     "readme.MD",
-    "desc/preliminary.md"
+    "img/commit.png",
+    "desc/preliminary.md",
+    "desc/multi_instant.md"
   ]
 }
