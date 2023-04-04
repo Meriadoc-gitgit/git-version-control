@@ -1,17 +1,17 @@
 # GESTION DES COMMITS
-## Preliminaire
-Pour pouvoir suivre l'evolution d'un projet, il faut pouvoir organiser chronologiquement differents enregistrements instantanes. 
+## Préliminaire
+Pour pouvoir suivre l'évolution d'un projet, il faut pouvoir organiser chronologiquement différents enregistrements instantanés. 
 
-Pour cela, on utilise ce qu'on appelle des *commits*, qui sont des enregistrements instantanes associes a des etapes jugees importantes dans la chronologie du projet.
+Pour cela, on utilise ce qu'on appelle des *commits*, qui sont des enregistrements instantanés associés à des étapes jugées importantes dans la chronologie du projet.
 >**Commits** = point de sauvegarde
 
->*On souhaite garder une trace quand on s'interresse a l'evolution du projet.*
+>*On souhaite garder une trace quand on s'intérresse à l'évolution du projet.*
 
-Avec notre implementation: 
-- Un commit est associe a l'enregistrement instantane d'un `WorkTree`
-- *[...]* accompagne d'autres informations relatives au point de sauvegarde
+Avec notre implémentation: 
+- Un commit est associé à l'enregistrement instantané d'un `WorkTree`
+- *[...]* accompagné d'autres informations relatives au point de sauvegarde
 
-### Structure utilisee
+### Structure utilisée
 ```c
 typedef struct key_value_pair {
   char* key;
@@ -27,12 +27,13 @@ typedef struct hash_table {
 typedef HashTable Commit;
 ```
 #### Note
-- Un commit est implemente par une table de hachage dont les cles et les valeurs sont des chaines de caracteres
-- Les elements de la table doivent correspondre ayx informations associees au point de sauvegarde
+- Un commit est implémenté par une table de hachage dont les clés et les valeurs sont des chaines de caractères
+- Les éléments de la table doivent correspondre aux informations associées au point de sauvegarde
 - Un `Commit` **devra au moins** contenir une paire de la forme `("tree",hash)` 
+	
+	où `hash` est le hash du fichier correspondant à l'enregistrement instantané d'un `WorkTree`
 
-  où `hash` est le hash du fichier correspondant a l'enregistrement instantane d'un `WorkTree`
-> **Remarque:** Cette partie a pour but de simuler les commandes `git add` et `git commit` de maniere simplifiee
+> **Remarque:** Cette partie a pour but de simuler les commandes `git add` et `git commit` de manière simplifiée
 
 ## Fonction HASH choisie: `DJB2`
 - [Homepage link](http://www.cse.yorku.ca/~oz/hash.html)
@@ -41,11 +42,11 @@ typedef HashTable Commit;
 - [Hash Functions for Strings](https://youtu.be/jtMwp0FqEcg)
 
 ## Fonctions de base
-1. `kvp* createKeyVal(char* key,char* val);` : allouer + initialiser un element
-
-    `void freeKeyVal(kvp* kv);` : liberer la memoire associe a un element
-2. `char* kvts(kvp* k)`: Convertir un element en une chaine de caracteres de la forme `cle:val`
-
-    `kvp* stkv(char* str);`: permet de faire la conversion inverse
-3. `Commit* initCommit();`: allouer et initialiser un `Commit` de taille fixee *(donnee par une constante du programme)*
-4. `void commitSet(Commit* c,char* key,char* value);`: insere la paire `(key,value)` dans la table, en gerant les collisions par adressage ouvert et probing **lineaire**
+1. `kvp* createKeyVal(char* key,char* val)` : allouer + initialiser un élément
+	
+    `void freeKeyVal(kvp* kv)` : libérer la memoire associé à un élément
+2. `char* kvts(kvp* k)`: convertir un élément en une chaine de caractères de la forme `cle:val`
+	
+    `kvp* stkv(char* str)`: permet de faire la conversion inverse
+3. `Commit* initCommit()`: allouer et initialiser un `Commit` de taille fixée *(donnée par une constante du programme)*
+4. `void commitSet(Commit* c,char* key,char* value)`: insère la paire `(key,value)` dans la table, en gérant les collisions par adressage ouvert et probing **linéaire**
