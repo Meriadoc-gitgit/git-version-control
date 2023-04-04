@@ -93,7 +93,7 @@ Dans `.refs`, il faut au moins 2 références:
 	- utilisé pour simuler des déplacements dans la timeline
 	- Par défaut: contient le hash du dernier `Commit` de la branche
 
-![[commit.png]]
+![[img/commit.png]]
 
 ### MANIPULATION DES RÉFÉRENCES
 1. `void initRefs()`: crée le répertoire caché `.refs` *(s'il n'existe pas déjà)* + crée `master` et `HEAD`
