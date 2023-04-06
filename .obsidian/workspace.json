@@ -13,8 +13,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "desc/branch-fusion.md",
-                "mode": "source",
+                "file": "desc/timeline.md",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -69,8 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "a4474f730b6c3359",
@@ -86,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "desc/branch-fusion.md",
+                "file": "desc/timeline.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "desc/branch-fusion.md",
+                "file": "desc/timeline.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "desc/branch-fusion.md"
+                "file": "desc/timeline.md"
               }
             }
           }
@@ -149,7 +148,11 @@
   },
   "active": "453b0d65e370a4b6",
   "lastOpenFiles": [
+    "desc/multi_instant.md",
+    "desc/commit.md",
     "desc/branch-fusion.md",
+    "desc/sub_img/method-fusion.png",
+    "desc/sub_img/fusion.png",
     "desc/timeline.md",
     "readme.MD",
     "projet-version-3avril.pdf",
@@ -160,10 +163,8 @@
     "src/src.o",
     "src/bash.o",
     "src/bash-e35ae5ee.o.tmp",
-    "desc/commit.md",
     "desc/sub_img/timeline.png",
     "projet-version-27mars.pdf",
-    "desc/multi_instant.md",
     "desc/sub_img/commit.png",
     "desc/preliminary.md"
   ]
