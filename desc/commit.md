@@ -35,6 +35,8 @@ typedef HashTable Commit;
 
 > **Remarque:** Cette partie a pour but de simuler les commandes `git add` et `git commit` de manière simplifiée
 
+>**Remarque 2**: Dans cette partie, on travaille avec une seule branche, permettant de suivre l'**évolution d'un projet** de manière **linéaire**
+
 ## Fonction HASH choisie: `DJB2`
 - [Homepage link](http://www.cse.yorku.ca/~oz/hash.html)
 - [DJB2 Algo explained](https://thealgorithms.github.io/C/d4/de3/hash__djb2_8c.html#details)

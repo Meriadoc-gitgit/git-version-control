@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "6bc923b818ecb3e5",
+        "id": "1ed5f34182d12fc5",
         "type": "tabs",
         "children": [
           {
-            "id": "8a0b7c33d40eaae6",
+            "id": "453b0d65e370a4b6",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "desc/commit.md",
+                "file": "desc/branch-fusion.md",
                 "mode": "source",
                 "source": false
               }
@@ -69,7 +69,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "a4474f730b6c3359",
@@ -85,7 +86,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "desc/commit.md",
+                "file": "desc/branch-fusion.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +103,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "desc/commit.md",
+                "file": "desc/branch-fusion.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +126,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "desc/commit.md"
+                "file": "desc/branch-fusion.md"
               }
             }
           }
@@ -146,11 +147,23 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "8a0b7c33d40eaae6",
+  "active": "453b0d65e370a4b6",
   "lastOpenFiles": [
-    "desc/multi_instant.md",
-    "desc/commit.md",
+    "desc/branch-fusion.md",
+    "desc/timeline.md",
     "readme.MD",
+    "projet-version-3avril.pdf",
+    "Unconfirmed 384360.crdownload",
+    "src/myGit",
+    "src/myGit_casebreak.o",
+    "src/myGit.o",
+    "src/src.o",
+    "src/bash.o",
+    "src/bash-e35ae5ee.o.tmp",
+    "desc/commit.md",
+    "desc/sub_img/timeline.png",
+    "projet-version-27mars.pdf",
+    "desc/multi_instant.md",
     "desc/sub_img/commit.png",
     "desc/preliminary.md"
   ]

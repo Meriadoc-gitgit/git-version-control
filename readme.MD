@@ -11,6 +11,8 @@ Un logiciel de **gestion de versions** est un outil permettant le stockage, le s
 1. [Preliminary](desc/preliminary.md)
 2. [Enregistrement de plusieur instantanees](desc/multi_instant.md)
 3. [Gestion des commits](desc/commit.md)
+4. [Timeline arborescente](desc/timeline.md)
+5. [Fusions de branches](desc/branch-fusion.md)
 
 ## `myGit` command simulated
 - `./myGit init`: initialise le répertoire de références
