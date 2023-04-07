@@ -18,6 +18,7 @@ void blobFile(char* file);
 int getChmod(const char* path);
 void setMode(int mode,char* path);
 
+char* hashToFile(char* hash);
 char* blobWorkTree(WorkTree* wt);
 char* concat(char* s1,char* s2);
 char* saveWorkTree(WorkTree* wt,char* path);

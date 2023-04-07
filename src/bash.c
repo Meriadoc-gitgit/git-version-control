@@ -16,17 +16,21 @@ int hashFile(char* src, char *dst) {
 }
 
 char* sha256file(char* file) {
+  /* Creation de fichier temporaire */
   static char template[] ="/tmp/myfileXXXXXX";
   char fname[1000];
   strcpy(fname,template);
   mkstemp(fname);
 
+  /* Enregistrement du hash du fichier en parametre au fichier temporaore */
   hashFile(file,fname);
+  /* Recuperation du hash du fichier en parametre enregistre dans le fichier temporaire */
   char *hash = (char*)malloc(256*sizeof(char));
   FILE *f = fopen(fname,"r");
   fgets(hash,256,f);
   fclose(f);
 
+  /* Commande envoye au systeme pour supprimer le fichier temporaire interne */
   char cmd[10000]; 
   sprintf(cmd,"rm %s",fname);
   system(cmd);
@@ -36,29 +40,32 @@ char* sha256file(char* file) {
 
 List* listdir(char* root_dir) {
   List* L = initList();
+  /* Parcourir la liste des fichiers et/ou repertoires contenant dans root_dir */
   DIR* dp = opendir(root_dir);
   struct dirent* ep;
   if (dp) {
     while((ep = readdir(dp))) {
+      /* Inserer le nom du contenu de root_dir dans une List L */
       insertFirst(L,buildCell(ep->d_name));
       List ptr = *L;
     }
-    (void)closedir(dp);
+    (void)closedir(dp); //fermer le flux apres l'usage
   } else {
+    /* Au cas ou parcours echoue, rattrapper le message d'erreur */
     perror("listdir: Could not open the directory\n");
     return NULL;
   }
   return L;
 }
 int file_exists(char* file) {
-  struct stat buffer;
+  struct stat buffer; //structure that provides detailed information about a file
   return (stat(file,&buffer)==0);
 }
 void cp(char* to, char* from) {
   if(file_exists(from)) {
     char ligne[256];
     FILE* ffrom = fopen(from,"r"); FILE* fto = fopen(to,"w");
-    while(fgets(ligne,256,ffrom))
+    while(fgets(ligne,256,ffrom)) //copie par lecture ligne par ligne du fichier source
       fputs(ligne,fto);
     fclose(ffrom); fclose(fto);
   }
@@ -66,33 +73,36 @@ void cp(char* to, char* from) {
 }
 char* hashToPath(char* hash) {
   char* dir = (char*)malloc((strlen(hash)+1)*sizeof(char));
-  dir[0] = hash[0]; dir[1] = hash[1]; dir[2] = '/';
+  dir[0] = hash[0]; dir[1] = hash[1]; dir[2] = '/'; //copier la repertoire du hash
   int i;
   for(i=3;i<=strlen(hash);i++)
-    dir[i] = hash[i-1];
-  dir[i] = '\0';
+    dir[i] = hash[i-1]; //copier chaque caractere du hash apres l'ajout de '/'
+  dir[i] = '\0'; // caractere fin 
   return dir;
 }
 void blobFile(char* file) { //ok, mais a re-tester
   if (!file_exists(file)) {
+    /* verifier l'existence du fichier en parametre dans le repertoire courant */
     printf("blobFile: Fichier demande n'existe pas\n");
     return;
   }
   char *path = hashToPath(sha256file(file));
-  char *dir = strdup(path); dir[2] = '\0';
+  char *dir = strdup(path); dir[2] = '\0'; //extraire le repertoire du hash
   if (!file_exists(dir)) {
-    char command[256];
+    char command[256]; 
+    /* creer le repertoire extrait s'il n'existe pas deja */
     sprintf(command,"mkdir %s",dir);
     system(command);
   }
-  if (file_exists(path)) return;
-  cp(path,file);
+  if (file_exists(path)) return; //si le fichier hash existe deja, aucune operation de plus
+  cp(path,file); //copier le contenu du fichier en parametre dans le path extrait de son hash
   return;
 }
 
 
 
 /* Part 2 */
+/* Fonction fournie pour la manipulation des chmod */
 int getChmod(const char* path) {
   struct stat ret;
   if (stat(path,&ret)==-1) return -1;
@@ -107,17 +117,23 @@ void setMode(int mode,char* path) {
 }
 
 struct stat st = {0};
+char* hashToFile(char* hash) {
+  char* ch = strdup(hash);
+  ch[2] = '\0'; //extrait de nom de repertoire du hash
+  if (stat(ch,&st)==-1) //creer le repertoire s'il n'existe pas deja
+    mkdir(ch,0700);
+  return hashToPath(hash);
+}
 char* blobWorkTree(WorkTree* wt) {
+  /* creation du fichier temporaire */
   char fname[100] = "/tmp/myfileXXXXXX";
-  mkstemp(fname); wttf(wt,fname);
+  mkstemp(fname); wttf(wt,fname); //ecrire le contenu de worktree dans le fichier temporaire
 
-  if (stat(sha256file(fname),&st)==-1) 
-    mkdir(sha256file(fname),0700);
-  
-  char *path = hashToPath(sha256file(fname));
-  strcat(path,".t");
-  cp(path,fname);
-  return sha256file(fname);
+  char* hash = sha256file(fname);
+  char* ch = hashToFile(hash);
+  strcat(ch,".t"); //ajouter l'extension '.t' pour se differer le repertoire des fichiers
+  cp(ch,fname); //copier le contenu du fichier temporaire au path extrait du hash
+  return hash;
 }
 char* concat(char* s1,char* s2) {
   char* dir = (char*)malloc(MAX_INPUT);
@@ -129,16 +145,17 @@ char* saveWorkTree(WorkTree* wt,char* path) {//ok
   for (int i=0;i<wt->n;i++) {
     WF = wt->tab[i]; 
     char* a_path = concat(path,WF.name);
-    if (listdir(a_path)) {
+    if (listdir(a_path)) { //si c'est un repertoire
       List* L = listdir(WF.name);
       WorkTree* newWT = initWorkTree(); 
       while(*L) {
+        //creer le nouveau worktree pour l'appel recursive de cette fonction
         appendWorkTree(newWT,(*L)->data,sha256file((*L)->data),getChmod((*L)->data));
         *L = (*L)->next;
       }
       WF.hash = saveWorkTree(newWT,a_path);
       WF.mode = getChmod(a_path);
-    } else {
+    } else { //si c'est un simple fichier
       blobFile(a_path);
       WF.hash = sha256file(a_path);
       WF.mode = getChmod(a_path);
@@ -153,11 +170,13 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
     char* a_path = concat(path,WF.name);
     char* cpPath = hashToPath(WF.hash);
     if (strcmp(strstr(WF.hash,".t"),".t")==0) {
+      //si c'est un repertoire
+      // strstr(arg1,arg2): trouver la sous-chaine similaire indique dans args2 de arg1
       strcat(a_path,".t");
       WorkTree* newWT = ftwt(cpPath);
       restoreWorkTree(newWT,a_path);
       setMode(getChmod(cpPath),a_path);
-    } else {
+    } else { //si c'est un fichier
       cp(a_path,cpPath); 
       setMode(getChmod(cpPath),a_path);
     }
@@ -170,21 +189,20 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
 /* Part 3 - GESTION DES COMMITS */
 /* Fonction de base */
 char* blobCommit(Commit* c) {
+  /* Meme procedure que blobWorkTree en utilisant l'extension .c au lieu de .t */
   char fname[100] = "/tmp/myfileXXXXXX";
   mkstemp(fname); ctf(c,fname);
 
-  if (stat(sha256file(fname),&st)==-1) 
-    mkdir(sha256file(fname),0700);
-  
-  char *path = hashToPath(sha256file(fname));
-  strcat(path,".c");
-  cp(path,fname);
-  return sha256file(fname);
+  char* hash = sha256file(fname);
+  char* ch = hashToFile(hash);
+  strcat(ch,".c");
+  cp(ch,fname);
+  return hash;
 }
 
 /* MANIPULATION DES REFERENCES */
 void initRefs(void) {
-  if (!file_exists(".refs")) {
+  if (!file_exists(".refs")) { //si .refs n'existe pas deja
     system("mkdir .refs");
     system("touch .refs/master");
     system("touch .refs/HEAD");
@@ -193,13 +211,15 @@ void initRefs(void) {
 }
 void createUpdateRef(char* ref_name,char* hash) {
   char buff[256];
+  /* echo hash > .refs/ref_name: ecrire hash dans .refs/ref_name */
   sprintf(buff,"echo %s > .refs/%s",hash,ref_name);
   system(buff);
+  return;
 }
 void deleteRef(char* ref_name) {//ok
   char buff[256];
   sprintf(buff,".refs/%s",ref_name);
-  if (!file_exists(buff)) 
+  if (!file_exists(buff)) //verifier l'existence de buff dans .refs
     printf("deletedRef: The reference %s does not exists\n",buff);
   else {
     sprintf(buff,"rm .refs/%s",ref_name);
@@ -209,11 +229,11 @@ void deleteRef(char* ref_name) {//ok
 }
 char* getRef(char* ref_name) {
   char buff[256]; sprintf(buff,".refs/%s",ref_name);
-  if (!file_exists(buff)) 
+  if (!file_exists(buff)) //verifier l'existence de ref_name dans .refs
     printf("getRef: The reference %s does not exists\n",buff);
   FILE* f = fopen(buff,"r");
   char* res = (char*)malloc(MAX_INPUT);
-  fgets(res,MAX_INPUT,f); fclose(f);
+  fgets(res,MAX_INPUT,f); fclose(f); //lire le contenu de ref_name + l'enregistrer dans res
   return res;
 }
 
