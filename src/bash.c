@@ -45,7 +45,7 @@ List* listdir(char* root_dir) {
     }
     (void)closedir(dp);
   } else {
-    perror("listdir: Could not opend the directory\n");
+    perror("listdir: Could not open the directory\n");
     return NULL;
   }
   return L;
@@ -55,27 +55,25 @@ int file_exists(char* file) {
   return (stat(file,&buffer)==0);
 }
 void cp(char* to, char* from) {
-  if (!file_exists(from)) {
-    printf("cp: Fichier demande n'existe pas\n");
-    return;
+  if(file_exists(from)) {
+    char ligne[256];
+    FILE* ffrom = fopen(from,"r"); FILE* fto = fopen(to,"w");
+    while(fgets(ligne,256,ffrom))
+      fputs(ligne,fto);
+    fclose(ffrom); fclose(fto);
   }
-  char cmd[20000];
-  sprintf(cmd,"cat %s > %s",from,to);
-  system(cmd); return;
+  return;
 }
 char* hashToPath(char* hash) {
-  char res[(int)strlen(hash)+1];
-  for (int i=0;i<2;i++) 
-    res[i] = hash[i];
-  res[2] = '/';
-  for (int i=2;i<(int)strlen(hash);i++)
-    res[i+1] = hash[i];
-
-  char* str = (char*)malloc(sizeof(char));
-  strcpy(str,res);
-  return str;
+  char* dir = (char*)malloc((strlen(hash)+1)*sizeof(char));
+  dir[0] = hash[0]; dir[1] = hash[1]; dir[2] = '/';
+  int i;
+  for(i=3;i<=strlen(hash);i++)
+    dir[i] = hash[i-1];
+  dir[i] = '\0';
+  return dir;
 }
-void blobFile(char* file) {
+void blobFile(char* file) { //ok, mais a re-tester
   if (!file_exists(file)) {
     printf("blobFile: Fichier demande n'existe pas\n");
     return;
@@ -170,7 +168,6 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
 
 
 /* Part 3 - GESTION DES COMMITS */
-
 /* Fonction de base */
 char* blobCommit(Commit* c) {
   char fname[100] = "/tmp/myfileXXXXXX";
