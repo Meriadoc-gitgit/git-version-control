@@ -4,16 +4,18 @@
     "type": "split",
     "children": [
       {
-        "id": "1ed5f34182d12fc5",
+        "id": "731dd24711d18939",
         "type": "tabs",
         "children": [
           {
-            "id": "453b0d65e370a4b6",
+            "id": "e6e6afc230c3c0fb",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "projet-version-3avril.pdf"
+                "file": "desc/timeline.md",
+                "mode": "preview",
+                "source": false
               }
             }
           }
@@ -83,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "projet-version-3avril.pdf",
+                "file": "desc/timeline.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "projet-version-3avril.pdf",
+                "file": "desc/timeline.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -123,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projet-version-3avril.pdf"
+                "file": "desc/timeline.md"
               }
             }
           }
@@ -144,10 +146,12 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "453b0d65e370a4b6",
+  "active": "e6e6afc230c3c0fb",
   "lastOpenFiles": [
-    "desc/timeline.md",
+    "file.txt",
+    "desc/sub_img/timeline.png",
     "projet-version-3avril.pdf",
+    "desc/timeline.md",
     "desc/commit.md",
     "desc/multi_instant.md",
     "desc/branch-fusion.md",
@@ -161,7 +165,6 @@
     "src/src.o",
     "src/bash.o",
     "src/bash-e35ae5ee.o.tmp",
-    "desc/sub_img/timeline.png",
     "projet-version-27mars.pdf",
     "desc/sub_img/commit.png",
     "desc/preliminary.md"

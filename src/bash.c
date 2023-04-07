@@ -359,8 +359,8 @@ List* merge(char* remote_branch, char* message) {
   WorkTree* wt = mergeWorkTree(current,remote,&conflicts);
   
   Commit* c = createCommit(blobWorkTree(wt));
-  commitSet(c,"predecessor",getRef(getCurrentBranch));
-  commitSet(c,"merged_predecessor",getRef(remote_branch));
+  commitSet(c,"predecessor",current_commit_h);
+  commitSet(c,"merged_predecessor",remote_commit_h);
   char* c_h = blobCommit(c);
   myGitCommit(getCurrentBranch(),message);
   createUpdateRef("HEAD",c_h);
@@ -368,8 +368,20 @@ List* merge(char* remote_branch, char* message) {
   restoreWorkTree(wt,".");
 
   free(current_commit_h); free(remote_commit_h); free(c_h);
+  libererWorkTree(current); libererWorkTree(remote);
   return NULL;
 }
 void createDeletionCommit(char* branch, List* conflicts, char* message) {
-
+  char* depart = getCurrentBranch();
+  myGitCheckoutBranch(branch);
+  Commit* c = ftc(hashToPathCommit(getRef(getCurrentBranch())));
+  WorkTree* wt = ftwt(strcat(hashToPath(commitGet(c,"tree")),".t"));
+  system("echo > .add"); // vider la zone de preparation
+  for(int i=0;i<wt->n;i++) {
+    if (!searchList(conflicts,wt->tab[i].name)) 
+      myGitAdd(wt->tab[i].name);
+  }
+  myGitCommit(branch,message);
+  myGitCheckoutBranch(depart); free(depart); libererWorkTree(wt);
+  return;
 }
