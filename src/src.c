@@ -37,16 +37,13 @@ char* ctos(Cell* C) {//OK
 char* ltos(List* L) {//OK
   if (*L==NULL) 
     return "";  
-  char command[MAX_INPUT] = "";
-  Cell* C = *L;
-  char* rst = (char*)malloc(sizeof(char)), *tmp;
-  while(C) {
-    tmp = ctos(C);
-    sprintf(command,"%s%s|",command,tmp);
-    C = C->next;
+  char* ch = malloc(PATH_MAX*sizeof(char));
+  while(*L) {
+    strcat(ch,(*L)->data);
+    *L = (*L)->next;
+    if (*L) strcat(ch,"|");
   }
-  strcpy(rst,command);
-  return rst;
+  return ch;
 }
 Cell* listGet(List* L,int i) {//OK
   if (*L==NULL) return NULL;
