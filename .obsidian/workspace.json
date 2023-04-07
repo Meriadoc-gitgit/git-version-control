@@ -11,11 +11,9 @@
             "id": "453b0d65e370a4b6",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "desc/timeline.md",
-                "mode": "preview",
-                "source": false
+                "file": "projet-version-3avril.pdf"
               }
             }
           }
@@ -85,7 +83,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "desc/timeline.md",
+                "file": "projet-version-3avril.pdf",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +100,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "desc/timeline.md",
+                "file": "projet-version-3avril.pdf",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +123,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "desc/timeline.md"
+                "file": "projet-version-3avril.pdf"
               }
             }
           }
@@ -148,14 +146,14 @@
   },
   "active": "453b0d65e370a4b6",
   "lastOpenFiles": [
-    "desc/multi_instant.md",
+    "desc/timeline.md",
+    "projet-version-3avril.pdf",
     "desc/commit.md",
+    "desc/multi_instant.md",
     "desc/branch-fusion.md",
     "desc/sub_img/method-fusion.png",
     "desc/sub_img/fusion.png",
-    "desc/timeline.md",
     "readme.MD",
-    "projet-version-3avril.pdf",
     "Unconfirmed 384360.crdownload",
     "src/myGit",
     "src/myGit_casebreak.o",

@@ -87,6 +87,7 @@ void blobFile(char* file) {
     sprintf(command,"mkdir %s",dir);
     system(command);
   }
+  if (file_exists(path)) return;
   cp(path,file);
   return;
 }
@@ -323,4 +324,52 @@ void myGitCheckoutCommit(char* pattern) {
     }
   }
   return;
+}
+
+
+
+/* Part 5+6 - FINAL */
+/* SIMULATION DE GIT MERGE */
+WorkTree* mergeWorkTree(WorkTree* wt1, WorkTree* wt2, List** conflicts) {
+  for (int i=0;i<wt1->n;i++) {
+    if (inWorkTree(wt2,wt1->tab[i].name))
+      insertFirst(*conflicts,buildCell(wt1->tab[i].name));
+  }
+  WorkTree* wt = initWorkTree();
+  for (int i=0;i<wt1->n;i++) {
+    if (!searchList(*conflicts,wt1->tab[i].name))
+      appendWorkTree(wt,wt1->tab[i].name,wt1->tab[i].hash,wt1->tab[i].mode);
+  }
+  for (int i=0;i<wt2->n;i++) {
+    if (!searchList(*conflicts,wt2->tab[i].name))
+      appendWorkTree(wt,wt2->tab[i].name,wt2->tab[i].hash,wt2->tab[i].mode);
+  }
+  return wt;
+}
+List* merge(char* remote_branch, char* message) {
+  char* current_commit_h = getRef(getCurrentBranch());
+  char* remote_commit_h = getRef(remote_branch);
+
+  WorkTree* current = ftwt(strcat(hashToPath(commitGet(ftc(hashToPathCommit(current_commit_h)),"tree")),".t"));
+  WorkTree* remote = ftwt(strcat(hashToPath(commitGet(ftc(hashToPathCommit(remote_commit_h)),"tree")),".t"));
+
+  List* conflicts = initList();
+  if (conflicts) return conflicts;
+
+  WorkTree* wt = mergeWorkTree(current,remote,&conflicts);
+  
+  Commit* c = createCommit(blobWorkTree(wt));
+  commitSet(c,"predecessor",getRef(getCurrentBranch));
+  commitSet(c,"merged_predecessor",getRef(remote_branch));
+  char* c_h = blobCommit(c);
+  myGitCommit(getCurrentBranch(),message);
+  createUpdateRef("HEAD",c_h);
+  deleteRef(remote_branch);
+  restoreWorkTree(wt,".");
+
+  free(current_commit_h); free(remote_commit_h); free(c_h);
+  return NULL;
+}
+void createDeletionCommit(char* branch, List* conflicts, char* message) {
+
 }

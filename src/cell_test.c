@@ -57,5 +57,8 @@ int main(void) {
   //printf("hash: %s\n",sha256file("src.txt"));
 
   //printf("%s",getCurrentBranch());
+
+  char *crt = concat(".refs/",getCurrentBranch());
+  printf("%s\n",crt);
   return 0;
 }

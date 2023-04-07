@@ -50,4 +50,12 @@ void myGitCheckoutBranch(char* branch);
 List* filterList(List* L,char* pattern);
 void myGitCheckoutCommit(char* pattern);
 
+
+
+/* Part 5+6 - FINAL */
+/* SIMULATION DE GIT MERGE */
+WorkTree* mergeWorkTree(WorkTree* wt1, WorkTree* wt2, List** conflicts);
+List* merge(char* remote_branch, char* message);
+void createDeletionCommit(char* branch, List* conflicts, char* message);
+
 #endif

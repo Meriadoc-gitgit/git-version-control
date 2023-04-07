@@ -97,9 +97,9 @@ Commit* ftc(char* file);
 void initBranch(void);
 int branchExists(char* branch);
 void createBranch(char* branch);
-char* getCurrentBranch(void);
+char* getCurrentBranch();
 void printBranch(char* branch);
 List* branchList(char* branch);
-List* getAllCommits(void);
+List* getAllCommits();
 
 #endif
