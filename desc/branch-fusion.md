@@ -4,6 +4,7 @@
 >**Note**: Ce nouveau commit est un peu spécial car il possède 2 prédécesseurs au lieu d'un seul
 
 **Risque de conflits**: Un conflit survient lorsque les worktrees à fusionner contiennent un fichier/répertoire de même nom, mais avec des hash *(donc des contenus)* différents
+
 $\to$ proposer des méthodes de gestion de conflits pour pouvoir fusionner des branches de manière pertinente.
 
 ![fusion](sub_img/fusion.png)
@@ -15,6 +16,7 @@ Pour résoudre un conflit: créer un commit dit *"de suppression"* qui consiste 
 Example
 ![méthode de fusion](sub_img/method-fusion.png)
 Si l'utilisateur préfère conserver le fichier `A.h` de la branche `master` plutôt que celui de `Feature1`, alors on va créer un commit de suppression sur la branche `Feature1` qui consiste à supprimer `A.h` de cette branche.
+
 $\to$ Possible de réaliser la fusion des 2 branches sans conflit
 
 #### Note
