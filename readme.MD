@@ -11,7 +11,7 @@ Un logiciel de **gestion de versions** est un outil permettant le stockage, le s
 **Objectif:** Étudier le fonctionnement d'un logiciel de gestion de versions, *en détaillant* différentes structures de données impliquées dans sa mise en oeuvre. 
 ## Path
 1. [Preliminary](desc/preliminary.md)
-2. [Enregistrement de plusieurs instantanees](desc/multi_instant.md)
+2. [Enregistrement de plusieurs instantanées](desc/multi_instant.md)
 3. [Gestion des commits](desc/commit.md)
 4. [Timeline arborescente](desc/timeline.md)
 5. [Fusions de branches](desc/branch-fusion.md)
