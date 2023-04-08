@@ -41,5 +41,7 @@ int main(void) {
 
   printf("chmod du fichier src.c dans src dans le projet: %d\n",getChmod("/Users/vuhoangthuyduong/Documents/GitHub/GIT-version-control/src/src.c"));
 
+  cp("src.c","test.txt");
+
   return 0;
 }
