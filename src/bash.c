@@ -63,10 +63,12 @@ int file_exists(char* file) {
 void cp(char* to, char* from) {
   if(file_exists(from)) {
     char ligne[256];
-    FILE* ffrom = fopen(from,"r"); FILE* fto = fopen(to,"w");
+    FILE* ffrom = fopen(from,"r"); 
+    FILE* fto = fopen(to,"w");
     while(fgets(ligne,256,ffrom)) //copie par lecture ligne par ligne du fichier source
       fprintf(fto,"%s",ligne);
-    fclose(ffrom); fclose(fto);
+    fclose(ffrom); 
+    fclose(fto);
   }
   return;
 }
@@ -126,7 +128,8 @@ char* hashToFile(char* hash) {
 char* blobWorkTree(WorkTree* wt) {
   /* creation du fichier temporaire */
   char fname[100] = "/tmp/myfileXXXXXX";
-  mkstemp(fname); wttf(wt,fname); //ecrire le contenu de worktree dans le fichier temporaire
+  mkstemp(fname); 
+  wttf(wt,fname); //ecrire le contenu de worktree dans le fichier temporaire
 
   char* hash = sha256file(fname);
   char* ch = hashToFile(hash);
@@ -136,7 +139,9 @@ char* blobWorkTree(WorkTree* wt) {
 }
 char* concat(char* s1,char* s2) {
   char* dir = (char*)malloc(INT_MAX*sizeof(char));
-  strcat(dir,s1); strcat(dir,"/"); strcat(dir,s2);
+  strcat(dir,s1); 
+  strcat(dir,"/"); 
+  strcat(dir,s2);
   return dir;
 }
 int isFile(const char* fileName) {
@@ -197,7 +202,8 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
 char* blobCommit(Commit* c) {
   /* Meme procedure que blobWorkTree en utilisant l'extension .c au lieu de .t */
   char fname[100] = "/tmp/myfileXXXXXX";
-  mkstemp(fname); ctf(c,fname);
+  mkstemp(fname); 
+  ctf(c,fname);
 
   char* hash = sha256file(fname);
   char* ch = hashToFile(hash);
@@ -234,12 +240,14 @@ void deleteRef(char* ref_name) {//ok
   return;
 }
 char* getRef(char* ref_name) {
-  char buff[256]; sprintf(buff,".refs/%s",ref_name);
+  char buff[256]; 
+  sprintf(buff,".refs/%s",ref_name);
   if (!file_exists(buff)) //verifier l'existence de ref_name dans .refs
     printf("getRef: The reference %s does not exists\n",buff);
   FILE* f = fopen(buff,"r");
   char* res = (char*)malloc(MAX_INPUT);
-  fgets(res,MAX_INPUT,f); fclose(f); //lire le contenu de ref_name + l'enregistrer dans res
+  fgets(res,MAX_INPUT,f); //lire le contenu de ref_name + l'enregistrer dans res
+  fclose(f); 
   return res;
 }
 
@@ -286,7 +294,8 @@ void myGitCommit(char* branch_name,char* message) {
   createUpdateRef(branch,hc);
   createUpdateRef("HEAD",hc);
   system("rm .add"); 
-  free(branch); free(head);
+  free(branch); 
+  free(head);
   return;
 }
 
@@ -373,8 +382,12 @@ List* merge(char* remote_branch, char* message) {
   char* current_commit_h = getRef(getCurrentBranch());
   char* remote_commit_h = getRef(remote_branch);
 
-  WorkTree* current = ftwt(strcat(hashToPath(commitGet(ftc(hashToPathCommit(current_commit_h)),"tree")),".t"));
-  WorkTree* remote = ftwt(strcat(hashToPath(commitGet(ftc(hashToPathCommit(remote_commit_h)),"tree")),".t"));
+  WorkTree* current = ftwt(strcat(
+    hashToPath(commitGet(
+      ftc(hashToPathCommit(current_commit_h)),"tree")),".t"));
+  WorkTree* remote = ftwt(strcat(
+    hashToPath(commitGet(
+      ftc(hashToPathCommit(remote_commit_h)),"tree")),".t"));
 
   List* conflicts = initList();
   if (conflicts) return conflicts;
@@ -390,8 +403,11 @@ List* merge(char* remote_branch, char* message) {
   deleteRef(remote_branch);
   restoreWorkTree(wt,".");
 
-  free(current_commit_h); free(remote_commit_h); free(c_h);
-  libererWorkTree(current); libererWorkTree(remote);
+  free(current_commit_h); 
+  free(remote_commit_h); 
+  free(c_h);
+  libererWorkTree(current); 
+  libererWorkTree(remote);
   return NULL;
 }
 void createDeletionCommit(char* branch, List* conflicts, char* message) {
@@ -405,6 +421,8 @@ void createDeletionCommit(char* branch, List* conflicts, char* message) {
       myGitAdd(wt->tab[i].name);
   }
   myGitCommit(branch,message);
-  myGitCheckoutBranch(depart); free(depart); libererWorkTree(wt);
+  myGitCheckoutBranch(depart); 
+  free(depart); 
+  libererWorkTree(wt);
   return;
 }

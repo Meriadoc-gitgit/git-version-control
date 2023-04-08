@@ -7,7 +7,6 @@
 #include "bash.h"
 
 int case_break(char* chain) {
-  
   if (hash(chain)==hash("init")) return 1;
   if (hash(chain)==hash("list-refs")) return 2;
   if (hash(chain)==hash("create-ref")) return 3;

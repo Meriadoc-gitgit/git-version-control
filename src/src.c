@@ -11,7 +11,8 @@
 int sizeList(List* L) {
   int cpt = 0;
   while (*L) {
-    cpt++; *L = (*L)->next;
+    cpt++; 
+    *L = (*L)->next;
   }
   return cpt;
 }
@@ -27,7 +28,8 @@ Cell* buildCell(char* ch) {//OK
   return rst;
 }
 void insertFirst(List* L,Cell* C) {//OK
-  C->next = *L; *L = C;
+  C->next = *L; 
+  *L = C;
   return;
 }
 char* ctos(Cell* C) {//OK
@@ -49,7 +51,8 @@ Cell* listGet(List* L,int i) {//OK
   if (*L==NULL) return NULL;
   Cell* tmp = *L;
   while(i>0) {
-    tmp = tmp->next; i--;
+    tmp = tmp->next; 
+    i--;
   }
   if (i==0) return tmp;
   else return NULL;
@@ -61,7 +64,8 @@ Cell* searchList(List* L,char* str) {//OK
   return tmp;
 }
 List* stol(char* s) {//ok
-  char str[(int)strlen(s)]; sprintf(str,"%s",s);
+  char str[(int)strlen(s)]; 
+  sprintf(str,"%s",s);
   const char* delim = "|";
   char* ptr = strtok(str,delim); 
   List* L = initList();
@@ -101,7 +105,9 @@ List* ftol(char* path) {//ok
     return NULL;
   }
   List* L = initList();
-  char buffer[256]; char *res = fgets(buffer, 256, f); char data[26];
+  char buffer[256]; 
+  char *res = fgets(buffer, 256, f); 
+  char data[26];
   while(res!=NULL) {
     sscanf(buffer,"%s",data);
     res = fgets(buffer, 256, f);
@@ -118,7 +124,8 @@ List* ftol(char* path) {//ok
 WorkFile* createWorkFile(char* name) {//ok
   WorkFile* wf = (WorkFile*)malloc(sizeof(WorkFile));
   wf->name = strdup(name);
-  wf->hash = NULL; wf->mode = 0;
+  wf->hash = NULL; 
+  wf->mode = 0;
   return wf;
 }
 char* wfts(WorkFile* wf) {//ok
@@ -131,9 +138,11 @@ char* wfts(WorkFile* wf) {//ok
   return command;
 }
 WorkFile* stwf(char* ch) {//ok
-  char str[(int)strlen(ch)]; sprintf(str,"%s",ch);
+  char str[(int)strlen(ch)]; 
+  sprintf(str,"%s",ch);
   const char* delim = "\t";
-  char name[100], hash[100]; int mode;
+  char name[100], hash[100]; 
+  int mode;
   sscanf(ch,"%s %s %d",name,hash,&mode);
   WorkFile* wf = createWorkFile(name);
   wf->hash = strdup(hash);
@@ -141,14 +150,17 @@ WorkFile* stwf(char* ch) {//ok
   return wf;
 }
 void libererWorkFile(WorkFile* wf) {//ok
-  free(wf->name); free(wf->hash); free(wf);
+  free(wf->name); 
+  free(wf->hash); 
+  free(wf);
   return;
 }
 
 
 WorkTree* initWorkTree() {//ok
   WorkTree* wt = (WorkTree*)malloc(sizeof(WorkTree));
-  wt->size = MAX_INPUT; wt->n = 0;
+  wt->size = MAX_INPUT; 
+  wt->n = 0;
   wt->tab = (WorkFile*)malloc(wt->size*sizeof(WorkFile));
   return wt;
 }
@@ -179,37 +191,42 @@ char* wtts(WorkTree* wt) {//ok
   char* w = NULL;
   for (int i=0;i<wt->n;i++) {
     w = wfts(&(wt->tab[i]));
-    strcat(command,w); strcat(command,"\n");
+    strcat(command,w); 
+    strcat(command,"\n");
   }
   return command;
 }
 WorkTree* stwt(char* ch) {//ok
-  int pos = 0; int n_pos = 0; int sep = '\n';
+  int pos = 0; 
+  int n_pos = 0; 
+  int sep = '\n';
   char* ptr;
   char* result = malloc(sizeof(char)*10000);
-  WorkTree* wt = initWorkTree ();
-  while (pos < strlen(ch)){
-    ptr = strchr(ch + pos , sep);
-    if (ptr == NULL)
+  WorkTree* wt = initWorkTree();
+  while (pos<strlen(ch)) {
+    ptr = strchr(ch+pos,sep);
+    if (ptr==NULL)
       n_pos = strlen(ch)+1;
-    else{
+    else 
       n_pos = ptr - ch + 1;
-    }
-    memcpy(result , ch+pos , n_pos - pos - 1);
-    result[n_pos - pos - 1] = '\0' ;
+    
+    memcpy(result, ch+pos, n_pos-pos-1);
+    result[n_pos-pos-1] = '\0';
     pos = n_pos;
     WorkFile* wf = stwf(result);
-    appendWorkTree(wt, wf->name , wf->hash , wf->mode);
+    appendWorkTree(wt, wf->name, wf->hash, wf->mode);
   }
   return wt;
 }
 int wttf(WorkTree* wt,char* file) {//ok
   FILE* f = fopen(file,"w");
   if (!f) {
-    printf("wttf: Erreur lors de l'ouverture de fichier\n"); return -1;
+    printf("wttf: Erreur lors de l'ouverture de fichier\n"); 
+    return -1;
   }
   fprintf(f,"%s",wtts(wt));
-  fclose(f); return 0;
+  fclose(f); 
+  return 0;
 }
 WorkTree* ftwt(char* file) {//ok
   FILE* f = fopen(file,"r");
@@ -218,7 +235,10 @@ WorkTree* ftwt(char* file) {//ok
     return NULL;
   }
   WorkTree* wt = initWorkTree();
-  char buffer[256]; char* res = fgets(buffer,256,f); char name[26], hash[256]; int mode;
+  char buffer[256]; 
+  char* res = fgets(buffer,256,f); 
+  char name[26], hash[256]; 
+  int mode;
   while (res!=NULL) {
     sscanf(buffer,"%s\t%s\t%d",name,hash,&mode);
     appendWorkTree(wt,name,hash,mode);
@@ -233,7 +253,7 @@ void libererWorkTree(WorkTree* wt) {//ok
     WorkFile *w=&(wt->tab[i]);
     free(w->name);
     free(w->hash);
-    } 
+  } 
   free(wt);
   return;
 }
@@ -243,11 +263,14 @@ void libererWorkTree(WorkTree* wt) {//ok
 /* FONCTION DE BASE */
 kvp* createKeyVal(char* key,char* val) {//ok
   kvp* kv = (kvp*)malloc(sizeof(kvp));
-  kv->key = strdup(key); kv->value = strdup(val);
+  kv->key = strdup(key); 
+  kv->value = strdup(val);
   return kv;
 }
 void freeKeyVal(kvp* kv) {//ok
-  free(kv->key); free(kv->value); free(kv);
+  free(kv->key); 
+  free(kv->value); 
+  free(kv);
   return;
 }
 char* kvts(kvp* k) {//ok
@@ -256,7 +279,8 @@ char* kvts(kvp* k) {//ok
   return buff;
 }
 kvp* stkv(char* str) {//ok
-  const char* delim = ":"; char key[100], val[100];
+  const char* delim = ":"; 
+  char key[100], val[100];
   sscanf(str,"%s : %s",key,val);
   return createKeyVal(key,val);
 }
@@ -310,9 +334,12 @@ char* cts(Commit* c) {//ok
   return desc;
 }
 Commit* stc(char* file) {//ok
-  char str[(int)strlen(file)]; sprintf(str,"%s",file);
+  char str[(int)strlen(file)]; 
+  sprintf(str,"%s",file);
   char* desc = str;
-  char* ptr; kvp* k; Commit* c = initCommit();
+  char* ptr; 
+  kvp* k; 
+  Commit* c = initCommit();
   while((ptr = strtok_r(desc, "\n", &desc))) {
     k = stkv(ptr);
     commitSet(c,k->key,k->value);
@@ -326,7 +353,8 @@ void ctf(Commit* c,char* file) {//ok
     return;
   }
   fprintf(f,"%s",cts(c));
-  fclose(f); return;
+  fclose(f); 
+  return;
 }
 Commit* ftc(char* file) {//ok
   Commit* c = initCommit();
@@ -335,7 +363,10 @@ Commit* ftc(char* file) {//ok
     printf("ftc: Erreur lors de l'ouverture de fichier\n");
     return NULL;
   }
-  char buffer[256]; char* res = fgets(buffer,256,f); char* key; char* value;
+  char buffer[256]; 
+  char* res = fgets(buffer,256,f); 
+  char* key; 
+  char* value;
   while (res!=NULL) {
     key = strtok(buffer,":\n");
     value = strtok(NULL,":\n");
@@ -359,11 +390,13 @@ int branchExists(char* branch) {
 }
 void createBranch(char* branch) {
   createUpdateRef(branch,getRef("HEAD"));
+  return;
 }
 char* getCurrentBranch(void) {
   FILE* f = fopen(".current_branch","r");
   char* buff = (char*)malloc(PATH_MAX);
-  fgets(buff,PATH_MAX,f); fclose(f); free(buff);
+  fgets(buff,PATH_MAX,f); 
+  fclose(f); 
   return buff;
 }
 void printBranch(char* branch) {
