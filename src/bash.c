@@ -148,8 +148,8 @@ char* saveWorkTree(WorkTree* wt,char* path) {//ok
   for (int i=0;i<wt->n;i++) {
     char* a_path = concat(path,wt->tab[i].name);
     //if (wt->tab[i].name[0]=='.') exit(0); 
-    if (!file_exists(hashToPath(wt->tab[i].hash))) {
-      if (isFile(a_path)==0 && wt->tab[i].name[0]!='.') { //si c'est un repertoire
+    if (!file_exists(hashToPath(wt->tab[i].hash))/* && wt->tab[i].name[0]!='.' */) {
+      if (isFile(a_path)==0) { //si c'est un repertoire
         List* L = listdir(a_path);
         WorkTree* newWT = initWorkTree(); 
         while(*L) {
@@ -182,7 +182,7 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
       WorkTree* newWT = ftwt(cp_path);
       restoreWorkTree(newWT,a_path);
       setMode(getChmod(cp_path),a_path);
-    } else { //si c'est un fichier
+    } else if (isWorkTree(wt->tab[i].hash)==0) { //si c'est un fichier
       cp(a_path,cp_path); 
       setMode(getChmod(cp_path),a_path);
     }
