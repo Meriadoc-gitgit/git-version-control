@@ -177,7 +177,7 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
   for (int i=0;i<wt->n;i++) {
     char* a_path = concat(path,wt->tab[i].name);
     char* cp_path = hashToPath(wt->tab[i].hash);
-    if (isWorkTree(wt->tab[i].hash)==1) { //si c'est un repertoire
+    if (isWorkTree(wt->tab[i].hash)==1) {
       strcat(cp_path,".t");
       WorkTree* newWT = ftwt(cp_path);
       restoreWorkTree(newWT,a_path);

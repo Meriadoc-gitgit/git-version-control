@@ -3,7 +3,7 @@
 
 Sous `git`, tous les objets, *qu'ils soient relatifs aux fichiers versionnés ou à leurs méta-données*, sont enregistrés sous forme de fichiers. <br>
 Ces fichiers ont pour particularité de pouvoir dériver le chemin où ils sont stockés à partir de leur contenu. 
-![fichiers-stocke.png](img/fichiers-stocke.png)
+![sha256 demo](sub_img/fichiers-stocke.png)
 
 #### Note
 - Ici, la fonction de hachage `SHA256` est appliquée sur le contenu du fichier

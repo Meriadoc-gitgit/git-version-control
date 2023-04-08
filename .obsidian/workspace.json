@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "readme.MD",
+                "file": "desc/commit.md",
                 "mode": "preview",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "readme.MD",
+                "file": "desc/commit.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "readme.MD",
+                "file": "desc/commit.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "readme.MD"
+                "file": "desc/commit.md"
               }
             }
           }
@@ -148,26 +148,26 @@
   },
   "active": "e6e6afc230c3c0fb",
   "lastOpenFiles": [
+    "desc/branch-fusion.md",
+    "desc/sub_img/Bash_command.png",
+    "readme.MD",
+    "desc/preliminary.md",
+    "src/file_text.txt",
+    "src/src.o",
+    "src/src-9e673a0d.o.tmp",
     "src/bash_test.o",
     "src/bash.o",
     "src/bash",
     "GIT-version-control-main.zip",
-    "src/src.o",
     "src/bash-84399550.o.tmp",
     "desc/commit.md",
-    "desc/branch-fusion.md",
     "desc/sub_img/method-fusion.png",
     "desc/sub_img/fusion.png",
-    "readme.MD",
     "desc/timeline.md",
     "file.txt",
     "desc/sub_img/timeline.png",
     "projet-version-3avril.pdf",
     "desc/multi_instant.md",
-    "Unconfirmed 384360.crdownload",
-    "src/myGit",
-    "src/myGit_casebreak.o",
-    "desc/sub_img/commit.png",
-    "desc/preliminary.md"
+    "desc/sub_img/commit.png"
   ]
 }
