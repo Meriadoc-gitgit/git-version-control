@@ -24,4 +24,4 @@ Un logiciel de **gestion de versions** est un outil permettant le stockage, le s
 - `./myGit add <elem> [<elem2> <elem3> ...]`: ajoute un ou plusieurs fichiers/répertoires à la zone de préparation *(prochain commit)*
 - `./myGit list-add`: affiche le contenu de la zone de préparation
 - `./myGit clear-add`: vide la zone de préparation
-- `./myGit commit <branch-name> [-m <message>]`: effedctue un commit sur une branche, avec ou sans mesage descriptif
+- `./myGit commit <branch-name> [-m <message>]`: effectue un commit sur une branche, avec ou sans mesage descriptif
