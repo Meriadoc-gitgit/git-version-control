@@ -85,6 +85,41 @@ int main(int argc, char* argv[]) {
       myGitCheckoutCommit(argv[2]);
       break;
 
+    case 14: 
+      List* conflicts = merge(argv[2],argv[3]);
+      if (!conflicts) 
+        printf("Branch %s successfully merged with the current branch %s\n",argv[2],getCurrentBranch());
+      else {
+        printf("WARNING: CONFLICTS DETECTED\nPlease choose among 3 options:\n1. Keep all files from the current branch\n2. Keep all files from %s\n3. Choose manually\n",argv[2]);
+        int choice; 
+        scanf("Enter chosen option: %d\n",&choice);
+        switch (choice)
+        {
+        case 1: 
+          createDeletionCommit(getCurrentBranch(),conflicts,argv[3]);
+          conflicts = merge(argv[2],argv[3]);
+          if (!conflicts) 
+            printf("Branch %s successfully merged with the current branch %s\n",argv[2],getCurrentBranch());
+          break;
+        
+        case 2: 
+          createDeletionCommit(argv[2],conflicts,argv[3]);
+          conflicts = merge(argv[2],argv[3]);
+          if (!conflicts) 
+            printf("Branch %s successfully merged with the current branch %s\n",argv[2],getCurrentBranch());
+          break;
+
+        case 3: 
+          
+          break;
+        
+        default:
+          printf("Warning: Invalid option.\nPlease re-enter chosen option\n");
+          scanf("Enter chosen option: %d\n",&choice);
+          break;
+        }
+      }
+
   }
   return 0;
 }

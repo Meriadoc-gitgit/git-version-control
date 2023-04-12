@@ -20,5 +20,6 @@ int case_break(char* chain) {
   if (hash(chain)==hash("branch-print")) return 11; //test on linux due to sha
   if (hash(chain)==hash("checkout-branch")) return 12;
   if (hash(chain)==hash("checkout-commit")) return 13;
+  if (hash(chain)==hash("merge")) return 14;
   else return -1;
 }
