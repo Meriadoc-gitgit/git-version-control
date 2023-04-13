@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "6a39a025d8cc619b",
+        "id": "75da6e8bfce8f812",
         "type": "tabs",
         "children": [
           {
-            "id": "6ea3ce4892497e89",
+            "id": "9cbf72607419845b",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "rapport.md",
-                "mode": "preview",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -85,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "rapport.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "rapport.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -124,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "rapport.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -146,16 +138,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "6ea3ce4892497e89",
+  "active": "9cbf72607419845b",
   "lastOpenFiles": [
     "readme.MD",
-    "rapport.md",
     "desc/multi_instant.md",
-    "desc/branch-fusion.md",
-    "desc/timeline.md",
-    "desc/preliminary.md",
     "desc/commit.md",
+    "desc/branch-fusion.md",
     "desc/sub_img/Bash_command.png",
+    "desc/preliminary.md",
     "src/file_text.txt",
     "src/src.o",
     "src/src-9e673a0d.o.tmp",
@@ -166,6 +156,7 @@
     "src/bash-84399550.o.tmp",
     "desc/sub_img/method-fusion.png",
     "desc/sub_img/fusion.png",
+    "desc/timeline.md",
     "file.txt",
     "desc/sub_img/timeline.png",
     "projet-version-3avril.pdf",

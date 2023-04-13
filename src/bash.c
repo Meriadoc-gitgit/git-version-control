@@ -8,6 +8,12 @@
 
 #include "src.h"
 
+int isFile(const char* fileName) {
+  struct stat path;
+  stat(fileName, &path);
+  return S_ISREG(path.st_mode);
+}
+
 /* Part 1 */
 int hashFile(char* src, char *dst) {
   char buff[100];
@@ -16,6 +22,7 @@ int hashFile(char* src, char *dst) {
 }
 
 char* sha256file(char* file) {
+  if (isFile(file)==0) return NULL;
   /* Creation de fichier temporaire */
   static char template[] ="/tmp/myfileXXXXXX";
   char fname[1000];
@@ -84,7 +91,7 @@ char* hashToPath(char* hash) {
 void blobFile(char* file) { //ok, mais a re-tester
   if (!file_exists(file)) {
     /* verifier l'existence du fichier en parametre dans le repertoire courant */
-    printf("blobFile: Fichier demande n'existe pas\n");
+    printf("blobFile: Fichier %s demande n'existe pas\n",file);
     return;
   }
   char *path = hashToPath(sha256file(file));
@@ -134,6 +141,7 @@ char* blobWorkTree(WorkTree* wt) {
   char* hash = sha256file(fname);
   char* ch = hashToFile(hash);
   strcat(ch,".t"); //ajouter l'extension '.t' pour se differer le repertoire des fichiers
+  //printf("ch: %s\n",ch);
   cp(ch,fname); //copier le contenu du fichier temporaire au path extrait du hash
   return hash;
 }
@@ -144,17 +152,13 @@ char* concat(char* s1,char* s2) {
   strcat(dir,s2);
   return dir;
 }
-int isFile(const char* fileName) {
-  struct stat path;
-  stat(fileName, &path);
-  return S_ISREG(path.st_mode);
-}
 char* saveWorkTree(WorkTree* wt,char* path) {//ok
   for (int i=0;i<wt->n;i++) {
     char* a_path = concat(path,wt->tab[i].name);
     //if (wt->tab[i].name[0]=='.') exit(0); 
-    if (!file_exists(hashToPath(wt->tab[i].hash))/* && wt->tab[i].name[0]!='.' */) {
+    if (/*!file_exists(hashToPath(wt->tab[i].hash)) &&*/ wt->tab[i].name[0]!='.') {
       if (isFile(a_path)==0) { //si c'est un repertoire
+        //printf("rep %s\n",wt->tab[i].name);
         List* L = listdir(a_path);
         WorkTree* newWT = initWorkTree(); 
         while(*L) {
@@ -165,9 +169,13 @@ char* saveWorkTree(WorkTree* wt,char* path) {//ok
         wt->tab[i].hash = saveWorkTree(newWT,a_path);
         wt->tab[i].mode = getChmod(a_path);
       } else { //si c'est un simple fichier
-        blobFile(wt->tab[i].name);
-        wt->tab[i].hash = sha256file(wt->tab[i].name);
-        wt->tab[i].mode = getChmod(a_path);
+        //printf("fic %s\n",wt->tab[i].name);
+        if (file_exists(wt->tab[i].name)) {
+          /*enregistrer ssi ce fichier exists!! afin d'éviter l'enregistrement des hash*/
+          blobFile(wt->tab[i].name);
+          wt->tab[i].hash = sha256file(wt->tab[i].name);
+          wt->tab[i].mode = getChmod(a_path);
+        }
       }
     }
   }
@@ -179,15 +187,22 @@ int isWorkTree(char* hash) {
   return -1;
 }
 void restoreWorkTree(WorkTree* wt,char* path) {//ok
+  /*Nécessaire de vider le path avant de restaurer un WorkTree */
+  char command[PATH_MAX];
+  sprintf(command,"rm -f %s/*",path);
+  /* Parcours principal */
   for (int i=0;i<wt->n;i++) {
     char* a_path = concat(path,wt->tab[i].name);
     char* cp_path = hashToPath(wt->tab[i].hash);
+    printf("status %s: %d\n",wt->tab[i].name,isWorkTree(wt->tab[i].hash));
     if (isWorkTree(wt->tab[i].hash)==1) { //si c'est un repertoire
+      printf("rep %s\n",wt->tab[i].name);
       strcat(cp_path,".t");
       WorkTree* newWT = ftwt(cp_path);
       restoreWorkTree(newWT,a_path);
       setMode(getChmod(cp_path),a_path);
     } else if (isWorkTree(wt->tab[i].hash)==0) { //si c'est un fichier
+      printf("fic %s\n",wt->tab[i].name);
       cp(a_path,cp_path); 
       setMode(getChmod(cp_path),a_path);
     }
