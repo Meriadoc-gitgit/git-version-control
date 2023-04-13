@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 
 #include "src.h"
-
+/* SIDE FUNCTION */
 int isFile(const char* fileName) {
   struct stat path;
   stat(fileName, &path);

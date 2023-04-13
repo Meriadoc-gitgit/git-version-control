@@ -44,6 +44,9 @@ int sizeList(List* L);
 int case_break(char* chain);
 
 /* Fonction de base */
+void freeCell(Cell* c);
+void freeList(List* L);
+
 List* initList();
 Cell* buildCell(char* ch);
 void insertFirst(List* L,Cell* C);
@@ -76,6 +79,8 @@ void libererWorkTree(WorkTree* wt);
 
 /* Part 3 - GESTION DES COMMITS */
 /* FONCTION DE BASE */
+void freeCommit(Commit* c);
+
 kvp* createKeyVal(char* key,char* val);
 void freeKeyVal(kvp* kv);
 char* kvts(kvp* k);

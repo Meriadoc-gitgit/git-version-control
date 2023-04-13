@@ -31,7 +31,7 @@ int main(void) {
   //printf("L1: %s\n",ltos(L1));
   printf("L2: %s\n\n",ltos(L2));
 
-  printf("src: %s\n",ltos(listdir("/users/Etu1/21110221/Documents/C/DATASTRUCT/GIT-version-control-main/src")));
+  //printf("src: %s\n",ltos(listdir("/users/Etu1/21110221/Documents/C/DATASTRUCT/GIT-version-control-main/src")));
 
   printf("\nAffichage de Cell:\n");
   printf("C: %s\n",ctos(C));
@@ -50,12 +50,16 @@ int main(void) {
   printf("test de ftol sur L3: %s\n",ltos(L3));
 
   /* Free */
-  free(C->data);
-  free(L); free(C);
+  /*
+  freeCell(C);
+  freeCell(C2);
+  freeCell(C3);
+  freeCell(C4);
+  */
+  freeList(L);
+  freeList(L2);
+  freeList(L3);
+  
 
-  /* SRC */
-  //printf("hash: %s\n",sha256file("src.txt"));
-
-  //printf("%s",getCurrentBranch());
   return 0;
 }

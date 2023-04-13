@@ -13,6 +13,7 @@ int main(void) {
   wf1->mode = 100;
   WorkFile* wf2 = stwf("WF2\tsrc.c\t705");
   WorkFile* work=stwf("hehe.c\tizeulgflr\t500");
+
   WorkTree* wt1 = initWorkTree();
   WorkTree* wt2 = stwt("src.c\tlahfb\t708\nhihi.c\taoiefh\t600\nhi.m\taoiefh\t600\nhii.k\taoiefh\t600");
   WorkTree* wt3 = initWorkTree();
@@ -60,14 +61,16 @@ int main(void) {
   printf("\ntest de ftwt on wt6: \n%s\n",wtts(wt6));
 
   /*LIBERATION*/
-
+  libererWorkFile(wf1);
+  libererWorkFile(wf2);
+  libererWorkFile(work);
   libererWorkFile(wf5);
-  //libererWorkFile(wf2);
-  //libererWorkFile(work);
-  //libererWorkTree(&wt1);
-  //libererWorkTree(&wt2);
-  //libererWorkTree(&wt3);
-  //libererWorkTree(wt4);
+
+  libererWorkTree(wt1);
+  libererWorkTree(wt2);
+  libererWorkTree(wt3);
+  libererWorkTree(wt4);
+  libererWorkTree(wt6);
 
   return 0;
 }

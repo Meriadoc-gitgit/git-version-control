@@ -6,6 +6,51 @@
 
 #include "bash.h"
 #include "src.h"
+/* FREE FUNCTION */
+void libererWorkFile(WorkFile* wf) {//ok
+  free(wf->name); 
+  free(wf->hash); 
+  free(wf);
+  return;
+}
+void libererWorkTree(WorkTree* wt) {//ok
+  if (wt->n==0) return;
+  for(int i=0;i<wt->n;i++){ 
+    WorkFile *w=&(wt->tab[i]);
+    free(w->name);
+    free(w->hash);
+  } 
+  free(wt);
+  return;
+}
+void freeKeyVal(kvp* kv) {//ok
+  free(kv->key); 
+  free(kv->value); 
+  free(kv);
+  return;
+}
+void freeCell(Cell* c) {
+  free(c->data);
+  //free(c);
+  return;
+}
+void freeList(List* L) {
+  Cell* tmp;
+  while (*L) {
+    tmp = (*L)->next;
+    free((*L)->data);
+    free(*L);
+    (*L) = tmp;
+  }
+  return;
+}
+void freeCommit(Commit* c) {
+  for (int i=0;i<c->size;i++) 
+    freeKeyVal(c->T[i]);
+  free(c);
+  return;
+}
+
 
 /* Part 1 - Manipulation de Cell et List */
 int sizeList(List* L) {
@@ -149,12 +194,6 @@ WorkFile* stwf(char* ch) {//ok
   wf->mode = mode;
   return wf;
 }
-void libererWorkFile(WorkFile* wf) {//ok
-  free(wf->name); 
-  free(wf->hash); 
-  free(wf);
-  return;
-}
 
 
 WorkTree* initWorkTree() {//ok
@@ -247,16 +286,6 @@ WorkTree* ftwt(char* file) {//ok
   fclose(f);
   return wt;
 }
-void libererWorkTree(WorkTree* wt) {//ok
-  if (wt->n==0) return;
-  for(int i=0;i<wt->n;i++){ 
-    WorkFile *w=&(wt->tab[i]);
-    free(w->name);
-    free(w->hash);
-  } 
-  free(wt);
-  return;
-}
 
 
 /* Part 3 - GESTION DES COMMITS */
@@ -266,12 +295,6 @@ kvp* createKeyVal(char* key,char* val) {//ok
   kv->key = strdup(key); 
   kv->value = strdup(val);
   return kv;
-}
-void freeKeyVal(kvp* kv) {//ok
-  free(kv->key); 
-  free(kv->value); 
-  free(kv);
-  return;
 }
 char* kvts(kvp* k) {//ok
   char* buff = (char*)malloc(MAX_INPUT);
