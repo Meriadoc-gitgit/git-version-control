@@ -1,6 +1,7 @@
 # Rapport de projet: Git-version-control
 >Réalisation d'un *outil de suivi et de versionnage de code* (**`git`**)
 
+>**Current progress**: 100% finished
 
 ## Préliminaire
 ### Highlight
