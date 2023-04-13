@@ -1,7 +1,7 @@
 # Projet: Réalisation d'un logiciel de gestion de versions
 **Aim:** Réalisation d'un *outil de suivi et de versionnage de code* (**`git`**)
 
->**Current progress**: 90% finished
+>**Current progress**: 100% finished
 
 # Cadre du projet
 Un logiciel de **gestion de versions** est un outil permettant le stockage, le suivi et la gestion de plusieurs versions d'un projet *(ou d'un ensembles de fichiers)*. 
