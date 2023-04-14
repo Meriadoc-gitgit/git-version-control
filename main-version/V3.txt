@@ -1,4 +1,4 @@
-Commit* c1 = createCommit(sha256file("src.c"));
+//Commit* c1 = createCommit(sha256file("src.c"));
 
   initRefs();
   
@@ -6,11 +6,11 @@ Commit* c1 = createCommit(sha256file("src.c"));
   printf("check if branch master exists: %d\n",branchExists("master"));
   createBranch("Feature1");
 
-  printf("blobCommit de c1: %s\n", blobCommit(c1));
-  printf("hashToPath de c1: %s\n", hashToFile(blobCommit(c1)));
+  //printf("blobCommit de c1: %s\n", blobCommit(c1));
+  //printf("hashToPath de c1: %s\n", hashToFile(blobCommit(c1)));
 
-  blobCommit(createCommit(sha256file("bash.c")));
-  createUpdateRef("Feature0",blobCommit(c1));
+  //blobCommit(createCommit(sha256file("bash.c")));
+  //createUpdateRef("Feature0",blobCommit(c1));
 
   printBranch("Feature0");
 

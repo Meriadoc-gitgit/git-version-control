@@ -286,7 +286,7 @@ int hash(char* str) {
 void commitSet(Commit* c,char* key,char* value) {//ok
   int h = hash(key)%c->size;
   while (c->T[h]) 
-    h = (h+1)%c->size;
+    h = h+1;
   c->T[h] = createKeyVal(key,value);
   c->n++;
   return;
@@ -298,7 +298,7 @@ Commit* createCommit(char* hash) {//ok
   return c;
 }
 char* commitGet(Commit* c,char* key) {//ok
-  for(int i=hash(key)%c->size;i<c->size;i++) {
+  for(int i=0;i<c->size;i++) {
     if (c->T[i] && strcmp(c->T[i]->key,key)==0) {
       return c->T[i]->value;
     }
@@ -348,12 +348,11 @@ Commit* ftc(char* file) {//ok
     return NULL;
   }
   char buffer[256]; 
-  char* key; 
-  char* value;
+  kvp* k;
   while (fgets(buffer,256,f)) {
-    key = strtok(buffer,":");
-    value = strtok(NULL,":\n");
-    commitSet(c,key,value);
+    k = stkv(buffer);
+    commitSet(c,k->key,k->value);
+    //fgets(buffer,256,f);
   }
   fclose(f);
   return c;
@@ -382,29 +381,17 @@ char* getCurrentBranch(void) {
   return buff;
 }
 void printBranch(char* branch) {
- 
   char* c_hash = getRef(branch);
   char* hash = hashToPathCommit(c_hash);
-  printf("PB: hashToPathCommit %s\n",hash);
-  printf("%d\n",file_exists(hash));
-     
-  printf("tu marches?!\n");
   Commit* c = ftc(hash);
-  printf("je marches!\n");
-   
-  printf("hihi\n");
-  while (c) {
-    if (commitGet(c,"message")) 
-      printf("%s -> %s\n",c_hash,commitGet(c,"message"));
-    else printf("%s\n",c_hash);
 
-    if (commitGet(c,"predecessor")) {
-      c_hash = commitGet(c,"predecessor");
-      c = ftc(hashToPathCommit(c_hash));
-    }
-    else c = NULL;
+  if (commitGet(c,"message")) {
+    printf("%s -> %s\n",c_hash,commitGet(c,"message"));}
+  else if (commitGet(c,"predecessor")) {
+    c_hash = commitGet(c,"predecessor");
+    c = ftc(hashToPathCommit(c_hash));
   }
-  free(c_hash);
+  else printf("%s\n",c_hash);
   return;
 }
 List* branchList(char* branch) {
@@ -419,7 +406,6 @@ List* branchList(char* branch) {
     }
     else c = NULL;
   }
-  free(c_hash);
   return L;
 }
 List* getAllCommits(void) {

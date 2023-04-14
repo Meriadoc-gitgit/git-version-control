@@ -291,14 +291,14 @@ void myGitCommit(char* branch_name,char* message) {
     printf("gitCommit: Initialiser d'abord les references du projet\n");
     return;
   }
-  branch_name = concat("./refs",branch_name);
+  char* path = concat(".refs",branch_name);
 
-  if (!file_exists(branch_name)) {
+  if (!file_exists(path)) {
     printf("git commit: La branche n'existe pas\n");
     return;
   }
   char *head = getRef("HEAD");
-  char  *branch = getRef(branch_name);
+  char *branch = getRef(branch_name);
 
   if (strcmp(head,branch)!=0) {
     printf("git commit: HEAD doit pointer sur le dernier commit de la branche\n");
