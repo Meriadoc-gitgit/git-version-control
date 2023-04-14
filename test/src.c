@@ -149,12 +149,6 @@ WorkFile* stwf(char* ch) {//ok
   wf->mode = mode;
   return wf;
 }
-void libererWorkFile(WorkFile* wf) {//ok
-  free(wf->name); 
-  free(wf->hash); 
-  free(wf);
-  return;
-}
 
 
 WorkTree* initWorkTree() {//ok
@@ -247,16 +241,6 @@ WorkTree* ftwt(char* file) {//ok
   fclose(f);
   return wt;
 }
-void libererWorkTree(WorkTree* wt) {//ok
-  if (wt->n==0) return;
-  for(int i=0;i<wt->n;i++){ 
-    WorkFile *w=&(wt->tab[i]);
-    free(w->name);
-    free(w->hash);
-  } 
-  free(wt);
-  return;
-}
 
 
 /* Part 3 - GESTION DES COMMITS */
@@ -275,13 +259,14 @@ void freeKeyVal(kvp* kv) {//ok
 }
 char* kvts(kvp* k) {//ok
   char* buff = (char*)malloc(MAX_INPUT);
-  sprintf(buff,"%s : %s",k->key,k->value);
+  sprintf(buff,"%s:%s",k->key,k->value);
   return buff;
 }
 kvp* stkv(char* str) {//ok
-  const char* delim = ":"; 
-  char key[100], val[100];
-  sscanf(str,"%s : %s",key,val);
+  const char* delim = ": "; 
+  char *key, *val;
+  key = strtok(str,":\n");
+  val = strtok(NULL,":\n");
   return createKeyVal(key,val);
 }
 Commit* initCommit() {//ok
@@ -315,7 +300,7 @@ Commit* createCommit(char* hash) {//ok
   return c;
 }
 char* commitGet(Commit* c,char* key) {//ok
-  for(int i=0;i<c->size;i++) {
+  for(int i=hash(key)%c->size;i<c->size;i++) {
     if (c->T[i] && strcmp(c->T[i]->key,key)==0) {
       return c->T[i]->value;
     }
@@ -323,11 +308,12 @@ char* commitGet(Commit* c,char* key) {//ok
   return NULL;
 }
 char* cts(Commit* c) {//ok
-  char* desc = (char*)malloc(INT_MAX);
+  char* desc = (char*)malloc(INT_MAX*sizeof(char));
   char* w = NULL;
   for (int i=0;i<MAX_INPUT;i++) {
     if (c->T[i]) {
       w = kvts(c->T[i]);
+      printf("%s\n",desc);
       strcat(desc,w); strcat(desc,"\n");
     }
   }
@@ -401,6 +387,8 @@ char* getCurrentBranch(void) {
 }
 void printBranch(char* branch) {
   char* c_hash = getRef(branch);
+  printf("PB: hashToPathCommit %s\n",hashToPathCommit(c_hash));
+  printf("%d\n",file_exists(hashToPathCommit(c_hash)));
   Commit* c = ftc(hashToPathCommit(c_hash));
   while (c) {
     if (commitGet(c,"message")) 

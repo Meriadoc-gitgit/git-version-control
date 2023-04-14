@@ -1,4 +1,4 @@
-CFLAGS = -Wall -g -Wno-unused-parameter
+CFLAGS = -g -Wno-unused-parameter
 CC = gcc
 
 PROGRAMS = myGit test 

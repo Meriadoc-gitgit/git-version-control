@@ -199,6 +199,7 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
       if (isWorkTree(wt->tab[i].hash)==1) { //si c'est un repertoire
         //printf("rep %s\n",wt->tab[i].name);
         strcat(cp_path,".t");
+        printf("%s\n",cp_path);
         WorkTree* newWT = ftwt(cp_path);
         restoreWorkTree(newWT,a_path);
         setMode(getChmod(cp_path),a_path);
@@ -265,7 +266,7 @@ char* getRef(char* ref_name) {
   sprintf(buff,".refs/%s",ref_name);
   FILE* f = fopen(buff,"r");
   char* res = (char*)malloc(INT_MAX);
-  fgets(res,INT_MAX,f); //lire le contenu de ref_name + l'enregistrer dans res
+  fscanf(f,"%s\n",res); //lire le contenu de ref_name + l'enregistrer dans res
   fclose(f); 
   return res;
 }
@@ -291,9 +292,7 @@ void myGitCommit(char* branch_name,char* message) {
     printf("gitCommit: Initialiser d'abord les references du projet\n");
     return;
   }
-  char buff[256]; sprintf(buff,".refs/%s",branch_name);
-
-  if (!file_exists(buff)) {
+  if (!file_exists(branch_name)) {
     printf("git commit: La branche n'existe pas\n");
     return;
   }
@@ -323,10 +322,8 @@ void myGitCommit(char* branch_name,char* message) {
 /* Part 4 - GESTION D'UNE TIMELINE ARBORESCENTE */
 /* Side function */
 char* hashToPathCommit(char* hash) {
-  char* buff = (char*)malloc(INT_MAX*sizeof(char));
-  strcat(buff,hashToPath(hash));
-  strcat(buff,".c");
-  return buff;
+  strcat(hash,".c");
+  return hash;
 }
 
 /* SIMULATION DE GIT CHECKOUT */

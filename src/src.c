@@ -6,51 +6,6 @@
 
 #include "bash.h"
 #include "src.h"
-/* FREE FUNCTION */
-void libererWorkFile(WorkFile* wf) {//ok
-  free(wf->name); 
-  free(wf->hash); 
-  free(wf);
-  return;
-}
-void libererWorkTree(WorkTree* wt) {//ok
-  if (wt->n==0) return;
-  for(int i=0;i<wt->n;i++){ 
-    WorkFile *w=&(wt->tab[i]);
-    free(w->name);
-    free(w->hash);
-  } 
-  free(wt);
-  return;
-}
-void freeKeyVal(kvp* kv) {//ok
-  free(kv->key); 
-  free(kv->value); 
-  free(kv);
-  return;
-}
-void freeCell(Cell* c) {
-  free(c->data);
-  //free(c);
-  return;
-}
-void freeList(List* L) {
-  Cell* tmp;
-  while (*L) {
-    tmp = (*L)->next;
-    free((*L)->data);
-    free(*L);
-    (*L) = tmp;
-  }
-  return;
-}
-void freeCommit(Commit* c) {
-  for (int i=0;i<c->size;i++) 
-    freeKeyVal(c->T[i]);
-  free(c);
-  return;
-}
-
 
 /* Part 1 - Manipulation de Cell et List */
 int sizeList(List* L) {
@@ -185,7 +140,6 @@ char* wfts(WorkFile* wf) {//ok
 WorkFile* stwf(char* ch) {//ok
   char str[(int)strlen(ch)]; 
   sprintf(str,"%s",ch);
-  const char* delim = "\t";
   char name[100], hash[100]; 
   int mode;
   sscanf(ch,"%s %s %d",name,hash,&mode);
@@ -296,15 +250,21 @@ kvp* createKeyVal(char* key,char* val) {//ok
   kv->value = strdup(val);
   return kv;
 }
+void freeKeyVal(kvp* kv) {//ok
+  free(kv->key); 
+  free(kv->value); 
+  free(kv);
+  return;
+}
 char* kvts(kvp* k) {//ok
   char* buff = (char*)malloc(MAX_INPUT);
-  sprintf(buff,"%s : %s",k->key,k->value);
+  sprintf(buff,"%s:%s",k->key,k->value);
   return buff;
 }
 kvp* stkv(char* str) {//ok
-  const char* delim = ":"; 
-  char key[100], val[100];
-  sscanf(str,"%s : %s",key,val);
+  char *key, *val;
+  key = strtok(str,":\n");
+  val = strtok(NULL,":\n");
   return createKeyVal(key,val);
 }
 Commit* initCommit() {//ok
@@ -338,7 +298,7 @@ Commit* createCommit(char* hash) {//ok
   return c;
 }
 char* commitGet(Commit* c,char* key) {//ok
-  for(int i=0;i<c->size;i++) {
+  for(int i=hash(key)%c->size;i<c->size;i++) {
     if (c->T[i] && strcmp(c->T[i]->key,key)==0) {
       return c->T[i]->value;
     }
@@ -346,11 +306,12 @@ char* commitGet(Commit* c,char* key) {//ok
   return NULL;
 }
 char* cts(Commit* c) {//ok
-  char* desc = (char*)malloc(INT_MAX);
+  char* desc = (char*)malloc(INT_MAX*sizeof(char));
   char* w = NULL;
   for (int i=0;i<MAX_INPUT;i++) {
     if (c->T[i]) {
       w = kvts(c->T[i]);
+      printf("%s\n",desc);
       strcat(desc,w); strcat(desc,"\n");
     }
   }
@@ -391,7 +352,7 @@ Commit* ftc(char* file) {//ok
   char* key; 
   char* value;
   while (res!=NULL) {
-    key = strtok(buffer,":\n");
+    key = strtok(buffer,":");
     value = strtok(NULL,":\n");
     commitSet(c,key,value);
     res = fgets(buffer,256,f);
@@ -423,8 +384,17 @@ char* getCurrentBranch(void) {
   return buff;
 }
 void printBranch(char* branch) {
+ 
   char* c_hash = getRef(branch);
-  Commit* c = ftc(hashToPathCommit(c_hash));
+  char* hash = hashToPathCommit(c_hash);
+  printf("PB: hashToPathCommit %s\n",hash);
+  printf("%d\n",file_exists(hash));
+     
+  printf("tu marches?!\n");
+  Commit* c = ftc(hash);
+  printf("je marches!\n");
+   
+  printf("hihi\n");
   while (c) {
     if (commitGet(c,"message")) 
       printf("%s -> %s\n",c_hash,commitGet(c,"message"));
