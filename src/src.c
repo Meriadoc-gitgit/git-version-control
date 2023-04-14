@@ -348,14 +348,12 @@ Commit* ftc(char* file) {//ok
     return NULL;
   }
   char buffer[256]; 
-  char* res = fgets(buffer,256,f); 
   char* key; 
   char* value;
-  while (res!=NULL) {
+  while (fgets(buffer,256,f)) {
     key = strtok(buffer,":");
     value = strtok(NULL,":\n");
     commitSet(c,key,value);
-    res = fgets(buffer,256,f);
   }
   fclose(f);
   return c;

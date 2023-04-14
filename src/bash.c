@@ -291,9 +291,9 @@ void myGitCommit(char* branch_name,char* message) {
     printf("gitCommit: Initialiser d'abord les references du projet\n");
     return;
   }
-  char buff[256]; sprintf(buff,".refs/%s",branch_name);
+  branch_name = concat("./refs",branch_name);
 
-  if (!file_exists(buff)) {
+  if (!file_exists(branch_name)) {
     printf("git commit: La branche n'existe pas\n");
     return;
   }
