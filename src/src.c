@@ -340,8 +340,9 @@ char* cts(Commit* c) {//ok
   for (int i=0;i<MAX_INPUT;i++) {
     if (c->T[i]) {
       w = kvts(c->T[i]);
-      printf("%s\n",desc);
-      strcat(desc,w); strcat(desc,"\n");
+      //printf("%s\n",desc);
+      strcat(desc,w); 
+      strcat(desc,"\n");
     }
   }
   return desc;
@@ -381,7 +382,7 @@ Commit* ftc(char* file) {//ok
   while (fgets(buffer,256,f)) {
     k = stkv(buffer);
     commitSet(c,k->key,k->value);
-    //fgets(buffer,256,f);
+    fgets(buffer,256,f); //WARNING: work differently between Linux and MacOS
   }
   fclose(f);
   return c;
@@ -413,7 +414,7 @@ void printBranch(char* branch) {//ok
   char* c_hash = getRef(branch);
   char* hash = hashToPathCommit(c_hash);
   Commit* c = ftc(hash);
-
+  
   if (commitGet(c,"predecessor")) {
     while(c) {
       if (commitGet(c,"message")) 

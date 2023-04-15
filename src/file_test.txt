@@ -1,4 +1,5 @@
+diallo:lima
 lim:thai hong
 tree:aieufbqebgfquoebgo
-vu:hoang thuy duong
 truong:gia bao
+vu:hoang thuy duong

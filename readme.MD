@@ -1,7 +1,7 @@
 # Projet: Réalisation d'un logiciel de gestion de versions
 **Aim:** Réalisation d'un *outil de suivi et de versionnage de code* (**`git`**)
 
->**Current progress**: 100% finished
+>**Current progress**: 90% finished
 
 >**Réalisatrices**: Vu Hoang Thuy Duong & Halimatou Diallo
 
