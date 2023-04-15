@@ -21,11 +21,17 @@ Un logiciel de **gestion de versions** est un outil permettant le stockage, le s
 5. [Fusions de branches](desc/branch-fusion.md)
 
 ## `myGit` command simulated
-- `./myGit init`: initialise le répertoire de références
-- `./myGit list-refs`: affiche toutes les références existantes
-- `./myGit create-ref <name> <hash>`: crée la référence `<name>` qui pointe vers le commit correspondant au `<hash>` donné
-- `./myGit delete <name>`: supprime la référence `name`
-- `./myGit add <elem> [<elem2> <elem3> ...]`: ajoute un ou plusieurs fichiers/répertoires à la zone de préparation *(prochain commit)*
-- `./myGit list-add`: affiche le contenu de la zone de préparation
-- `./myGit clear-add`: vide la zone de préparation
-- `./myGit commit <branch-name> [-m <message>]`: effectue un commit sur une branche, avec ou sans message descriptif
+1. `./myGit init`: initialise le répertoire de références
+2. `./myGit list-refs`: affiche toutes les références existantes
+3. `./myGit create-ref <name> <hash>`: crée la référence `<name>` qui pointe vers le commit correspondant au `<hash>` donné
+4. `./myGit delete <name>`: supprime la référence `name`
+5. `./myGit add <elem> [<elem2> <elem3> ...]`: ajoute un ou plusieurs fichiers/répertoires à la zone de préparation _(prochain commit)_
+6. `./myGit list-add`: affiche le contenu de la zone de préparation
+7. `./myGit clear-add`: vide la zone de préparation
+8. `./myGit commit <branch-name> [-m <message>]`: effedctue un commit sur une branche, avec ou sans mesage descriptif
+9. `./myGit get-current-branch` : affiche le nom de la branche courante
+10. `./myGit branch <branch-name>`: crée une branche qui s'appelle `<branch-name>` si elle n'existe pas déjà
+11. `./myGit branch-print <branch-name>`: affiche le hash de tous les commits de la branche, accompagné de leur message descriptif éventuel
+12. `./myGit checkout-branch <branch-name>`: réalise un déplacement sur la branche `<branch-name>`
+13. `./myGit checkout-commit <pattern>`: réalise un déplacement sur le commit qui commence par `<pattern>`
+14. `./myGit merge <branch> <message>`: merge la branche courante avec la branche `<branch>` en gérant les conflits

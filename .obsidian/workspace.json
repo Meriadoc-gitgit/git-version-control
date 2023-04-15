@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "readme.MD",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               }
             }
@@ -148,8 +148,9 @@
   },
   "active": "9cbf72607419845b",
   "lastOpenFiles": [
-    "description.MD",
+    "report.MD",
     "readme.MD",
+    "description.MD",
     "desc/multi_instant.md",
     "desc/commit.md",
     "desc/branch-fusion.md",
