@@ -4,6 +4,7 @@
 >**Current progress**: 90% finished
 
 >**Réalisatrices**: Vu Hoang Thuy Duong & Halimatou Diallo
+
 >**Instructeurs**: Paul Hermouet & Louis 
 
 # Cadre du projet
