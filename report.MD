@@ -10,9 +10,9 @@
 - **Lien Github du projet**: https://github.com/Meriadoc-gitgit/GIT-version-control.git
 - **Instructeurs**: Paul Hermouet & Louis Serrano
 ## Cadre de projet
->**Objectif**: Étudier le fonctionnement d'un logiciel de gestion de versions, *en détaillant* différentes structures de données impliquées dans sa mise en oeuvre. 
+>**Objectif**: Étudier le fonctionnement d'un logiciel de gestion de versions, *en détaillant* différentes structures de données impliquées dans sa mise en œuvre. 
 
-Un logiciel de **gestion de versions** est un outil permettant le stockage, le suivi et la gestion de plusieurs versions d'un projet *(ou d'un ensembles de fichiers)*. 
+Un logiciel de **gestion de versions** est un outil permettant le stockage, le suivi et la gestion de plusieurs versions d'un projet *(ou d'un ensemble de fichiers)*. 
 - offrent un **accès aisé à l'historique de toutes les modifications effectuées** sur les fichiers + permettent notamment de *récupérer une version antérieure en cas de problème*. 
 - très utiles dans le cadre de travail collaboratif, permettant de *fusionner de manière intelligente différentes versions d'un même projet*. 
 
@@ -26,12 +26,10 @@ Un logiciel de **gestion de versions** est un outil permettant le stockage, le s
 	- Github: https://github.com/Meriadoc-gitgit
 
 2. **Halimatou Diallo**
-	- Numéro d'étudiant: 
+	- Numéro d'étudiant: 21114613
 	- Groupe: MONO 6
 	- Titre: roi de valgrind *(vaincre toute sorte de data leak)*
-	- Pseudo: 
-	- LinkedIn: 
-	- Github: 
+	
 
 ## Pré-requis
 1. Connaissances de base des commandes en Bash pour la manipulation du système: `mkdir`, `rm`...
@@ -44,8 +42,6 @@ Un logiciel de **gestion de versions** est un outil permettant le stockage, le s
 		- ...
 	- Cours suivi: LU2IN006 - Structure des données | Sorbonne Université | 2022-2023
 4. Exigence secondaire: extra autonomie, bonne gestion de stress + extra sens de team-player *(tout au long du projet)*
-
-## Configuration *(pour MacOS)*
 
 # Manuel d'usage
 ## Choix de fonction de hachage
@@ -62,22 +58,22 @@ int hash(char* str) {
 }
 ```
 ### Pourquoi un tel choix ? 
-L'explication est simple. En comparant avec les 2 autres algorithmes fournies *(dont SBDM et LOSE LOSE)*, DJB2 est une algorithme renommée et certifiée en tant que meilleure algorithme pour les chaines de caractères par une grande population *(avis de l'auteur du site + de la grande communauté des developpers lus sur Stackoverflow et d'autres forums)*. 
+L'explication est simple. En comparant avec les 2 autres algorithmes fournies *(dont SBDM et LOSE LOSE)*, DJB2 est une algorithme renommée et certifiée en tant que meilleure algorithme pour les chaînes de caractères par une grande population *(avis de l'auteur du site + de la grande communauté des développeurs lus sur Stackoverflow et d'autres forums)*. 
 
 L'utilisation de DJB2 garantit une excellente distribution et vitesse sur de nombreux jeux de clés et tailles de table différents. Pourtant, la magie du nombre 33 *(pourquoi il fonctionne mieux que de nombreuses autres constantes, premières ou non)* n'a jamais été suffisamment expliquée.
 
->**Note**: Le résultat de cette fonction peut notamment être négative. Afin d'assurer une bonne insertion des couples `(key,value)` dans `Commit`, il est forcément recommandé d'utiliser la valeur absolue du `hash` renvoyé par DJB2.
+>**Note**: Le résultat de cette fonction peut notamment être négatif. Afin d'assurer une bonne insertion des couples `(key,value)` dans `Commit`, il est forcément recommandé d'utiliser la valeur absolue du `hash` renvoyé par DJB2.
 
 ### Changement par rapport à l'algorithme fournie
 1. Changement de **type du paramètre en entrée**
 	
-	Suivant l'algorithme fournie sur le site web mentionné dans l'énoncé, le type du paramètre pris en entrée sera un `unsigned char`. Pourtant, en testant cette fonction avec un tel paramètre, la boucle risque de s'arrêter immédiatement une fois parcouru le premier caractère du chaine en entrée au lieu d'avancer jusqu'à son dernier élément. 
+	Suivant l'algorithme fourni sur le site web mentionné dans l'énoncé, le type du paramètre pris en entrée sera un `unsigned char`. Pourtant, en testant cette fonction avec un tel paramètre, la boucle risque de s'arrêter immédiatement une fois parcouru le premier caractère du chaîne en entrée au lieu d'avancer jusqu'à son dernier élément. 
 	
-	Cela cause donc un grand problème de collision, vu que les résultats de hachage ne seront que les hachages des caractères à la place des chaines de caractères. Donc, pour améliorer la complexité du programme et meilleure gestion de collisions, nous avons décider de modifier ce paramètre en `char*`
+	Cela cause donc un grand problème de collision, vu que les résultats de hachage ne seront que les hachages des caractères à la place des chaînes de caractères. Donc, pour améliorer la complexité du programme et meilleure gestion de collisions, nous avons décidé de modifier ce paramètre en `char*`
 	
 2. Changement de **type retour de la fonction**
 	
-	Pour simplifier la compréhension du programme, nous avons modifier le type de retour de cette fonction en `int` au lieu de `unsigned long`. En terme de résultat, après plusieurs assertions, nous trouve que cela ne cause pas de problème à la simulation de l'ensemble du logiciel.
+	Pour simplifier la compréhension du programme, nous avons modifier le type de retour de cette fonction en `int` au lieu de `unsigned long`. En termes de résultat, après plusieurs assertions, nous trouvons que cela ne cause pas de problème à la simulation de l'ensemble du logiciel.
 	
 
 ## Commandes `myGit` simulées
@@ -107,7 +103,7 @@ Cette liste est composée de **14 commandes primordiales** du logiciel simulées
 5. `./myGit add <elem> [<elem2> <elem3> ...]`: ajoute un ou plusieurs fichiers/répertoires à la zone de préparation _(prochain commit)_
 6. `./myGit list-add`: affiche le contenu de la zone de préparation
 7. `./myGit clear-add`: vide la zone de préparation
-8. `./myGit commit <branch-name> [-m <message>]`: effedctue un commit sur une branche, avec ou sans mesage descriptif
+8. `./myGit commit <branch-name> [-m <message>]`: effectue un commit sur une branche, avec ou sans mesage descriptif
 9. `./myGit get-current-branch` : affiche le nom de la branche courante
 10. `./myGit branch <branch-name>`: crée une branche qui s'appelle `<branch-name>` si elle n'existe pas déjà
 11. `./myGit branch-print <branch-name>`: affiche le hash de tous les commits de la branche, accompagné de leur message descriptif éventuel
@@ -123,7 +119,7 @@ Cette liste est composée de **14 commandes primordiales** du logiciel simulées
 - Répertoire **src**: contenant les **sources de codes primordials du projet**, dont les fichiers suivant:
 	- 1 fichier **myGit.c**: simulateur principal de la commande `./myGit` du projet, faire l'appel à **bash.h** et **src.h**
 	- 1 fichier **Makefile**: contenant les commandes configurées pour compiler et exécuter le programme
-	- 1 fichier **bash.h**: contenant les fonctions du manipulation qui utilise certaines commandes de Bash et les fonctions de simulation de **myGit**
+	- 1 fichier **bash.h**: contenant les fonctions de manipulation qui utilise certaines commandes de Bash et les fonctions de simulation de **myGit**
 	- 1 fichier **src.c**: contenant les fonctions de base qui seront prochainement utilisées dans les fonctions du fichier **bash.h**
 	- 2 fichier caché **.current_branch** et **.add**: contribuent à la contrôle de version et de branches de **myGit**
 	- 2 sous-répertoire caché: **.refs** et **.** :
@@ -139,18 +135,18 @@ Cette liste est composée de **14 commandes primordiales** du logiciel simulées
 >Ainsi déjà bien gérés avant le rendu de projet
 ## Concernant les Data Leak
 ### Gestion de valgrind
-Jusqu'à présent, **ce programme a atteint 0 bytes de fuites de mémoire**, qui satisfait l'exigence d'un bon projet à rendre. Pourtant, avant d'arriver à un tel niveau, le nombre total de bytes de fuites de mémoire est imcomptable. 
+Jusqu'à présent, **ce programme a atteint 0 bytes de fuites de mémoire**, qui satisfait l'exigence d'un bon projet à rendre. Pourtant, avant d'arriver à un tel niveau, le nombre total de bytes de fuites de mémoire est incroyable. 
 
-Au départ, nous avons séparés notre projet 6 programmes, dont: myGit, test, commit, bash, cell et work; afin d'assurer que les tests ne nous paraissent pas trop long et compréhensibles. Pour chaque programme, sauf celui de myGit, le nombre de bytes de fuites de mémoire après exécution de valgrind peut toucher environ 25 billion, incroyable pour un projet qui ne dure que 2 mois depuis son lancement. 
+Au départ, nous avons séparé notre projet 6 programmes, dont: ***myGit, test, commit, bash, cell et work***; afin d'assurer que les tests ne nous paraissent pas trop longs et compréhensibles. Pour chaque programme, sauf celui de ***myGit***, le nombre de bytes de fuites de mémoire après exécution de valgrind peut toucher environ 25 milliards, incroyable pour un projet qui ne dure que 2 mois depuis son lancement. 
 
-Au fur à mesure, nous avons fait beaucoup d'efforts pour trouver la source du problème, et de désallouer les variables initialisés lors dans les main et ceux internes des fonctions. Malheureusement, cela n'améliore pas la situation, et nous nous trouvons coincés avec nos instructeurs à chaque séance de TP. 
+Au fur à mesure, nous avons fait beaucoup d'efforts pour trouver la source du problème, et de désallouer les variables initialisées lors des ***main*** et ceux internes des fonctions. Malheureusement, cela n'améliore pas la situation, et nous nous trouvons coincés avec nos instructeurs à chaque séance de TP. 
 
-Enfin, nous avons remarqué que ce catastrophe ne survient pas des allocations, mais du programme et du fichier lui-même. À chaque test, lors de l'initialisation des variables, ou de l'instruction d'affichage: `printf("test de ltos: %s\n", ltos(L));` par exemple, on a déjà enregistré un donné de base dans le programme, dont ici c'est la fonction `ltos`. Chaque enregistrement comme celui-là cause une fuite de mémoire, et les données liées à cette fonction seront diffusées hors du programme. Donc, pour gérer une telle fuite, la seule solution est simple: enlever tous les tests et les programmes hors de celui principal. 
+Enfin, nous avons remarqué que cette catastrophe ne survient pas des allocations, mais du programme et du fichier lui-même. À chaque test, lors de l'initialisation des variables, ou de l'instruction d'affichage: `printf("test de ltos: %s\n", ltos(L));` par exemple, on a déjà enregistré un donné de base dans le programme, dont ici c'est la fonction `ltos`. Chaque enregistrement comme celui-là cause une fuite de mémoire, et les données liées à cette fonction seront diffusées hors du programme. Donc, pour gérer une telle fuite, la seule solution est simple: enlever tous les tests et les programmes hors de celui principal. 
 
-Pour le programme principal, dont **myGit**, aucun byte de fuite de mémoire est reporté, avec un seul erreur lors de l'utilisation de `strcmp` pour comparer les chaines de caractères de `argv[1]` avec les chaines commandes. Cet erreur est venu du fait que `argv[1]` est une chaine qui n'est initialisé qu'avec nos propres commandes dans le Terminal, pas dans le programme lui-même. Donc, il n'est forcément pas un problème qui attire trop de souci. 
+Pour le programme principal, dont **myGit**, aucun byte de fuite de mémoire est reporté, avec un seul erreur lors de l'utilisation de `strcmp` pour comparer les chaînes de caractères de `argv[1]` avec les chaînes commandes. Cette erreur est venue du fait que `argv[1]` est une chaîne qui n'est initialisée qu'avec nos propres commandes dans le Terminal, pas dans le programme lui-même. Donc, il n'est pas forcément un problème qui attire trop de souci. 
 
 ### Lors des tests
-Les fuites de mémoire ne peuvent pas seulement être trouvées lors des valgrind, mais possiblement lors de l'exécution du programme lui-même sans être visible lors de sa compilation. 
+Les fuites de mémoire ne peuvent pas seulement être trouvées lors des ***valgrind***, mais possiblement lors de l'exécution du programme lui-même sans être visible lors de sa compilation. 
 
 Par exemple, lors de l'exécution d'un de mes programmes précédents, l'affichage est comme suit: 
 ```Bash
@@ -165,31 +161,61 @@ WorkTree* wt2 = mergeWorkTree(wt,wt1,&conflicts);
 printf("conflicts mergeWT: %s\n",
 .|..|main.o|66|src.txt|.DS_Store|.current_branch|test|bash.c|Makefile|src.h|src.o|myGit.c|main.c|bash.h|bash.o|.add|test.txt|.refs|file_test.txt
 ```
-dont le programme de départ ne va produire que `test de ltos sur L: .|..|main.o|66|src.txt|.DS_Store|.current_branch|test|bash.c|Makefile|src.h|src.o|myGit.c|main.c|bash.h|bash.o|.add|test.txt|.refs|file_test.txt` , et toute la partie qui apparait au millieu de cet affichage appartient au corps du fichier **src.c** *(c'est juste un exemple pour démontrer le mal-fonctionnement du programme)*. 
+dont le programme de départ ne va produire que `test de ltos sur L: .|..|main.o|66|src.txt|.DS_Store|.current_branch|test|bash.c|Makefile|src.h|src.o|myGit.c|main.c|bash.h|bash.o|.add|test.txt|.refs|file_test.txt` , et toute la partie qui apparaît au milieu de cet affichage appartient au corps du fichier **src.c** *(c'est juste un exemple pour démontrer le mal-fonctionnement du programme)*. 
 
-Ce problème est lié au fait que certains variables ne sont pas alloués suffisamment, le plus suivant quand on utilise `sprintf` et `strcat` ou `strtok`. Il est recommandé d'allouer avec le maximum possible, et plus les désallouer si nécessaire pour assurer le fonctionnement global. 
+Ce problème est lié au fait que certaines variables ne sont pas alloués suffisamment, le plus suivant quand on utilise `sprintf` et `strcat` ou `strtok`. Il est recommandé d'allouer avec le maximum possible, et plus les désallouer si nécessaire pour assurer le fonctionnement global. 
 ## Concernant les variables redondant
-En écrivant les instructions de compilation dans un Makefile, on écrit souvent: 
-```Makefile
+En écrivant les instructions de compilation dans un ***Makefile***, on écrit souvent: 
+```Bash
 gcc -g -Wno-unused-parameter -c bash.c
 ```
-dont l'option `-g` pour débugger les informations dans le fichier de sortie. Malheureusement, avec un tel commande, il sera difficile de pouvoir trouver les variables non utilisés tout au long du projet. Le syntaxe suivant est plus recommandé: 
-```Makefile
+dont l'option `-g` pour débugger les informations dans le fichier de sortie. Malheureusement, avec une telle commande, il sera difficile de pouvoir trouver les variables non utilisées tout au long du projet. Le syntaxe suivant est plus recommandé: 
+```Bash
 gcc -Wall -g -Wno-unused-parameter -c bash.c
 ```
-L'option `-Wall` est utilisé pour capté est Warning concernant les variables redondant du programme. 
+L'option `-Wall` est utilisé pour capter les ***Warning*** concernant les variables redondant du programme. 
 
-Ces variables ne causent pas de problème en terme de compilation et d'exécution, mais ils vont augmenter la complexité globale et temporelle pour leur allocation ou initialisation, et donc rallonger le temps d'exécution. Il vaut mieux d'éviter au maximum possible leur présence dans le projet. 
-
-## Concernant le mal-fonctionnement commandes
-
-
+Ces variables ne causent pas de problème en termes de compilation et d'exécution, mais elles vont augmenter la complexité globale et temporelle pour leur allocation ou initialisation, et donc rallonger le temps d'exécution. Il vaut mieux éviter au maximum possible leur présence dans le projet. 
 
 ## Concernant les instructions de test `if-else`
+Ces instructions ne paraissent pas comme un tel problème pour certain. Pourtant, il est strictement recommandé de respecter l'ordre des `if-else if-else`. 
+Par exemple, en écrivant comme suit, le code compile mais ce sera impossible d'exécuter: 
+```C
+if (instructions1) {
+	...
+}
+if (instructions2) {
+	...
+}
+...
+else {
+	...
+}
+```
+En suivant une avalanche d'instructions de test `if`, le programme se trouve dans une situation coincée et aura une confusion lors de l'entrée et sortie des tests. 
 
+Pour remédier à ce problème, il faut simplement modifier le code comme suit: 
+```C
+if (instructions1) {
+	...
+}
+else if (instructions2) {
+	...
+}
+...
+else {
+	...
+}
+```
 
 # Conclusion et Remerciement
 
+
+Tout au long du projet, nous avons appris beaucoup de choses. Grâce au manipulation des chaînes de caractères, nous retenons l'importance d'un bon choix de taille d'allocation, et l'impact des pointeurs à l'espace de mémoire en appliquant les fonctions globales sur certains variables. Parallèlement, nous comprenons mieux la différence entre l'utilisation d'un tableau et celle d'un pointeur, et leur impact sur l'espace de mémoire global après l'exécution d'un programme. De plus, nous sommes capables de mieux gérer les fuites de mémoire, à trouver les erreurs minuscules dans les codes, et à comprendre la source des fautes de segmentation.
+
+Nous tenons à exprimer nos sincères remerciements auprès des responsables, nos instructeurs et des professeurs qui nous ont accompagnés tout au long de ce projet.
+
+*De Duong à Halimatou: Merci d'avoir été ma première et donc meilleure binôme jusqu'à maintenant.*
 
 # Références
 1. DJB2 Algo explained | https://thealgorithms.github.io/C/d4/de3/hash__djb2_8c.html#details

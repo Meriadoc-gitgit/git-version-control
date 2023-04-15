@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "report.MD",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               }
             }
@@ -148,6 +148,8 @@
   },
   "active": "9cbf72607419845b",
   "lastOpenFiles": [
+    "report.pdf",
+    "report.tex",
     "src/test",
     "src/main.o",
     "src/src.o",
@@ -164,8 +166,6 @@
     "src/src-ecaf8d6f.o.tmp",
     "src/file_text.txt",
     "src/src-00666fe5.o.tmp",
-    "src/bash-1930278e.o.tmp",
-    "main-version/V4.txt",
     "description.MD",
     "desc/branch-fusion.md",
     "desc/sub_img/Bash_command.png",
