@@ -5,7 +5,7 @@
 
 >**Réalisatrices**: Vu Hoang Thuy Duong & Halimatou Diallo
 
->**Instructeurs**: Paul Hermouet & Louis 
+>**Instructeurs**: Paul Hermouet & Louis Serrano
 
 # Cadre du projet
 Un logiciel de **gestion de versions** est un outil permettant le stockage, le suivi et la gestion de plusieurs versions d'un projet *(ou d'un ensembles de fichiers)*. 
