@@ -286,7 +286,7 @@ void myGitAdd(char* file_or_folder) {
   else printf("git add: File or folder %s does not exists",file_or_folder);
   return;
 }
-void myGitCommit(char* branch_name,char* message) {
+void myGitCommit(char* branch_name,char* message) {//ok
   if (!file_exists(".refs")) {
     printf("gitCommit: Initialiser d'abord les references du projet\n");
     return;
@@ -320,6 +320,7 @@ void myGitCommit(char* branch_name,char* message) {
 
 
 
+/* 7 left to test !! require Linux environment */
 /* Part 4 - GESTION D'UNE TIMELINE ARBORESCENTE */
 /* Side function */
 char* hashToPathCommit(char* hash) {

@@ -25,6 +25,12 @@ int main(void) {
 
   printBranch("Feature0");
 
+  List* L = branchList("Feature0");
+  printf("%s\n",ltos(L));
+
+  List* L1 = getAllCommits();
+  printf("%s\n",ltos(L1));
+
   myGitAdd("src.c");
   myGitCommit("Feature0","test");
 }

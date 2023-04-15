@@ -285,6 +285,7 @@ int hash(char* str) {
 }
 void commitSet(Commit* c,char* key,char* value) {//ok
   int h = hash(key)%c->size;
+  if (h<0) h = -h;
   while (c->T[h]) 
     h = h+1;
   c->T[h] = createKeyVal(key,value);
@@ -380,21 +381,28 @@ char* getCurrentBranch(void) {
   fclose(f); 
   return buff;
 }
-void printBranch(char* branch) {
+void printBranch(char* branch) {//ok
   char* c_hash = getRef(branch);
   char* hash = hashToPathCommit(c_hash);
   Commit* c = ftc(hash);
 
-  if (commitGet(c,"message")) {
-    printf("%s -> %s\n",c_hash,commitGet(c,"message"));}
-  else if (commitGet(c,"predecessor")) {
-    c_hash = commitGet(c,"predecessor");
-    c = ftc(hashToPathCommit(c_hash));
+  if (commitGet(c,"predecessor")) {
+    while(c) {
+      if (commitGet(c,"message")) 
+        printf("%s -> %s\n",c_hash,commitGet(c,"message"));
+      else printf("%s\n",c_hash);
+      c_hash = commitGet(c,"predecessor");
+      c = ftc(hashToPathCommit(c_hash));
+    }
   }
-  else printf("%s\n",c_hash);
+  else {
+    if (commitGet(c,"message")) 
+      printf("%s -> %s\n",c_hash,commitGet(c,"message"));
+    else printf("%s\n",c_hash);
+  }
   return;
 }
-List* branchList(char* branch) {
+List* branchList(char* branch) {//ok
   char* c_hash = getRef(branch);
   Commit* c = ftc(hashToPathCommit(c_hash));
   List* L = initList();
@@ -408,7 +416,7 @@ List* branchList(char* branch) {
   }
   return L;
 }
-List* getAllCommits(void) {
+List* getAllCommits(void) {//ok
   List* L = initList();
   List* ref = listdir(".refs");
   for (Cell* ptr=*ref;ptr!=NULL;ptr=ptr->next) {
