@@ -63,7 +63,7 @@ Example:
 - l'enregistrement instantané est dans: `ds/fsd245azd.t`
 #### Fonction
 ```c
-char* blocWorkTree(WorkTree* wt);
+char* blobWorkTree(WorkTree* wt);
 ```
 #### Algorithm
 - crée un fichier temporaire représentant le `WorkTree` 

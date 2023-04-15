@@ -338,7 +338,7 @@ void restoreCommit(char* hash_commit) {
   free(tree_hash);
   return;
 }
-void myGitCheckoutBranch(char* branch) {
+void myGitCheckoutBranch(char* branch) {//ok
   char buff[PATH_MAX];
   sprintf(buff,"echo %s > .current_branch",branch);
   system(buff);
@@ -365,7 +365,6 @@ void myGitCheckoutCommit(char* pattern) {
     char* c_hash = listGet(filtered,0)->data;
     createUpdateRef("HEAD",c_hash);
     restoreCommit(c_hash);
-    free(c_hash);
   } else {
     if (!sizeList(filtered)) 
       printf("No pattern matching.\n");
@@ -382,7 +381,7 @@ void myGitCheckoutCommit(char* pattern) {
 
 /* Part 5+6 - FINAL */
 /* SIMULATION DE GIT MERGE */
-WorkTree* mergeWorkTree(WorkTree* wt1, WorkTree* wt2, List** conflicts) {
+WorkTree* mergeWorkTree(WorkTree* wt1, WorkTree* wt2, List** conflicts) {//ok
   for (int i=0;i<wt1->n;i++) {
     if (inWorkTree(wt2,wt1->tab[i].name))
       insertFirst(*conflicts,buildCell(wt1->tab[i].name));

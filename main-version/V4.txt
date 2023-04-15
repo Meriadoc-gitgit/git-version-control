@@ -41,9 +41,6 @@ int main(void) {
   List* L1 = getAllCommits();
   printf("%s\n",ltos(L1));
 
-  List* L2 = ftol("file_text.txt");
-  printf("%s\n",ltos(L2));
-
   myGitAdd("src.c");
   myGitCommit("Feature0","test");
 

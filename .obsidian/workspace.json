@@ -13,8 +13,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "readme.MD",
-                "mode": "source",
+                "file": "report.MD",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "readme.MD",
+                "file": "report.MD",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "readme.MD",
+                "file": "report.MD",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "readme.MD"
+                "file": "report.MD"
               }
             }
           }
@@ -148,28 +148,30 @@
   },
   "active": "9cbf72607419845b",
   "lastOpenFiles": [
-    "report.MD",
+    "src/test",
+    "src/main.o",
+    "src/src.o",
+    "src/bash.o",
+    "src/bash-d1fa1923.o.tmp",
+    "src/src-af7c61ae.o.tmp",
+    "photo.jpg",
     "readme.MD",
-    "description.MD",
-    "desc/multi_instant.md",
+    "report.MD",
     "desc/commit.md",
+    "desc/timeline.md",
+    "desc/preliminary.md",
+    "desc/multi_instant.md",
+    "src/src-ecaf8d6f.o.tmp",
+    "src/file_text.txt",
+    "src/src-00666fe5.o.tmp",
+    "src/bash-1930278e.o.tmp",
+    "main-version/V4.txt",
+    "description.MD",
     "desc/branch-fusion.md",
     "desc/sub_img/Bash_command.png",
-    "desc/preliminary.md",
-    "src/file_text.txt",
-    "src/src.o",
-    "src/src-9e673a0d.o.tmp",
-    "src/bash_test.o",
-    "src/bash.o",
-    "src/bash",
-    "GIT-version-control-main.zip",
-    "src/bash-84399550.o.tmp",
     "desc/sub_img/method-fusion.png",
     "desc/sub_img/fusion.png",
-    "desc/timeline.md",
-    "file.txt",
     "desc/sub_img/timeline.png",
-    "projet-version-3avril.pdf",
     "desc/sub_img/commit.png"
   ]
 }
