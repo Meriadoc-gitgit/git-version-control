@@ -448,14 +448,14 @@ List* branchList(char* branch) {//ok
 }
 List* getAllCommits(void) {//ok
   //Usage: renvoie la liste des hash des commits de toutes les branches (sans répétition)
-  List* L = initList(); 
-  List* ref = listdir(".refs");
-  for (Cell* ptr=*ref;ptr!=NULL;ptr=ptr->next) {
-    if (ptr->data[0]!='.') {
-      List* branch = branchList(ptr->data);
-      while (*branch) {
-        if (!searchList(L,(*branch)->data)) 
-          insertFirst(L,buildCell((*branch)->data));
+  List* L = initList(); //initialise une List
+  List* ref = listdir(".refs"); //parcourir + enregistrer les elements du repertoire .refs
+  for (Cell* ptr=*ref;ptr!=NULL;ptr=ptr->next) { //parcourir la List ainsi initialisee
+    if (ptr->data[0]!='.') { //au cas ou cet element n'est pas un fichier/repertoire cache
+      List* branch = branchList(ptr->data); //parcourir une branche dans la List L de branches
+      while (*branch) { //si la branche est non-vide
+        if (!searchList(L,(*branch)->data)) //et que l'element de cette branche n'apparait pas encore dans L
+          insertFirst(L,buildCell((*branch)->data)); //inserer cet element dans L
         *branch = (*branch)->next;
       }
     }
