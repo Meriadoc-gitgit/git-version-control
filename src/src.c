@@ -447,15 +447,17 @@ List* branchList(char* branch) {//ok
   return L;
 }
 List* getAllCommits(void) {//ok
-  List* L = initList();
+  //Usage: renvoie la liste des hash des commits de toutes les branches (sans répétition)
+  List* L = initList(); 
   List* ref = listdir(".refs");
   for (Cell* ptr=*ref;ptr!=NULL;ptr=ptr->next) {
-    if (ptr->data[0]=='.') continue;
-    List* branch = branchList(ptr->data);
-    while (*branch) {
-      if (!searchList(L,(*branch)->data)) 
-        insertFirst(L,buildCell((*branch)->data));
-      *branch = (*branch)->next;
+    if (ptr->data[0]!='.') {
+      List* branch = branchList(ptr->data);
+      while (*branch) {
+        if (!searchList(L,(*branch)->data)) 
+          insertFirst(L,buildCell((*branch)->data));
+        *branch = (*branch)->next;
+      }
     }
   }
   return L;
