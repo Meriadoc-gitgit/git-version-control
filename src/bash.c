@@ -350,54 +350,58 @@ void myGitCommit(char* branch_name,char* message) {//ok
 /* Part 4 - GESTION D'UNE TIMELINE ARBORESCENTE */
 /* Side function */
 char* hashToPathCommit(char* hash) {
-  char* buff = (char*)malloc(INT_MAX*sizeof(char));
+  //Usage: transformer le hash en entree en un path a un enregistrement d'un Commit
+  char* buff = (char*)malloc(INT_MAX*sizeof(char)); //allouer cette variable pour enregistrer le path suivant
   strcat(buff,hashToPath(hash));
-  strcat(buff,".c");
+  strcat(buff,".c"); //concatener le path avec son extension
   return buff;
 }
 
 /* SIMULATION DE GIT CHECKOUT */
 void restoreCommit(char* hash_commit) {
+  //Usage: restaurer le WorkTree associé à un commit dont le hash est donnée en paramètre
   Commit* c = ftc(hashToPathCommit(hash_commit));
   char* tree_hash = strcat(hashToPath(commitGet(c,"tree")),".t");
-  restoreWorkTree(ftwt(tree_hash),".");
-  free(tree_hash);
+  restoreWorkTree(ftwt(tree_hash),"."); //restaurer le WorkTree associe
   return;
 }
 void myGitCheckoutBranch(char* branch) {//ok
-  char buff[PATH_MAX];
-  sprintf(buff,"echo %s > .current_branch",branch);
+  //Usage: restaure le WorkTree correspondant au dernier commit de branch
+  char buff[PATH_MAX*sizeof(char)]; //allouer cette variable pour l'enregistrement d'une commande
+  sprintf(buff,"echo %s > .current_branch",branch); //modifier la direction le .current_branch
   system(buff);
 
   char* hash_commit = getRef(branch);
-  createUpdateRef("HEAD",hash_commit);
-  restoreCommit(hash_commit);
+  createUpdateRef("HEAD",hash_commit); //mettre a jour la reference HEAD
+  restoreCommit(hash_commit); //restaurer le Commit depuis le hash enregistre dans la branche en entree
   return;
 }
 List* filterList(List* L,char* pattern) {
-  List* filtered = initList();
-  for (Cell* ptr=*L;ptr!=NULL;ptr=ptr->next) {
+  //Usage: retourne une nouvelle liste contenant uniquement les éléments de L commencant par pattern
+  List* filtered = initList(); //initialiser une List
+  for (Cell* ptr=*L;ptr!=NULL;ptr=ptr->next) { //parcourir la List fournie en entree
     char* c = strdup(ptr->data);
-    c[strlen(pattern)] = '\0';
-    if (!strcmp(c,pattern))
-      insertFirst(filtered,buildCell(c));
-    free(c);
+    c[strlen(pattern)] = '\0'; //indiquer la fin d'une chaine avec '\0'
+    if (!strcmp(c,pattern)) //si ces 2 chaines se ressemblent
+      insertFirst(filtered,buildCell(ptr->data)); //alors inserer ptr->data dans la List recemment cree
   }
   return filtered;
 }
 void myGitCheckoutCommit(char* pattern) {
-  List* filtered = filterList(getAllCommits(),pattern);
-  if (sizeList(filtered)==1) {
+  //Usage: filtre cette liste pour ne garder que ceux qui commencent par pattern
+  List* filtered = filterList(getAllCommits(),pattern); //filtre la List de tous les Commit existants qui correspond a la chaine pattern
+  if (sizeList(filtered)==1) { //s'il ne reste plus qu'un hash
     char* c_hash = listGet(filtered,0)->data;
-    createUpdateRef("HEAD",c_hash);
-    restoreCommit(c_hash);
+    createUpdateRef("HEAD",c_hash); //met à jour la référence HEAD pour pointer sur ce hash
+    restoreCommit(c_hash); //restaure le WorkTree correspondant
   } else {
-    if (!sizeList(filtered)) 
-      printf("No pattern matching.\n");
+    if (!sizeList(filtered)) //s'il ne reste plus aucun hash: affiche le message d'erreur à l'utilisateur
+      printf("WARNING: No pattern matching.\n");
     else {
-      printf("Multiple matchings found:\n");
+      printf("WARNING: Multiple matchings found:\n");
       for (Cell* ptr=*filtered;ptr!=NULL;ptr=ptr->next)
         printf("-> %s\n",ptr->data);
+      //s'il reste plusieurs hash: affiche tous + demande à l'utilisateur de préciser sa requête
     }
   }
   return;
@@ -408,25 +412,30 @@ void myGitCheckoutCommit(char* pattern) {
 /* Part 5+6 - FINAL */
 /* SIMULATION DE GIT MERGE */
 WorkTree* mergeWorkTree(WorkTree* wt1, WorkTree* wt2, List** conflicts) {//ok
+  /*Usage: crée:
+  1. une liste de chaines de caractères composée des noms de fichiers/répertoires qui sont en conflit
+  2. un nouveau WorkTree des fichiers et/ou répertoires qui ne sont pas en conflit*/
   for (int i=0;i<wt1->n;i++) {
     if (inWorkTree(wt2,wt1->tab[i].name))
-      insertFirst(*conflicts,buildCell(wt1->tab[i].name));
+      insertFirst(*conflicts,buildCell(wt1->tab[i].name)); //creer la List des conflits si 1 nom de fichier existe dans tous les 2 WorkTree en entree
   }
-  WorkTree* wt = initWorkTree();
+  WorkTree* wt = initWorkTree(); //initialiser un WorkTree
   for (int i=0;i<wt1->n;i++) {
     if (!searchList(*conflicts,wt1->tab[i].name))
-      appendWorkTree(wt,wt1->tab[i].name,wt1->tab[i].hash,wt1->tab[i].mode);
+      appendWorkTree(wt,wt1->tab[i].name,wt1->tab[i].hash,wt1->tab[i].mode); //inserer le fichier du premier WorkTree dans le nouveau WorkTree ssi il n'existe pas dans la List des conflits
   }
   for (int i=0;i<wt2->n;i++) {
     if (!searchList(*conflicts,wt2->tab[i].name))
-      appendWorkTree(wt,wt2->tab[i].name,wt2->tab[i].hash,wt2->tab[i].mode);
+      appendWorkTree(wt,wt2->tab[i].name,wt2->tab[i].hash,wt2->tab[i].mode); //inserer le fichier du deuxieme WorkTree dans le nouveau WorkTree ssi il n'existe pas dans la List des conflits
   }
   return wt;
 }
 List* merge(char* remote_branch, char* message) {
+  //Usage: Fusionne la branche courante avec la branche passée en paramètre si aucun conflit n'existe.
   char* current_commit_h = getRef(getCurrentBranch());
   char* remote_commit_h = getRef(remote_branch);
 
+  //Initialiser 2 WorkTree associes a la variable remote_branch et a la branche courante
   WorkTree* current = ftwt(strcat(
     hashToPath(commitGet(
       ftc(hashToPathCommit(current_commit_h)),"tree")),".t"));
@@ -434,33 +443,40 @@ List* merge(char* remote_branch, char* message) {
     hashToPath(commitGet(
       ftc(hashToPathCommit(remote_commit_h)),"tree")),".t"));
 
-  List* conflicts = initList();
+  List* conflicts = initList(); //initialiser une List qui va enregistrer les conflits
 
-  WorkTree* wt = mergeWorkTree(current,remote,&conflicts);
+  WorkTree* wt = mergeWorkTree(current,remote,&conflicts); //crée le worktree de fusion (avec mergeWorkTree)
+
+  /*
+  Si au moins un conflit:
+  - aucune de ses opérations n'est effectuée
+  - la fonction retourne la liste des conflits
+  */
   if (conflicts) return conflicts;
   
-  Commit* c = createCommit(blobWorkTree(wt));
-  commitSet(c,"predecessor",current_commit_h);
-  commitSet(c,"merged_predecessor",remote_commit_h);
-  char* c_h = blobCommit(c);
-  myGitCommit(getCurrentBranch(),message);
-  createUpdateRef("HEAD",c_h);
-  deleteRef(remote_branch);
-  restoreWorkTree(wt,".");
+  //Si aucun conflit
+  Commit* c = createCommit(blobWorkTree(wt)); //crée le commit associé à ce nouveau worktree
+  commitSet(c,"predecessor",current_commit_h); //..en indiquant qui sont des prédécesseurs
+  commitSet(c,"merged_predecessor",remote_commit_h); //..en lui ajoutant le message descriptif passé en paramètre
+  char* c_h = blobCommit(c); //réalise un enregistrement instantané du worktree de fusion + de ce nouveau commit
+  myGitCommit(getCurrentBranch(),message); //ajouter le nouveau commit à la branche courante
+  createUpdateRef("HEAD",c_h); //MAJ la référence de la branche courante et la référence HEAD pour pointer vers ce nouveau commit
+  deleteRef(remote_branch); //supprimer la référence de la branche passée en paramètre
+  restoreWorkTree(wt,"."); //restaurer le projet correspondant au worktree de fusion
   return NULL;
 }
 void createDeletionCommit(char* branch, List* conflicts, char* message) {
+  //Usage: crée + ajoute un commit de suppression sur branch, correspondant à la suppression des éléments de la liste conflicts.
   char* depart = getCurrentBranch();
-  myGitCheckoutBranch(branch);
-  Commit* c = ftc(hashToPathCommit(getRef(getCurrentBranch())));
+  myGitCheckoutBranch(branch); //se déplacer sur la branche en question (à l'aide de myGitCheckoutBranch)
+  Commit* c = ftc(hashToPathCommit(getRef(branch))); //récupère le dernier commit de cette branche + le worktree associé
   WorkTree* wt = ftwt(strcat(hashToPath(commitGet(c,"tree")),".t"));
-  system("echo > .add"); // vider la zone de preparation
+  system("echo > .add"); //vider la zone de preparation
   for(int i=0;i<wt->n;i++) {
     if (!searchList(conflicts,wt->tab[i].name)) 
-      myGitAdd(wt->tab[i].name);
+      myGitAdd(wt->tab[i].name); //utiliser myGitAdd pour ajouter les fichiers/répertoires du worktree qui ne font pas partie de la liste des conflits
   }
-  myGitCommit(branch,message);
-  myGitCheckoutBranch(depart); 
-  free(depart); 
+  myGitCommit(branch,message); //appelle myGitCommit pour créer le commit de suppression
+  myGitCheckoutBranch(depart); //revient sur la branche de départ (à l'aide de myGitCheckoutBranch)
   return;
 }
