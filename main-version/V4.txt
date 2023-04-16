@@ -1,15 +1,4 @@
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-
-#include "src.h"
-#include "bash.h"
-
-int main(void) {
-
-  //Commit* c1 = createCommit(sha256file("src.c"));
+//Commit* c1 = createCommit(sha256file("src.c"));
 
   initRefs();
   
@@ -33,16 +22,17 @@ int main(void) {
   List* conflicts = initList();
   WorkTree* wt2 = mergeWorkTree(wt,wt1,&conflicts);
   printf("conflicts mergeWT: %s\n",ltos(conflicts));
+
+  printf("\nTest de PRINTBRANCH\n\n");
   printBranch("Feature0");
 
-  List* L = branchList("Feature0");
-  printf("%s\n",ltos(L));
+  printf("\n\n");
 
-  List* L1 = getAllCommits();
-  printf("%s\n",ltos(L1));
+  //List* L = branchList("Feature0");
+  //printf("L: %s\n",ltos(L));
+
+  //List* L1 = getAllCommits();
+  //printf("%s\n",ltos(L1));
 
   myGitAdd("src.c");
   myGitCommit("Feature0","test");
-
-  return 0;
-}

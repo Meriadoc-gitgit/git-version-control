@@ -58,7 +58,7 @@ typedef HashTable Commit;
 6. `char* CommitGet(Commit* c, char* key)`: 
 	- cherche dans la table s'il existe un élément dont la clé est `key` *(en sachant qua les conflits sont résolus pas adressage ouvert et probing linéaire)*
 	- retourne la valeur de l'élément s'il existe, `NULL` sinon
-7. `char* cts(Commit* c)`: convertit un cômmit en une chaine de carcatères *(composée des chaines de caractères représentant chacun de ses couples (clé, valeur), séparées par un saut de ligne)*
+7. `char* cts(Commit* c)`: convertit un Commit en une chaine de carcatères *(composée des chaines de caractères représentant chacun de ses couples (clé, valeur), séparées par un saut de ligne)*
 	
 	`Commit* stc(char* file)`: réalise la conversion inverse
 8. `void ctf(Commit* c, char* file)`: écrit dans le fichier `file` la chaine de caractères représentant le commit `c`.

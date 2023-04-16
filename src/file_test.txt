@@ -1,5 +1,5 @@
-diallo:lima
 lim:thai hong
+diallo:lima
 tree:aieufbqebgfquoebgo
-truong:gia bao
 vu:hoang thuy duong
+truong:gia bao

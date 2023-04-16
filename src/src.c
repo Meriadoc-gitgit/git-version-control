@@ -19,8 +19,8 @@ int sizeList(List* L) {
 }
 List* initList() { //OK
   //Usage: Initialiser une liste vide
-  List* rst = (List*)malloc(sizeof(List));
-  *rst = NULL;
+  List* rst = (List*)malloc(sizeof(List)); //alloue une structure de type List
+  *rst = NULL; //initialise la structure ainsi allouee
   return rst;
 }
 Cell* buildCell(char* ch) {//OK
@@ -245,7 +245,7 @@ WorkTree* ftwt(char* file) {//ok
   //Usage: construit un WorkTree à partir d'un fichier qui contient sa représentation en chaine de caractères
   FILE* f = fopen(file,"r");
   if (!f) { //verifier si le fichier file a ete bien ouvert
-    printf("WARNING: The file %s is empty\n",file);
+    printf("WARNING: %s is empty\n",file);
     return NULL;
   }
   WorkTree* wt = initWorkTree(); //initialiser un WorkTree dont on a retourner prochainement
@@ -311,80 +311,82 @@ int hash(char* str) {
   return hash;
 }
 void commitSet(Commit* c,char* key,char* value) {//ok
-  
-  int h = hash(key)%c->size;
-  if (h<0) h = -h;
-  while (c->T[h]) 
+  //Usage: insère la paire (key,value) dans la table, en gérant les collisions par adressage ouvert et probing linéaire
+  int h = hash(key)%c->size; //calculer la position ou inserera cette paire 
+  if (h<0) h = -h; //prendre la valeur absolue de la position au cas ou elle serait negative
+  while (c->T[h]) //si cette position est deja occupee, on gere la collision par probing lineaire 
     h = h+1;
-  c->T[h] = createKeyVal(key,value);
-  c->n++;
+  c->T[h] = createKeyVal(key,value); //inserer la paire apres gestion de probing lineaire
+  c->n++; //incrementer le nombre de paire presente dans le tableau de 1
   return;
 }
 Commit* createCommit(char* hash) {//ok
-  Commit* c = initCommit();
-  commitSet(c,"tree",hash);
-  //c->n++;
+  Commit* c = initCommit(); //aloue et initialise un Commit
+  commitSet(c,"tree",hash); //ajouter l'element obligatoire correspondant a la cle "tree"
   return c;
 }
 char* commitGet(Commit* c,char* key) {//ok
-  for(int i=0;i<c->size;i++) {
-    if (c->T[i] && strcmp(c->T[i]->key,key)==0) {
-      return c->T[i]->value;
+  //Usage: cherche dans la table s'il existe un élément dont la clé est key (en sachant qua les conflits sont résolus pas adressage ouvert et probing linéaire)
+  for(int i=0;i<c->size;i++) { //parcourir le tableau du Commit
+    if (c->T[i] && strcmp(c->T[i]->key,key)==0) { //verifier l'existence d'une paire a la position indiquee
+      //au cas ou il existerait une paire dans cette position, on verifie la ressemblance de sa clef avec la chaine key fournie dans l'argument 
+      return c->T[i]->value; //si les tests passent, retourne la valeur de cette paire
     }
   }
-  return NULL;
+  return NULL; //si aucune test ne passe
 }
 char* cts(Commit* c) {//ok
-  char* desc = (char*)malloc(INT_MAX*sizeof(char));
-  char* w = NULL;
-  for (int i=0;i<MAX_INPUT;i++) {
-    if (c->T[i]) {
-      w = kvts(c->T[i]);
-      //printf("%s\n",desc);
-      strcat(desc,w); 
-      strcat(desc,"\n");
+  //Usage: convertit un Commit en une chaine de carcatères (composée des chaines de caractères représentant chacun de ses couples (clé, valeur), séparées par un saut de ligne)
+  char* desc = (char*)malloc(INT_MAX*sizeof(char)); //alloue cette chaine de taille maximum possible pour la concatenation suivante
+  char* w = NULL; //initialise cette chaine a NULL pour la recuperation des valeurs des paires dU Commit en entree suivant
+  for (int i=0;i<MAX_INPUT;i++) { //parcours le tableau des paires du Commit
+    if (c->T[i]) { //s'il existe une paire dans cette position
+      w = kvts(c->T[i]); //convertit la paire a la position i en sa propre chaine de description
+      strcat(desc,w); //concatener la chaine de description precedente dans desc
+      strcat(desc,"\n"); //ajouter '\n' apres la concatenation pour distinguer les description de chaque paire
     }
   }
-  return desc;
+  return desc; //retourne la chaine de description
 }
 Commit* stc(char* file) {//ok
-  char str[(int)strlen(file)]; 
-  sprintf(str,"%s",file);
-  char* desc = str;
-  char* ptr; 
-  kvp* k; 
-  Commit* c = initCommit();
-  while((ptr = strtok_r(desc, "\n", &desc))) {
-    k = stkv(ptr);
-    commitSet(c,k->key,k->value);
+  //Usage: convertir une chaine de description d'un Commit a un Commit
+  char* ptr; //declarer une chaine de caracteres pour la manipulation suivante
+  kvp* k; //declarer une variable de type kvp* pour la manipulation suivante
+  Commit* c = initCommit(); //initialise un Commit
+  while((ptr = strtok_r(file, "\n", &file))) { //parcourir la chaine en entree
+    //strtok_r est utilise au lieu de strtok afin de mieux trouver la sous-chaine et pouvoir distinguer sans confusion l'element '\n'
+    k = stkv(ptr); //convertir la chaine de description d'un kvp en un kvp
+    commitSet(c,k->key,k->value); //ajoute la paire ainsi trouver dans le Commit alloue recemment
   }
   return c;
 }
 void ctf(Commit* c,char* file) {//ok
+  //Usage: écrit dans le fichier file la chaine de caractères représentant le commit c.
   FILE* f = fopen(file,"w");
-  if (!f) {
-    printf("ctf: Erreur lors de l'ouverture\n");
+  if (!f) { //si le fichier n'est pas bien ouvert
+    printf("WARNING: Unable to open %s\n",file);
     return;
   }
-  fprintf(f,"%s",cts(c));
-  fclose(f); 
+  fprintf(f,"%s",cts(c)); //ecrire la chaine de description du Commit en entree dans le fichier
+  fclose(f); //fermer le fichier ainsi ouvert
   return;
 }
 Commit* ftc(char* file) {//ok
-  Commit* c = initCommit();
+  //Usage: charge un Commit depuis un fichier le représentant
+  Commit* c = initCommit(); //initialise un Commit
   FILE* f = fopen(file,"r");
-  if (!f) {
-    printf("ftc: Erreur lors de l'ouverture de fichier\n");
+  if (!f) { //verifier si le fichier n'est pas vide ou est bien ouvert
+    printf("WARNING: %s is empty\n",file);
     return NULL;
   }
-  char buffer[256]; 
-  kvp* k;
-  while (fgets(buffer,256,f)) {
-    k = stkv(buffer);
-    commitSet(c,k->key,k->value);
-    fgets(buffer,256,f); //WARNING: work differently between Linux and MacOS
+  char buffer[256]; //allouer une chaine de caractere pour parcourir prochainement ligne par ligne le fichier ouvert
+  kvp* k; //declarer une variable temporaire de type kvp
+  while (fgets(buffer,256,f)) { //parcours ligne par ligne du fichier
+    k = stkv(buffer); //convertir une ligne de description de kvp en un kvp
+    commitSet(c,k->key,k->value); //ajouter une paire (clef,value) dans le Commit
+    //fgets(buffer,256,f); //WARNING: (probably) work differently between Linux and MacOS
   }
-  fclose(f);
+  fclose(f); //fermer le fichier ainsi ouvert
   return c;
 }
 
@@ -393,55 +395,54 @@ Commit* ftc(char* file) {//ok
 /* Part 4 - GESTION D'UNE TIMELINE ARBORESCENTE */
 /* FONCTION DE BASE */
 void initBranch(void) {
+  //Usage: crée le fichier caché .current_branch contenant la chaine de caractères master
   system("echo master > .current_branch");
   return;
 }
 int branchExists(char* branch) {
+  //Usage: vérifie l'existence d'une branche
   return searchList(listdir(".refs"),branch)!=NULL;
 }
 void createBranch(char* branch) {
+  //Usage: crée une référence appelée branch (qui pointe vers le même commit que la référence HEAD)
   createUpdateRef(branch,getRef("HEAD"));
   return;
 }
 char* getCurrentBranch(void) {
+  //Usage: lit le fichier caché .current_branch pour retourner le nom de la branche courante
   FILE* f = fopen(".current_branch","r");
-  char* buff = (char*)malloc(PATH_MAX);
+  char* buff = (char*)malloc(PATH_MAX*sizeof(char)); //allouer cette variable afin de recuperer la chaine de caracteres enregistree dans .current_branch
   fgets(buff,PATH_MAX,f); 
   fclose(f); 
   return buff;
 }
 void printBranch(char* branch) {//ok
-  char* c_hash = getRef(branch);
-  char* hash = hashToPathCommit(c_hash);
-  Commit* c = ftc(hash);
-  
-  if (commitGet(c,"predecessor")) {
-    while(c) {
-      if (commitGet(c,"message")) 
-        printf("%s -> %s\n",c_hash,commitGet(c,"message"));
-      else printf("%s\n",c_hash);
-      c_hash = commitGet(c,"predecessor");
-      c = ftc(hashToPathCommit(c_hash));
-    }
-  }
-  else {
-    if (commitGet(c,"message")) 
+  //Usage: parcourt la branche branch + pour chacun de ses commits, affiche son hash et son message descriptif (s'il en existe un)
+  char* c_hash = getRef(branch); //sauver la reference enregistree dans branch
+  char* hash = hashToPathCommit(c_hash); //convertit la reference (un hash) a un path 
+  Commit* c = ftc(hash); //convertit la description du Commit enregistree dans le path trouve en un Commit
+  while (c) { //WARNING: fixed a few line according to the last test on Saturday!!
+    if (commitGet(c,"message")) //afficher le message de description de commit
       printf("%s -> %s\n",c_hash,commitGet(c,"message"));
-    else printf("%s\n",c_hash);
+    else printf("%s\n",c_hash); //si pas de message, afficher seulement le hash du commit
+    c_hash = commitGet(c,"predecessor"); //recuperer le hash du predecesseur du commit actuel
+    if (c_hash) { //si son predecesseur existe
+      c = ftc(hashToPathCommit(c_hash));
+    } else c = NULL; //sinon, on sort de la boucle
   }
   return;
 }
 List* branchList(char* branch) {//ok
-  char* c_hash = getRef(branch);
-  Commit* c = ftc(hashToPathCommit(c_hash));
-  List* L = initList();
-  while (c) {
-    insertFirst(L,buildCell(c_hash));
-    if (commitGet(c,"predecessor")) {
-      c_hash = commitGet(c,"predecessor");
+  //Usage: construit + retourne une liste chainée contenant le hash de tous les commits de la branche
+  char* c_hash = getRef(branch); //sauver la reference enregistree dans branch
+  Commit* c = ftc(hashToPathCommit(c_hash)); ///convertit la description du Commit enregistree dans le path trouve en un Commit
+  List* L = initList(); //initialise un List
+  while (c) { //parcourir le Commit
+    insertFirst(L,buildCell(c_hash)); //inserer le hash du Commit comme un element de List
+    c_hash = commitGet(c,"predecessor"); //recuperer le hash du predecesseur du commit actuel
+    if (c_hash) { //si son predecesseur existe
       c = ftc(hashToPathCommit(c_hash));
-    }
-    else c = NULL;
+    } else c = NULL; //sinon, on sort de la boucle
   }
   return L;
 }
