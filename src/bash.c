@@ -200,6 +200,7 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
         //printf("rep %s\n",wt->tab[i].name);
         strcat(cp_path,".t");
         WorkTree* newWT = ftwt(cp_path);
+        mkdir(a_path,0700); //new line, need to  retest, remove if not working
         restoreWorkTree(newWT,a_path);
         setMode(getChmod(cp_path),a_path);
       } else if (isWorkTree(wt->tab[i].hash)==0) { //si c'est un fichier
