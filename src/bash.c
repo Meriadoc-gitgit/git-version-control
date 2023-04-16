@@ -9,20 +9,25 @@
 #include "src.h"
 /* SIDE FUNCTION */
 int isFile(const char* fileName) {
-  struct stat path;
+  //Usage: verifier si fileName est un fichier. 
+  //Retour: 1 si c'est un fichier, 0 sinon
+  struct stat path; //declaration de structure stat
   stat(fileName, &path);
   return S_ISREG(path.st_mode);
 }
 
 /* Part 1 */
 int hashFile(char* src, char *dst) {
+  //Usage: calcule le hash du contenu du premier fichier + l'écrit dans le deuxième fichier
   char buff[100];
   sprintf(buff,"cat %s | sha256sum > %s",src,dst);
   return system(buff);
 }
 
 char* sha256file(char* file) {
-  if (isFile(file)==0) return NULL;
+  //Usage: renvoie 1 chaine de caractères contenant le hash du fichier donné en paramètre
+  if (isFile(file)==0) return NULL; //si file est un repertoire
+  
   /* Creation de fichier temporaire */
   static char template[] ="/tmp/myfileXXXXXX";
   char fname[1000];
@@ -32,66 +37,72 @@ char* sha256file(char* file) {
   /* Enregistrement du hash du fichier en parametre au fichier temporaore */
   hashFile(file,fname);
   /* Recuperation du hash du fichier en parametre enregistre dans le fichier temporaire */
-  char *hash = (char*)malloc(256*sizeof(char));
-  FILE *f = fopen(fname,"r");
-  fgets(hash,256,f);
-  fclose(f);
+  char *hash = (char*)malloc(256*sizeof(char)); //allouer cette variable pour l'enregistrement du contenu du fichier temporaire
+  FILE *f = fopen(fname,"r"); //ouverture de fichier temporaire fname ainsi cree
+  fgets(hash,256,f); //enregistrer son contenu dans hash
+  fclose(f); //fermer le fichier temporaire
 
   /* Commande envoye au systeme pour supprimer le fichier temporaire interne */
   char cmd[10000]; 
   sprintf(cmd,"rm %s",fname);
-  system(cmd);
+  system(cmd); //supprimer le fichier temporaire du systeme
   return hash;
 }
 
 
 List* listdir(char* root_dir) {
-  List* L = initList();
+  //Usage: renvoie une liste contenant les noms des fichiers et répertoires qui s'y trouvent
+  List* L = initList(); //initialise une List
   /* Parcourir la liste des fichiers et/ou repertoires contenant dans root_dir */
   DIR* dp = opendir(root_dir);
   struct dirent* ep;
   if (dp) {
     while((ep = readdir(dp))) {
-      /* Inserer le nom du contenu de root_dir dans une List L */
-      insertFirst(L,buildCell(ep->d_name));
+      insertFirst(L,buildCell(ep->d_name)); // Inserer le nom du contenu de root_dir dans une List L
     }
     (void)closedir(dp); //fermer le flux apres l'usage
   } else {
     /* Au cas ou parcours echoue, rattrapper le message d'erreur */
-    perror("listdir: Could not open the directory\n");
+    perror("WARNING: Could not open the directory\n");
     return NULL;
   }
   return L;
 }
 int file_exists(char* file) {
+  //Usage: renvoie 1 si le fichier existe dans le répertoire courant et 0 sinon
   struct stat buffer; //structure that provides detailed information about a file
   return (stat(file,&buffer)==0);
 }
 void cp(char* to, char* from) {
-  if(file_exists(from)) {
-    char ligne[256];
+  //Usage: copie le contenu d'un fichier vers un autre (en lisant ligne par ligne du fichier source)
+  if(file_exists(from)) { //verifier l'existence du fichier source dans le systeme
+    char ligne[256]; //alouer cette variable pour faire la lecture ligne par ligne suivant
     FILE* ffrom = fopen(from,"r"); 
     FILE* fto = fopen(to,"w");
     while(fgets(ligne,256,ffrom)) //copie par lecture ligne par ligne du fichier source
       fprintf(fto,"%s",ligne);
     fclose(ffrom); 
-    fclose(fto);
+    fclose(fto); //fermer tous les 2 fichiers
   }
   return;
 }
 char* hashToPath(char* hash) {
+  //Usage: retourne le chemin d'un fichier à partir de son hash
   char* dir = (char*)malloc((strlen(hash)+1)*sizeof(char));
-  dir[0] = hash[0]; dir[1] = hash[1]; dir[2] = '/'; //copier la repertoire du hash
+  dir[0] = hash[0]; 
+  dir[1] = hash[1]; //copier la repertoire du hash
+  dir[2] = '/'; //ajouter le slash '/' pour distinguer le nom du repertoire et celui du fichier
   int i;
   for(i=3;i<=strlen(hash);i++)
     dir[i] = hash[i-1]; //copier chaque caractere du hash apres l'ajout de '/'
   dir[i] = '\0'; // caractere fin 
   return dir;
 }
-void blobFile(char* file) { //ok, mais a re-tester
+void blobFile(char* file) { 
+  //Usage: enregistre un instantané (réalise un sauvegarde) du fichier donnée en entrée
   if (!file_exists(file)) {
     /* verifier l'existence du fichier en parametre dans le repertoire courant */
-    printf("blobFile: Fichier %s demande n'existe pas\n",file);
+    printf("WARNING: %s does not exist\n",file);
     return;
   }
   char *path = hashToPath(sha256file(file));
@@ -132,6 +143,8 @@ char* hashToFile(char* hash) {
     mkdir(ch,0700);
   return hashToPath(hash);
 }
+
+
 char* blobWorkTree(WorkTree* wt) {
   /* creation du fichier temporaire */
   char fname[100] = "/tmp/myfileXXXXXX";
@@ -146,6 +159,7 @@ char* blobWorkTree(WorkTree* wt) {
   return hash;
 }
 char* concat(char* s1,char* s2) {
+  //Usage: concatener 2 chaines de caracteres pour former un path a un fichier/repertoire
   char* dir = (char*)malloc(INT_MAX*sizeof(char));
   strcat(dir,s1); 
   strcat(dir,"/"); 
@@ -165,13 +179,13 @@ char* saveWorkTree(WorkTree* wt,char* path) {//ok
           appendWorkTree(newWT,(*L)->data,sha256file((*L)->data),getChmod((*L)->data));
           *L = (*L)->next;
         }
-        wt->tab[i].hash = saveWorkTree(newWT,a_path);
+        wt->tab[i].hash = saveWorkTree(newWT,a_path); //appel recursive de saveWT
         wt->tab[i].mode = getChmod(a_path);
       } else { //si c'est un simple fichier
         //printf("fic %s\n",wt->tab[i].name);
         if (file_exists(wt->tab[i].name)) {
           /*enregistrer ssi ce fichier exists!! afin d'éviter l'enregistrement des hash*/
-          blobFile(wt->tab[i].name);
+          blobFile(wt->tab[i].name); //enregistrer un fichier de WorkTree
           wt->tab[i].hash = sha256file(wt->tab[i].name);
           wt->tab[i].mode = getChmod(a_path);
         }
@@ -181,21 +195,22 @@ char* saveWorkTree(WorkTree* wt,char* path) {//ok
   return blobWorkTree(wt);
 }
 int isWorkTree(char* hash) {
+  //Verifier si hash est un WorkTree
   if (file_exists(strcat(hashToPath(hash),".t"))) return 1;
   if (file_exists(hashToPath(hash))) return 0;
-  return -1;
+  return -1; //en cas de ni WorkTree ni WorkFile
 }
 void restoreWorkTree(WorkTree* wt,char* path) {//ok
-  /*Nécessaire de vider le path avant de restaurer un WorkTree */
+  /*Nécessaire de vider le path avant de restaurer un WorkTree*/
   char command[PATH_MAX];
-  sprintf(command,"rm -f %s/*",path);
+  sprintf(command,"rm -f %s/*",path); //vider le path avant la restauration (afin d'eviter les fautes de segmentation)
   system(command);
   /* Parcours principal */
   for (int i=0;i<wt->n;i++) {
     char* a_path = concat(path,wt->tab[i].name);
     char* cp_path = hashToPath(wt->tab[i].hash);
     //printf("status %s: %d\n",wt->tab[i].name,isWorkTree(wt->tab[i].hash));
-    if (file_exists(cp_path)) {
+    if (file_exists(cp_path)) { //si le chemin hache existe
       if (isWorkTree(wt->tab[i].hash)==1) { //si c'est un repertoire
         //printf("rep %s\n",wt->tab[i].name);
         strcat(cp_path,".t");
@@ -232,96 +247,106 @@ char* blobCommit(Commit* c) {
 
 /* MANIPULATION DES REFERENCES */
 void initRefs(void) {
+  //Usage: crée le répertoire caché .refs (s'il n'existe pas déjà) + crée master et HEAD
   if (!file_exists(".refs")) { //si .refs n'existe pas deja
     system("mkdir .refs");
-    system("touch .refs/master");
-    system("touch .refs/HEAD");
+    system("touch .refs/master"); //creer la reference master
+    system("touch .refs/HEAD"); //creer la reference HEAD
   }
   return;
 }
-void createUpdateRef(char* ref_name,char* hash) { // recheck
+void createUpdateRef(char* ref_name,char* hash) { 
+  //Usage: met à jour une référence en remplacent son contenu par hash
   char buff[256];
   sprintf(buff,".refs/%s",ref_name);
-  if (file_exists(buff)) {
-    FILE* f = fopen(buff,"w");
-    fprintf(f,"%s",hash);
-    fclose(f);
+  if (!file_exists(buff)) { //Si la référence n'existe pas: la fonction commence par créer le fichier
+    char cmd[256];
+    sprintf(cmd,"touch %s",buff);
+    system(cmd);
   }
-  else printf("The file does not exists\n");
+  FILE* f = fopen(buff,"w");
+  fprintf(f,"%s",hash); //enregistrer le hash fourni en entree dans le fichier 
+  fclose(f);
   return;
 }
 void deleteRef(char* ref_name) {//ok
+  //Usage: supprime une référence
   char buff[256];
   sprintf(buff,".refs/%s",ref_name);
   if (!file_exists(buff)) //verifier l'existence de buff dans .refs
-    printf("deletedRef: The reference %s does not exists\n",buff);
-  else {
+    printf("WARNING: The reference %s does not exists\n",buff);
+  else { //si la reference existe dans le systeme, on effectue l'instruction de suppression
     sprintf(buff,"rm .refs/%s",ref_name);
     system(buff);
   }
   return;
 }
 char* getRef(char* ref_name) {
+  //Usage: récupère vers quoi pointe une référence (le hash contenu dans le fichier)
   char buff[256];
   sprintf(buff,".refs/%s",ref_name);
+  if (!file_exists(buff)) return NULL; //Si le fichier n'existe pas, retourne NULL
   FILE* f = fopen(buff,"r");
   char* res = (char*)malloc(INT_MAX);
   fgets(res,INT_MAX,f); //lire le contenu de ref_name + l'enregistrer dans res
   fclose(f); 
-  return res;
+  return res; //possible d'etre vide si le fichier est vide
 }
 
 /* SIMULATION */
 void myGitAdd(char* file_or_folder) {
+  //Usage: ajouter un fichier ou répertoire dans le WorkTree correspondant à la zone de préparation
   WorkTree* wt;
-  if (!file_exists(".add")) {
+  if (!file_exists(".add")) { //Si .add n'existe pas, il faut d'abord le créer
     system("touch .add");
     wt = initWorkTree();
   } else 
-    wt = ftwt(".add");
+    wt = ftwt(".add"); //initialiser un WorkTree depuis .add
 
-  if (file_exists(file_or_folder)) {
-    appendWorkTree(wt,file_or_folder,NULL,0);
+  if (file_exists(file_or_folder)) { //si le fichier en entree existe deja dans le systeme
+    appendWorkTree(wt,file_or_folder,NULL,0); //ajouter 1 WorkFile + mettre a jour .add
     wttf(wt,".add");
   }
-  else printf("git add: File or folder %s does not exists",file_or_folder);
+  else printf("WARNING: File or folder %s does not exists",file_or_folder);
   return;
 }
 void myGitCommit(char* branch_name,char* message) {//ok
-  if (!file_exists(".refs")) {
-    printf("gitCommit: Initialiser d'abord les references du projet\n");
+  if (!file_exists(".refs")) { //si le repertoire .refs n'existe pas deja
+    printf("WARNING: Require to initialize project references first\n");
     return;
   }
   char* path = concat(".refs",branch_name);
 
-  if (!file_exists(path)) {
-    printf("git commit: La branche n'existe pas\n");
+  if (!file_exists(path)) { //si la branche n'existe pas deja
+    printf("WARNING: The branch does not exist\n");
     return;
   }
   char *head = getRef("HEAD");
   char *branch = getRef(branch_name);
 
-  if (strcmp(head,branch)!=0) {
-    printf("git commit: HEAD doit pointer sur le dernier commit de la branche\n");
+  if (strcmp(head,branch)!=0) { //si le HEAD et la branche fournie ne pointe pas sur le meme Commit
+    printf("WARNING: HEAD must point to the last commit of the branch\n");
     return;
   }
+  //Si toutes les tests suivantes sont passees
   WorkTree* wt = ftwt(".add"); 
-  char* h = saveWorkTree(wt,".");
-  Commit* c = createCommit(h);
-  if (strlen(branch)!=0) 
+  char* h = saveWorkTree(wt,"."); //sauvegarder le WorkTree de la zone de preparation
+  Commit* c = createCommit(h); 
+  if (strlen(branch)!=0) //si la branche n'est pas vide
     commitSet(c,"predecessor",branch);
-  if (message!=NULL) 
+
+  if (message!=NULL) //s'il y a une message de description pour le Commit
     commitSet(c,"message",message);
-  char* hc = blobCommit(c);
-  createUpdateRef(branch,hc);
-  createUpdateRef("HEAD",hc);
-  system("rm .add"); 
+
+  char* hc = blobCommit(c); //enregistrer le Commit
+  createUpdateRef(branch,hc); //mettre a jour la branche
+  createUpdateRef("HEAD",hc); //mettre a jour HEAD
+  system("rm .add"); //enlever .add du systeme apres avoir tout Commit les fichiers de la zone de preparation
   return;
 }
 
 
 
-/* 7 left to test !! require Linux environment */
 /* Part 4 - GESTION D'UNE TIMELINE ARBORESCENTE */
 /* Side function */
 char* hashToPathCommit(char* hash) {

@@ -43,10 +43,7 @@ int main(int argc, char* argv[]) {
     }
   }
   else if (!strcmp(argv[1],"commit")) {
-    if (strcmp(argv[3],"-m")==0)
-      myGitCommit(argv[2],argv[4]);
-    else 
-      myGitCommit(argv[2],NULL);
+    myGitCommit(argv[2],argv[4]); //pas necessaire de comparer "-m" avec le 3e argument de la commande, au risque des fautes de segmentation !!
   }
   else if (!strcmp(argv[1],"get-current-branch")) 
     printf("%s\n",getCurrentBranch());
@@ -95,8 +92,8 @@ int main(int argc, char* argv[]) {
 
       case 3: 
         printf("CONFLICTS REVIEW\n");
-        List* current;
-        List* remote; 
+        List* current = initList();
+        List* remote = initList(); 
         int option; 
         while(*conflicts) {
           printf("%s - Please choose among 2 options below:\n1. Keep current branch version\n2. Keep remote branch version\n",(*conflicts)->data);

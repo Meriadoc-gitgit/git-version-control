@@ -9,6 +9,7 @@
 int main(void) {
 
   //A inserer une des tests enregistrees dans le repertoire main-version
+  myGitCommit("Feature0","");
 
   return 0;
 }
