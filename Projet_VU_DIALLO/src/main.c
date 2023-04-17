@@ -8,7 +8,10 @@
 
 int main(void) {
 
-  //A inserer une des tests enregistrees dans le repertoire main-version
+  //À noter avant d'effectuer des tests
+  //À insérer une des tests du répertoire main-version
+  //Si vous souhaitez de tester la fonction restoreWT, il est recommandé de créer le repertoire de path avant, afin d'éviter les erreurs de segmentation
+  //Bon test !
 
   return 0;
 }

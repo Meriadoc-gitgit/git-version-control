@@ -384,7 +384,7 @@ Commit* ftc(char* file) {//ok
   while (fgets(buffer,256,f)) { //parcours ligne par ligne du fichier
     k = stkv(buffer); //convertir une ligne de description de kvp en un kvp
     commitSet(c,k->key,k->value); //ajouter une paire (clef,value) dans le Commit
-    //fgets(buffer,256,f); //WARNING: (probably) work differently between Linux and MacOS
+    fgets(buffer,256,f); //WARNING: (probably) work differently between Linux and MacOS
   }
   fclose(f); //fermer le fichier ainsi ouvert
   return c;
@@ -421,9 +421,11 @@ void printBranch(char* branch) {//ok
   char* c_hash = getRef(branch); //sauver la reference enregistree dans branch
   char* hash = hashToPathCommit(c_hash); //convertit la reference (un hash) a un path 
   Commit* c = ftc(hash); //convertit la description du Commit enregistree dans le path trouve en un Commit
+
   while (c) { //WARNING: fixed a few line according to the last test on Saturday!!
-    if (commitGet(c,"message")) //afficher le message de description de commit
-      printf("%s -> %s\n",c_hash,commitGet(c,"message"));
+    char* m = commitGet(c,"message");
+    if (m) //afficher le message de description de commit
+      printf("%s -> %s\n",c_hash,m);
     else printf("%s\n",c_hash); //si pas de message, afficher seulement le hash du commit
     c_hash = commitGet(c,"predecessor"); //recuperer le hash du predecesseur du commit actuel
     if (c_hash) { //si son predecesseur existe

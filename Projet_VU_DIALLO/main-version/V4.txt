@@ -11,7 +11,7 @@
 
   //blobCommit(createCommit(sha256file("bash.c")));
   //createUpdateRef("Feature0",blobCommit(c1));
-  List* master = listdir("/Users/vuhoangthuyduong/Documents/GitHub/GIT-version-control/src");
+  List* master = listdir("/users/Etu1/21110221/Documents/C/Projet_VU_DIALLO/Projet_VU_DIALLO/src");
   WorkTree* wt = initWorkTree();
   WorkTree* wt1 = initWorkTree();
   while(*master) {
@@ -22,6 +22,7 @@
   List* conflicts = initList();
   WorkTree* wt2 = mergeWorkTree(wt,wt1,&conflicts);
   printf("conflicts mergeWT: %s\n",ltos(conflicts));
+  printf("Affichage de wt2:\n%s\n",wtts(wt2));
 
   printf("\nTest de PRINTBRANCH\n\n");
   printBranch("Feature0");
@@ -36,3 +37,5 @@
 
   myGitAdd("src.c");
   myGitCommit("Feature0","test");
+
+  return 0;

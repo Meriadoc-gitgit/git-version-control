@@ -178,7 +178,7 @@ L'option `-Wall` est utilisé pour lister les ***Warning*** concernant les varia
 Ces variables ne causent pas de problème en terme de compilation et d'exécution, mais elles vont augmenter la complexité globale et temporelle pour leur allocation ou initialisation, et donc rallonger le temps d'exécution. Il vaut mieux éviter au maximum possible leur présence dans le projet. 
 
 ## Concernant les instructions de test `if-else`
-Ces instructions ne paraissent pas comme un tel problème pour certains(certains quoi??). Pourtant, il est strictement recommandé de respecter l'ordre des `if-else if-else`. 
+Ces instructions ne paraissent pas comme un tel problème pour certaines fonctions. Pourtant, il est strictement recommandé de respecter l'ordre des `if-else if-else`. 
 Par exemple, en écrivant comme suit, le code compile mais ce sera impossible d'exécuter: 
 ```C
 if (instructions1) {

@@ -171,7 +171,6 @@ char* saveWorkTree(WorkTree* wt,char* path) {//ok
     char* a_path = concat(path,wt->tab[i].name);
     if (!file_exists(hashToPath(wt->tab[i].hash)) && wt->tab[i].name[0]!='.') {
       if (isFile(a_path)==0) { //si c'est un repertoire
-        //printf("rep %s\n",wt->tab[i].name);
         List* L = listdir(a_path);
         WorkTree* newWT = initWorkTree(); 
         while(*L) {
@@ -182,7 +181,6 @@ char* saveWorkTree(WorkTree* wt,char* path) {//ok
         wt->tab[i].hash = saveWorkTree(newWT,a_path); //appel recursive de saveWT
         wt->tab[i].mode = getChmod(a_path);
       } else { //si c'est un simple fichier
-        //printf("fic %s\n",wt->tab[i].name);
         if (file_exists(wt->tab[i].name)) {
           /*enregistrer ssi ce fichier exists!! afin d'éviter l'enregistrement des hash*/
           blobFile(wt->tab[i].name); //enregistrer un fichier de WorkTree
@@ -209,17 +207,14 @@ void restoreWorkTree(WorkTree* wt,char* path) {//ok
   for (int i=0;i<wt->n;i++) {
     char* a_path = concat(path,wt->tab[i].name);
     char* cp_path = hashToPath(wt->tab[i].hash);
-    //printf("status %s: %d\n",wt->tab[i].name,isWorkTree(wt->tab[i].hash));
     if (file_exists(cp_path)) { //si le chemin hache existe
       if (isWorkTree(wt->tab[i].hash)==1) { //si c'est un repertoire
-        //printf("rep %s\n",wt->tab[i].name);
+        mkdir(a_path,0700); //créer les repertoires s'il n'existe pas déjà
         strcat(cp_path,".t");
         WorkTree* newWT = ftwt(cp_path);
-        mkdir(a_path,0700); //new line, need to  retest, remove if not working
         restoreWorkTree(newWT,a_path);
         setMode(getChmod(cp_path),a_path);
       } else if (isWorkTree(wt->tab[i].hash)==0) { //si c'est un fichier
-        //printf("fic %s\n",wt->tab[i].name);
         cp(a_path,cp_path); 
         setMode(getChmod(cp_path),a_path);
       }
@@ -257,7 +252,7 @@ void initRefs(void) {
 }
 void createUpdateRef(char* ref_name,char* hash) { 
   //Usage: met à jour une référence en remplacent son contenu par hash
-  char buff[256];
+  char buff[100];
   sprintf(buff,".refs/%s",ref_name);
   if (!file_exists(buff)) { //Si la référence n'existe pas: la fonction commence par créer le fichier
     char cmd[256];
@@ -435,13 +430,17 @@ List* merge(char* remote_branch, char* message) {
   char* current_commit_h = getRef(getCurrentBranch());
   char* remote_commit_h = getRef(remote_branch);
 
+  /*Initialiser 2 Commits pour faciliter les opérations*/
+  Commit* c1 = ftc(hashToPathCommit(current_commit_h));
+  Commit* c2 = ftc(hashToPathCommit(remote_commit_h));
+
+  /*Initialiser 2 paths afin de faciliter les opérations*/
+  char* chemin1 = strcat(hashToPath(commitGet(c1,"tree")),".t");
+  char* chemin2 = strcat(hashToPath(commitGet(c2,"tree")),".t");
+
   //Initialiser 2 WorkTree associes a la variable remote_branch et a la branche courante
-  WorkTree* current = ftwt(strcat(
-    hashToPath(commitGet(
-      ftc(hashToPathCommit(current_commit_h)),"tree")),".t"));
-  WorkTree* remote = ftwt(strcat(
-    hashToPath(commitGet(
-      ftc(hashToPathCommit(remote_commit_h)),"tree")),".t"));
+  WorkTree* current = ftwt(chemin1);
+  WorkTree* remote = ftwt(chemin2);
 
   List* conflicts = initList(); //initialiser une List qui va enregistrer les conflits
 
